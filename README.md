@@ -2,7 +2,7 @@
 
 Prepaid 5-gallon water delivery platform: one sign-in, three apps, one shared data set.
 
-- **Customer app** — coupon balance, next delivery with live "on the way" status, reschedule and hold, top-up (card / Apple Pay / cash to driver), history (calendar, weekly, monthly), support tickets with replies, English and Arabic (RTL).
+- **Customer app** — Qatar blue-plate address (building, street, zone), coupon balance, next delivery with live "on the way" status, reschedule and hold, top-up (card / Apple Pay / cash to driver), history (calendar, weekly, monthly), support tickets with replies, English and Arabic (RTL).
 - **Driver app** — today's route on a live map (real Doha tiles, road-following route, numbered stops, moving driver marker with distance and ETA), reorder and optimise, stop screen with call / WhatsApp / navigate, photo proof, confirm or "no response", 30-minute undo, day summary.
 - **Admin panel** — overview, customers, drivers, routes (generate per day, reassign), support, reports with CSV export, settings for white-labelling (company name, accent colour, coupon packs, zones, thresholds), audit log, and a live preview of the driver and customer apps.
 

@@ -22,6 +22,13 @@ const rel=ts=>{const m=Math.round((Date.now()-new Date(ts))/60000);if(m<1)return
 let _tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('on'),2600)};
 const LANG=()=>(S.c&&S.c.ar&&S.role==='customer')?'ar-QA':'en-GB';
 
+/* ---- Qatar blue address plate ---- */
+const QZONES={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
+function plate(c,o){o=o||{};const ed=!!o.edit,id=o.id||'qp',sz=o.size||'';const f=(k,lab,ar,v,w)=>`<div class="pc ${k}"><div class="pl"><span>${lab}</span><span dir="rtl">${ar}</span></div>${ed?`<input class="pn" id="${id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="${w}" value="${v??''}" placeholder="—" aria-label="${lab} number" oninput="this.value=this.value.replace(/\\D/g,'')">`:`<div class="pn">${v??'—'}</div>`}</div>`;
+ return `<div class="qplate ${sz}" role="group" aria-label="Qatar address plate"><div class="pb">${f('b','Building','رقم المبنى',c.qbuilding,4)}<div class="prow">${f('s','Street','الشارع',c.qstreet,4)}${f('z','Zone','المنطقة',c.qzone,3)}</div></div></div>`}
+const plateRead=id=>{const g=k=>{const e=document.getElementById(id+'-'+k);return e&&e.value?+e.value:null};return {qbuilding:g('b'),qstreet:g('s'),qzone:g('z')}};
+const plateText=c=>(c.qbuilding?'Bldg '+c.qbuilding:'')+(c.qstreet?', St '+c.qstreet:'')+(c.qzone?', Zone '+c.qzone:'');
+
 /* ---- icons (stroke) ---- */
 const P={
 home:'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
@@ -76,7 +83,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v1';
+const LS='fh-water-demo-v2';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -130,6 +137,8 @@ function genData(){
   const building=z.id==='z4'?'Apartment '+(400+Math.floor(r()*1800))+', '+TOW[i%4]:z.id==='z7'?'Apartment '+(100+Math.floor(r()*2000))+', Porto Arabia':'Villa '+n;
   const street=z.id==='z4'?'West Bay':z.id==='z7'?'The Pearl':z.id==='z5'?'Al Dafna':z.id==='z6'?'Fox Hills, Lusail':(a[1]+(z.id==='z3'?Math.floor(10+r()*80):Math.floor(10+r()*89)))+a[2];
   customers.push(C('c'+(19+i),nm,'','+974 5560 '+(3100+i*7),building,street,z.id,day,w[0],w[1],2+Math.floor(r()*3),8+Math.floor(r()*80),i%6===0?'Ring the bell twice':''))});
+ const QZ={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
+ customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
  /* ledger: 16 weeks of history */
  const ledger=[];const packs=[{id:'p30',coupons:30,price:220},{id:'p60',coupons:60,price:420},{id:'p120',coupons:120,price:780}];

@@ -254,6 +254,26 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
  .adm.previewing .mtab{display:none}.adm.previewing .main{padding:calc(12px + var(--sat)) 0 0}.adm.previewing .main>.row{padding:0 16px}.adm.previewing .phone{height:calc(100dvh - 108px - var(--sat))}.adm.previewing .main>p{display:none}
 }
 
+
+/* Qatar blue address plate */
+.qplate{background:#0B4FA8;border-radius:16px;padding:5px;box-shadow:0 6px 18px rgba(11,79,168,.25);color:#fff;font-family:Figtree,sans-serif}
+.qplate .pb{border:2px solid rgba(255,255,255,.92);border-radius:12px;overflow:hidden}
+.qplate .pc{padding:8px 12px 10px;position:relative}
+.qplate .pc.b{border-bottom:2px solid rgba(255,255,255,.92);text-align:center}
+.qplate .prow{display:grid;grid-template-columns:1fr 1fr}
+.qplate .pc.s{border-right:2px solid rgba(255,255,255,.92)}
+.qplate .pl{display:flex;justify-content:space-between;gap:6px;font-size:11px;font-weight:600;opacity:.85;letter-spacing:.01em}
+.qplate .pn{display:block;width:100%;font:800 34px/1.05 Figtree,sans-serif;letter-spacing:.02em;color:#fff;text-align:center;background:transparent;border:0;padding:2px 0 0;margin:0;font-variant-numeric:tabular-nums}
+.qplate .pc.b .pn{font-size:46px}
+.qplate input.pn{border-radius:8px;outline:0;caret-color:#fff}
+.qplate input.pn::placeholder{color:rgba(255,255,255,.45)}
+.qplate input.pn:focus{background:rgba(255,255,255,.14)}
+.qplate.sm{border-radius:12px;padding:3px;box-shadow:none}.qplate.sm .pb{border-radius:9px;border-width:1.5px}
+.qplate.sm .pc{padding:4px 8px 5px}.qplate.sm .pl{font-size:9px}.qplate.sm .pn{font-size:20px}.qplate.sm .pc.b .pn{font-size:24px}
+.qplate.sm .pc.b{border-bottom-width:1.5px}.qplate.sm .pc.s{border-right-width:1.5px}
+.qplate.sm .pl span[dir=rtl]{display:none}
+.qplate.inline{display:inline-block;min-width:150px}
+.plate-row{display:flex;gap:12px;align-items:center}.plate-row .qplate{flex:none;width:140px}
 /* live map */
 .mapwrap{position:relative}
 .lmap{height:270px;width:100%;background:var(--card2);position:relative;z-index:0;isolation:isolate}
