@@ -24,7 +24,7 @@ Sample data (42 customers across 7 Doha zones, 16 weeks of history, routes for e
 
 ## Live map
 
-The map uses Leaflet with CARTO basemap tiles and road geometry from the public OSRM server. The driver's position is simulated for the demo (it travels toward the next stop and resets when a stop is confirmed); a driver can switch on **Share my live location** in the Me tab to use the phone's real GPS instead. Customers see the same driver marker on their "Arriving today" card, and the admin overview shows every driver and stop on one map.
+The map uses Leaflet with Esri light/dark gray basemap tiles (OpenStreetMap fallback) and road geometry from the public OSRM server. The driver app asks for the phone's location when the route opens and shows the real position with an accuracy circle; the locate button on the map retries or recenters. If location is blocked, the marker is simulated (it travels toward the next stop). Live location can be switched off in the Me tab. Customers see the same driver marker on their "Arriving today" card, and the admin overview shows every driver and stop on one map.
 
 ## Structure
 
