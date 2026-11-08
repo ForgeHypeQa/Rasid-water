@@ -6,6 +6,14 @@ Prepaid 5-gallon water delivery platform: one sign-in, three apps, one shared da
 - **Driver app** — today's route on a live map (real Doha tiles, road-following route, numbered stops, moving driver marker with distance and ETA), reorder and optimise, stop screen with call / WhatsApp / navigate, photo proof, confirm or "no response", 30-minute undo, day summary.
 - **Admin panel** — overview, customers, drivers, routes (generate per day, reassign), support, reports with CSV export, settings for white-labelling (company name, accent colour, coupon packs, zones, thresholds), audit log, and a live preview of the driver and customer apps.
 
+## Get the app
+
+- **Android:** download `Rasid-Water.apk` from the [latest release](https://github.com/ForgeHypeQa/Rasid-water/releases/latest) and open it on the phone (allow "Install unknown apps" when asked).
+- **iPhone:** open [forgehypeqa.github.io/Rasid-water](https://forgehypeqa.github.io/Rasid-water/) in Safari → Share → Add to Home Screen.
+- **Android, no APK:** open the same link in Chrome → menu → Install app.
+
+The APK is built automatically by GitHub Actions (`.github/workflows/android.yml`, Capacitor 6) on every change to the app. It is a debug-signed build for demos; for the Play Store, add a release keystore and build `assembleRelease` / `bundleRelease`.
+
 ## Run the demo
 
 Open `index.html` in a browser, or host it on any static host (Netlify, Vercel, GitHub Pages). No build step, no server.

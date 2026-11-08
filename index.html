@@ -3,7 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ForgeHype Water — Demo</title>
+<title>Rasid Water</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="theme-color" content="#FF5A00">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rasid">
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1066,7 +1074,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v2';
+const LS='fh-water-demo-v3';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -1167,7 +1175,7 @@ function genData(){
   {id:'t3',cid:'c14',subject:'Need an invoice for last top-up',status:'open',created_at:iso(-1,16,12),messages:[{from:'customer',body:'Please send a tax invoice for the 60-coupon pack I bought on the 1st.',at:iso(-1,16,12)}]},
   {id:'t4',cid:'c5',subject:'Change delivery to the afternoon',status:'resolved',created_at:iso(-6,14,0),messages:[{from:'customer',body:'Can my delivery window be moved to 2 to 4 pm?',at:iso(-6,14,0)},{from:'support',body:'Done. Your window is now 10 to 12 on the same day, which is the latest slot in Lusail. Let us know if that works.',at:iso(-6,15,30)},{from:'customer',body:'That works, thanks.',at:iso(-6,16,0)}]}];
  const notes=[];
- const settings={company:'ForgeHype Water',accent:'orange',currency:'QAR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
+ const settings={company:'Rasid Water',accent:'orange',currency:'QAR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
  const audit=[{at:iso(-1,12,20),who:'Aisha Al-Naimi',what:'Replied to ticket from Noora Al-Kuwari'},{at:iso(-1,9,2),who:'Fatima Al-Sulaiti',what:'Generated routes for '+fmtD(TODAY)},{at:iso(-2,17,45),who:'Fatima Al-Sulaiti',what:'Added 60 coupons to Saad Al-Khater (card payment at office)'}];
  return {zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
 }
@@ -1251,6 +1259,20 @@ function signOut(){S.me=null;S.role=null;S.a.preview=null;S.a.asId=null;S.c.tab=
 function resetDemo(){try{localStorage.removeItem(LS)}catch(e){}S.data=genData();S.a.preview=null;S.a.asId=null;S.c=Object.assign(S.c,{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S});S.d=Object.assign(S.d,{scr:'route',tab:'route',cur:null,photo:null,busy:false});S.a.tab='home';applyTheme();save();render();toast('Demo data reset')}
 function toggleTheme(){const dark=document.documentElement.dataset.theme==='dark';S.theme=dark?'light':'dark';applyTheme();save();render()}
 
+/* ---- install as app ---- */
+const INST={evt:null,
+ standalone(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true||/Capacitor/i.test(navigator.userAgent)||!!window.Capacitor},
+ ios(){return /iphone|ipad|ipod/i.test(navigator.userAgent)},
+ btn(){if(INST.standalone())return '';return `<button class="btn t w mt12" onclick="INST.go()">${ic('download','s')} Install the app</button>`},
+ go(){if(INST.evt){INST.evt.prompt();INST.evt.userChoice.then(c=>{if(c.outcome==='accepted')toast('Installing Rasid');INST.evt=null;render()});return}
+  sheet(`<h2 class="title">Install Rasid</h2><p class="sub mt4">Use it like a normal app, full screen, from your home screen.</p>
+  <div class="card mt16 tight">${INST.ios()?`<div class="li"><span class="ic tint-sky">1</span><div class="grow">Open this page in <b>Safari</b></div></div><div class="li"><span class="ic tint-sky">2</span><div class="grow">Tap <b>Share</b> (square with an arrow)</div></div><div class="li"><span class="ic tint-sky">3</span><div class="grow">Choose <b>Add to Home Screen</b>, then <b>Add</b></div></div>`
+  :`<div class="li"><span class="ic tint-sky">1</span><div class="grow">Open the browser menu <b>⋮</b></div></div><div class="li"><span class="ic tint-sky">2</span><div class="grow">Tap <b>Install app</b> or <b>Add to Home screen</b></div></div>`}</div>
+  ${INST.ios()?'':`<div class="card flat"><b>Prefer an APK?</b><div class="sub sm mt4">Download the Android app file from the project's Releases page and open it to install.</div><a class="btn g w mt12" href="https://github.com/ForgeHypeQa/Rasid-water/releases/latest" target="_blank" rel="noopener">${ic('download','s')} Android APK</a></div>`}
+  <button class="btn g w" onclick="closeSheet()">Done</button>`)}};
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();INST.evt=e});
+addEventListener('appinstalled',()=>{toast('Rasid installed');render()});
+
 /* ---- login view ---- */
 function loginView(){const acc=accounts();const grp=k=>acc.filter(a=>a.kind===k);
  const row=a=>`<button class="acct" onclick="fillLogin('${a.email}')"><span class="avatar sm ${a.kind==='customer'?'tint-sky':a.kind==='driver'?'tint-mint':'tint-acc'}">${initials(a.name)}</span><span class="grow"><b>${esc(a.name)}</b><span class="sub" style="display:block">${esc(a.label)}</span></span><span class="xs mute">${esc(a.email)}</span></button>`;
@@ -1262,7 +1284,7 @@ function loginView(){const acc=accounts();const grp=k=>acc.filter(a=>a.kind===k)
    <div class="grp mt16"><input class="in" id="lemail" type="email" placeholder="Email" autocomplete="username" required><input class="in" id="lpw" type="password" placeholder="Password" autocomplete="current-password" required></div>
    <div class="sm mt8" id="lerr" style="color:var(--rose-i);min-height:18px"></div>
    <button class="btn p w lg mt4" type="submit">Sign in</button>
-  </form>
+  </form>${INST.btn()}
  </div>
  <div class="row sp mt20 mb8"><span class="h3">Demo accounts</span><span class="pill tint-sand">Password 0000</span></div>
  <p class="sub mb12">Tap an account to fill it in. Everything here is sample data for ${esc(fmtLong(TODAY))}; nothing leaves this browser.</p>
@@ -1285,7 +1307,7 @@ function demoPill(){return `<button class="demo-pill" onclick="demoSheet()">${ic
 function demoSheet(){const m=S.me;sheet(`<h2 class="title">Demo controls</h2><p class="sub mt4">Signed in as ${esc(m.name)} (${m.kind}).</p>
  <div class="card mt16 tight"><div class="li tap" onclick="toggleTheme();closeSheet()"><span class="ic tint-grey">${ic('moon')}</span><span class="grow b">Switch light / dark</span></div>
  <div class="li tap" onclick="closeSheet();resetDemo()"><span class="ic tint-grey">${ic('refresh')}</span><span class="grow b">Reset demo data</span><span class="sub">Fresh sample data</span></div>
- <div class="li tap" onclick="closeSheet();signOut()"><span class="ic tint-rose">${ic('logout')}</span><span class="grow b">Sign out</span><span class="sub">Try another account</span></div></div>
+ <div class="li tap" onclick="closeSheet();signOut()"><span class="ic tint-rose">${ic('logout')}</span><span class="grow b">Sign out</span><span class="sub">Try another account</span></div>${INST.standalone()?'':`<div class="li tap" onclick="closeSheet();INST.go()"><span class="ic tint-acc">${ic('download')}</span><span class="grow b">Install the app</span></div>`}</div>
  <button class="btn g w mt8" onclick="closeSheet()">Close</button>`)}
 function railView(){const m=S.me;return `<aside class="rail"><div class="brand mb16"><span class="mark">${ic('drop')}</span>${esc(D().settings.company)}</div>
  <div class="card"><div class="sm sb mute">Signed in</div><div class="row mt8"><span class="avatar ${m.kind==='driver'?'tint-mint':'tint-sky'}">${initials(m.name)}</span><div><b>${esc(m.name)}</b><div class="sub">${m.kind==='driver'?'Driver app':'Customer app'}</div></div></div>
@@ -1823,6 +1845,7 @@ const AD={
 (function(){if(!load()){S.data=genData();save()}applyTheme();render();
  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!S.theme){applyTheme()}});
  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+ if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.Capacitor){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 })();
 </script>
 </body>
