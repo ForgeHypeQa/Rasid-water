@@ -1,7 +1,0 @@
-{
-  "appId": "qa.forgehype.rasid",
-  "appName": "Rasid",
-  "webDir": "www",
-  "server": { "androidScheme": "https" },
-  "android": { "backgroundColor": "#F3F3F6" }
-}

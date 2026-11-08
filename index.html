@@ -1268,7 +1268,6 @@ const INST={evt:null,
   sheet(`<h2 class="title">Install Rasid</h2><p class="sub mt4">Use it like a normal app, full screen, from your home screen.</p>
   <div class="card mt16 tight">${INST.ios()?`<div class="li"><span class="ic tint-sky">1</span><div class="grow">Open this page in <b>Safari</b></div></div><div class="li"><span class="ic tint-sky">2</span><div class="grow">Tap <b>Share</b> (square with an arrow)</div></div><div class="li"><span class="ic tint-sky">3</span><div class="grow">Choose <b>Add to Home Screen</b>, then <b>Add</b></div></div>`
   :`<div class="li"><span class="ic tint-sky">1</span><div class="grow">Open the browser menu <b>⋮</b></div></div><div class="li"><span class="ic tint-sky">2</span><div class="grow">Tap <b>Install app</b> or <b>Add to Home screen</b></div></div>`}</div>
-  ${INST.ios()?'':`<div class="card flat"><b>Prefer an APK?</b><div class="sub sm mt4">Download the Android app file from the project's Releases page and open it to install.</div><a class="btn g w mt12" href="https://github.com/ForgeHypeQa/Rasid-water/releases/latest" target="_blank" rel="noopener">${ic('download','s')} Android APK</a></div>`}
   <button class="btn g w" onclick="closeSheet()">Done</button>`)}};
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();INST.evt=e});
 addEventListener('appinstalled',()=>{toast('Rasid installed');render()});
