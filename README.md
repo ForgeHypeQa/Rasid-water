@@ -1,0 +1,41 @@
+# Rasid — water delivery app
+
+Prepaid 5-gallon water delivery platform: one sign-in, three apps, one shared data set.
+
+- **Customer app** — coupon balance, next delivery with live "on the way" status, reschedule and hold, top-up (card / Apple Pay / cash to driver), history (calendar, weekly, monthly), support tickets with replies, English and Arabic (RTL).
+- **Driver app** — today's route with overview map, reorder and optimise, stop screen with call / WhatsApp / navigate, photo proof, confirm or "no response", 30-minute undo, day summary.
+- **Admin panel** — overview, customers, drivers, routes (generate per day, reassign), support, reports with CSV export, settings for white-labelling (company name, accent colour, coupon packs, zones, thresholds), audit log, and a live preview of the driver and customer apps.
+
+## Run the demo
+
+Open `index.html` in a browser, or host it on any static host (Netlify, Vercel, GitHub Pages). No build step, no server.
+
+**Demo accounts — password `0000` for all**
+
+| Role | Email |
+| --- | --- |
+| Admin | admin@forgehype.qa |
+| Support | support@forgehype.qa |
+| Driver, Van 1 | driver1@forgehype.qa |
+| Driver, Van 2 | driver2@forgehype.qa |
+| Customers | khalid@demo.qa, noora@demo.qa, hamad@demo.qa, maryam@demo.qa, ahmed@demo.qa |
+
+Sample data (42 customers across 7 Doha zones, 16 weeks of history, routes for every weekday) is generated for the day the demo is opened and kept in the browser's local storage. Use **Reset data** on the sign-in screen or in Settings to start fresh.
+
+## Structure
+
+```
+index.html      the whole app, built from src/
+src/
+  01-head.html  styles (iOS-style light/dark theme, components)
+  02-core.js    utilities, icons, state, seeded demo data, business actions (ACT), auth, shell
+  03-customer.js
+  04-driver.js
+  05-admin.js
+  06-tail.html  boot
+build.sh        concatenates src/ into index.html
+```
+
+All data changes go through the `ACT` object in `02-core.js` (confirm, miss, undo, order, topup, adjust, generate, ticket, reply). Replacing those functions with Supabase calls connects the same screens to the live database.
+
+Built by ForgeHype.

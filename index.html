@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ForgeHype Water — Demo</title>
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#F3F3F6;--card:#FFFFFF;--card2:#F7F7F9;--ink:#121418;--ink2:#3E434C;--mute:#7C818B;--line:#E6E7EB;--line2:#EFF0F3;
+ --acc:#FF5A00;
+ --mint:#DDF4E8;--mint-i:#0F7A4D;--sky:#E1ECFF;--sky-i:#1C55D6;--sand:#FFF0CF;--sand-i:#8A5700;--rose:#FFE3E3;--rose-i:#C22B2B;--lilac:#ECE6FF;--lilac-i:#5B40D6;
+ --r:22px;--r2:16px;--r3:12px;
+ --sh:0 1px 2px rgba(16,18,24,.04),0 0 0 1px rgba(16,18,24,.035);
+ --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+ --acc-t:color-mix(in srgb,var(--acc) 13%,var(--card));--acc-i:color-mix(in srgb,var(--acc) 82%,#000);--acc-h:color-mix(in srgb,var(--acc) 88%,#000);
+ color-scheme:light;
+}
+[data-theme=dark]{
+ --bg:#0C0D10;--card:#17191E;--card2:#1E2127;--ink:#F3F4F6;--ink2:#C7CAD1;--mute:#8E939D;--line:#262930;--line2:#1F2227;
+ --mint:#0F2E22;--mint-i:#4ED39B;--sky:#13244A;--sky-i:#86ABFF;--sand:#382808;--sand-i:#FFC46A;--rose:#3B1818;--rose-i:#FF8A8A;--lilac:#241B45;--lilac-i:#BBA8FF;
+ --sh:0 0 0 1px rgba(255,255,255,.05);
+ --acc-t:color-mix(in srgb,var(--acc) 22%,var(--card));--acc-i:color-mix(in srgb,var(--acc) 75%,#fff);--acc-h:color-mix(in srgb,var(--acc) 85%,#fff);
+ color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 Figtree,-apple-system,BlinkMacSystemFont,"SF Pro Text",Segoe UI,Roboto,sans-serif;font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;margin:0}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+a{color:inherit;text-decoration:none}
+input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+.title{font-size:28px;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+.h2{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.h3{font-size:16px;font-weight:700}
+.sub{color:var(--mute);font-size:14px}
+.sm{font-size:13px}.xs{font-size:12px}
+.mute{color:var(--mute)}.ink2{color:var(--ink2)}
+.b{font-weight:700}.sb{font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.big{font-size:56px;line-height:1;font-weight:800;letter-spacing:-.03em}
+.mid{font-size:34px;line-height:1;font-weight:800;letter-spacing:-.02em}
+.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}.wrap{flex-wrap:wrap}
+.col{display:flex;flex-direction:column;gap:4px}
+.grow{flex:1;min-width:0}
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
+.c{text-align:center}
+.sep{display:inline-block;width:3px;height:3px;border-radius:50%;background:var(--mute);margin:0 7px;vertical-align:middle;opacity:.7}
+svg.i{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.i.s{width:16px;height:16px}svg.i.l{width:24px;height:24px}
+
+/* cards & lists */
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.card.tight{padding:4px 16px}
+.card.flat{box-shadow:none;background:var(--card2)}
+.li{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line2)}
+.li:first-child{border-top:0}
+.li.tap{cursor:pointer}
+.li .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex:none}
+.tint-mint{background:var(--mint);color:var(--mint-i)}.tint-sky{background:var(--sky);color:var(--sky-i)}.tint-sand{background:var(--sand);color:var(--sand-i)}.tint-rose{background:var(--rose);color:var(--rose-i)}.tint-lilac{background:var(--lilac);color:var(--lilac-i)}.tint-acc{background:var(--acc-t);color:var(--acc-i)}.tint-grey{background:var(--card2);color:var(--ink2)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap}
+.pill.lg{padding:7px 13px;font-size:13px}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:15px;flex:none;letter-spacing:.01em}
+.avatar.sm{width:34px;height:34px;font-size:13px}.avatar.lg{width:64px;height:64px;font-size:22px}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:8px;background:var(--acc)}
+.bar.mint i{background:var(--mint-i)}.bar.rose i{background:var(--rose-i)}.bar.sand i{background:var(--sand-i)}
+.kpi{padding:16px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh)}
+.kpi .v{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.kpi .l{color:var(--mute);font-size:13px;margin-top:4px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:var(--sh);text-align:start;display:block;width:100%}
+.tile .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;margin-bottom:12px}
+.tile b{display:block;font-size:15px}.tile span{color:var(--mute);font-size:13px}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat3 div{border-radius:16px;padding:10px 12px}
+.stat3 b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em}
+.stat3 span{display:block;font-size:12px;line-height:1.25;margin-top:2px;opacity:.85}
+.empty{color:var(--mute);text-align:center;padding:26px 12px;font-size:14px}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:12px 16px;font-weight:700;font-size:15px;line-height:1.2;transition:transform .08s ease,background .15s}
+.btn:active{transform:scale(.985)}
+.btn.p{background:var(--acc);color:#fff}.btn.p:hover{background:var(--acc-h)}
+.btn.t{background:var(--acc-t);color:var(--acc-i)}
+.btn.g{background:var(--card2);color:var(--ink)}
+.btn.o{box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink)}
+.btn.d{background:var(--rose);color:var(--rose-i)}
+.btn.w{width:100%}.btn.lg{padding:16px 18px;font-size:16px;border-radius:18px}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:11px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ok{background:var(--mint-i);color:#fff}
+.btn.c2{background:var(--card);box-shadow:var(--sh)}
+.ib{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--card);box-shadow:var(--sh)}
+.ib.flat{background:var(--card2);box-shadow:none}
+.seg{display:flex;background:var(--card2);border-radius:14px;padding:4px;gap:2px}
+.seg button{flex:1;border-radius:11px;padding:9px 8px;font-weight:600;color:var(--mute);font-size:14px}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{border-radius:999px;padding:8px 14px;font-weight:600;font-size:13px;background:var(--card);box-shadow:var(--sh);white-space:nowrap;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);color:var(--bg);box-shadow:none}
+.field{display:block;margin-top:12px}
+.field span{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.in{width:100%;border-radius:14px;padding:13px 14px;border:1px solid var(--line);background:var(--card);font-size:15px;appearance:none}
+.in:focus{border-color:var(--acc);outline:0;box-shadow:0 0 0 3px var(--acc-t)}
+textarea.in{min-height:92px;resize:vertical}
+select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C818B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+[dir=rtl] select.in{background-position:left 12px center;padding-right:14px;padding-left:36px}
+.grp{background:var(--card);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden}
+.grp .in{border:0;border-radius:0;border-top:1px solid var(--line2);background:transparent}
+.grp .in:first-child{border-top:0}.grp .in:focus{box-shadow:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sw{position:relative;width:46px;height:28px;border-radius:14px;background:var(--line);transition:background .2s;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.sw.on{background:var(--mint-i)}.sw.on::after{transform:translateX(18px)}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:start;border-radius:16px;padding:14px 16px;background:var(--card);box-shadow:var(--sh);margin-top:10px;font-weight:600}
+.opt.on{box-shadow:inset 0 0 0 2px var(--acc)}
+.opt small{display:block;font-weight:500;color:var(--mute);font-size:13px;margin-top:2px}
+.toast{position:fixed;left:50%;transform:translate(-50%,10px);bottom:calc(28px + var(--sab));background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;z-index:400;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:min(92vw,420px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.grab{width:38px;height:5px;border-radius:5px;background:var(--line);margin:4px auto 14px}
+
+/* phone frame */
+.stage{min-height:100dvh;display:flex;align-items:center;justify-content:center;gap:40px;padding:40px 24px}
+.phone{width:390px;height:844px;border-radius:56px;background:#0a0a0b;padding:12px;box-shadow:0 40px 90px rgba(0,0,0,.28),0 0 0 2px #2a2a2e inset;position:relative;flex:none}
+.phone .screen{border-radius:44px;overflow:hidden;background:var(--bg);height:100%;position:relative;display:flex;flex-direction:column;color:var(--ink)}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:122px;height:34px;background:#000;border-radius:20px;z-index:6}
+.statusbar{height:56px;flex:none;display:flex;justify-content:space-between;align-items:flex-end;padding:0 30px 9px;font-weight:600;font-size:15px}
+.statusbar .sig{display:flex;gap:5px;align-items:center}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;padding:4px 16px 28px;overscroll-behavior:contain}
+.tabbar{flex:none;display:flex;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line2);padding:8px 6px calc(8px + var(--sab))}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font-size:11px;font-weight:600;color:var(--mute);border-radius:12px}
+.tabbar button.on{color:var(--acc-i)}
+.tabbar button.on svg{stroke:var(--acc)}
+.foot{flex:none;padding:10px 16px calc(12px + var(--sab));background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.foot.card-like{background:var(--card);border-top:1px solid var(--line2)}
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center;z-index:50;animation:fade .18s ease}
+.sheet{background:var(--bg);border-radius:28px 28px 0 0;width:100%;max-height:90%;overflow:auto;padding:10px 16px calc(22px + var(--sab));animation:up .24s cubic-bezier(.2,.8,.2,1)}
+.sheet .title{font-size:24px}
+@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.demo-pill{position:fixed;top:calc(12px + var(--sat));right:12px;z-index:300;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700;display:inline-flex;gap:6px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.2);opacity:.9}
+.rail{width:300px;flex:none;color:var(--ink)}
+.rail .card{padding:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.brand .mark{width:34px;height:34px;border-radius:11px;background:var(--acc);display:grid;place-items:center;color:#fff}
+.brand .mark svg{stroke:#fff;width:18px;height:18px}
+@media(max-width:899px){
+ .stage{padding:0;gap:0;display:block;min-height:auto}
+ .phone{width:100%;height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+ .phone .screen{border-radius:0}
+ .island,.statusbar{display:none}
+ .screen{padding-top:var(--sat)}
+ .rail{display:none}
+}
+@media(max-height:900px) and (min-width:900px){.phone{transform:scale(.92);transform-origin:center}}
+@media(max-height:820px) and (min-width:900px){.phone{transform:scale(.84)}}
+
+/* login */
+.login{min-height:100dvh;display:grid;place-items:center;padding:24px}
+.login .box{width:100%;max-width:420px}
+.acct{display:flex;align-items:center;gap:12px;width:100%;text-align:start;padding:12px;border-radius:16px;background:var(--card);box-shadow:var(--sh);margin-top:8px}
+.acct:hover{background:var(--card2)}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+
+/* gauge */
+.gauge{width:54px;height:92px;border-radius:18px;background:var(--card2);position:relative;overflow:hidden;flex:none;box-shadow:inset 0 0 0 1px var(--line)}
+.gauge i{position:absolute;left:0;right:0;bottom:0;background:var(--acc);transition:height .6s ease}
+.gauge i::before{content:"";position:absolute;left:-10%;right:-10%;top:-6px;height:12px;background:var(--card2);border-radius:50%;opacity:.35}
+.gauge.low i{background:var(--rose-i)}.gauge.warn i{background:var(--sand-i)}
+.gauge::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:8px;background:var(--line);border-radius:0 0 6px 6px;z-index:2}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal .h{font-size:11px;font-weight:600;color:var(--mute);padding:6px 0}
+.cal button{height:48px;border-radius:14px;font-weight:500;font-size:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink)}
+.cal button.o{opacity:.3}.cal button.t{background:var(--acc-t);color:var(--acc-i);font-weight:700}.cal button.n{box-shadow:inset 0 0 0 2px var(--acc)}
+.cal button.sel{background:var(--ink);color:var(--bg)}
+.cal u{display:flex;gap:2px;height:5px;text-decoration:none}.cal u s{width:5px;height:5px;border-radius:50%;display:inline-block}
+
+/* driver */
+.stop{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:20px;padding:12px 12px 12px 14px;margin-bottom:10px;box-shadow:var(--sh)}
+.stop.next{box-shadow:inset 0 0 0 2px var(--acc),var(--sh)}
+.stop.done{opacity:.72}
+.stop .n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex:none;background:var(--card2);color:var(--ink)}
+.stop.next .n{background:var(--acc);color:#fff}.stop.done .n{background:var(--mint);color:var(--mint-i)}.stop.miss .n{background:var(--rose);color:var(--rose-i)}
+.mv{display:flex;flex-direction:column;gap:3px}.mv button{width:30px;height:24px;border-radius:8px;background:var(--card2);display:grid;place-items:center}
+.mv button:disabled{opacity:.3}
+.mapbox{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:12px}
+.mapbox svg{display:block;width:100%;height:auto}
+.acts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}
+.acts a,.acts button{border-radius:16px;padding:12px 6px;font-weight:700;text-align:center;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.step{display:flex;align-items:center;gap:12px}
+.step button{width:46px;height:46px;border-radius:50%;background:var(--card2);display:grid;place-items:center}
+.step button.p{background:var(--ink);color:var(--bg)}
+.step span{font-size:34px;font-weight:800;min-width:36px;text-align:center;letter-spacing:-.02em}
+.photo{border:2px dashed var(--line);border-radius:18px;background:var(--card2);min-height:120px;display:grid;place-items:center;text-align:center;font-weight:600;padding:14px;margin-top:12px;overflow:hidden;cursor:pointer;color:var(--ink2)}
+.photo img{max-width:100%;max-height:220px;border-radius:12px;display:block}
+.bigok{width:120px;height:120px;border-radius:50%;background:var(--mint-i);color:#fff;display:grid;place-items:center;margin:26px auto 16px;box-shadow:0 0 0 14px var(--mint)}
+.bigok svg{width:56px;height:56px;stroke-width:2.4}
+
+/* admin */
+.adm{display:grid;grid-template-columns:248px 1fr;min-height:100dvh}
+.side{position:sticky;top:0;height:100dvh;border-right:1px solid var(--line);background:var(--card);padding:22px 14px 18px;display:flex;flex-direction:column;gap:6px}
+.side .nav{margin-top:18px;display:flex;flex-direction:column;gap:2px}
+.side .nav button,.side .nav .lbl{display:flex;gap:11px;align-items:center;width:100%;padding:10px 12px;border-radius:12px;color:var(--ink2);font-weight:600;font-size:14px;text-align:start}
+.side .nav button:hover{background:var(--card2)}
+.side .nav button.on{background:var(--acc-t);color:var(--acc-i)}
+.side .nav .lbl{color:var(--mute);font-size:12px;font-weight:600;padding:14px 12px 4px}
+.side .me{margin-top:auto;padding-top:12px;border-top:1px solid var(--line2)}
+.main{padding:28px 32px 48px;max-width:1240px;width:100%;margin:0 auto}
+.main.center{display:flex;flex-direction:column;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:start;font-size:12px;font-weight:600;color:var(--mute);padding:8px 10px;border-bottom:1px solid var(--line2)}
+.tbl td{padding:12px 10px;border-bottom:1px solid var(--line2);vertical-align:middle;font-size:14px}
+.tbl tr.tap{cursor:pointer}.tbl tr.tap:hover td{background:var(--card2)}
+.tbl tr:last-child td{border-bottom:0}
+.mtab{display:none;position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line2);padding:8px 6px calc(8px + var(--sab))}
+.mtab button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font-size:11px;font-weight:600;color:var(--mute)}
+.mtab button.on{color:var(--acc-i)}.mtab button.on svg{stroke:var(--acc)}
+.pagehead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.search{position:relative}.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
+.search .in{padding-left:42px}
+[dir=rtl] .search svg{left:auto;right:14px}[dir=rtl] .search .in{padding-left:14px;padding-right:42px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px;animation:fade .18s}
+.modal .sheet{max-width:560px;border-radius:26px;max-height:92vh;padding:22px 22px 24px;animation:pop .22s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{transform:translateY(14px) scale(.98);opacity:.6}to{transform:none;opacity:1}}
+.swatch{width:30px;height:30px;border-radius:50%;box-shadow:0 0 0 2px var(--card),0 0 0 3px transparent;cursor:pointer}
+.swatch.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ink)}
+.spark{display:flex;align-items:flex-end;gap:6px;height:120px}
+.spark div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--mute);height:100%;justify-content:flex-end}
+.spark i{display:block;width:100%;border-radius:8px 8px 4px 4px;background:var(--acc);opacity:.85;min-height:3px}
+.spark i.m{background:var(--rose-i)}.spark div.on i{opacity:1}
+.feed{position:relative;padding-left:18px}.feed::before{content:"";position:absolute;left:5px;top:10px;bottom:10px;width:2px;background:var(--line2)}
+.feed .li{position:relative;border-top:0;padding:8px 0}
+.feed .li::before{content:"";position:absolute;left:-18px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--card);box-shadow:inset 0 0 0 3px var(--line)}
+.feed .li.ok::before{box-shadow:inset 0 0 0 3px var(--mint-i)}.feed .li.bad::before{box-shadow:inset 0 0 0 3px var(--rose-i)}.feed .li.top::before{box-shadow:inset 0 0 0 3px var(--sky-i)}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:899px){
+ .adm{display:block}.side{display:none}.main{padding:calc(16px + var(--sat)) 16px 110px}.mtab{display:flex}
+ .cols{grid-template-columns:1fr}.tbl thead{display:none}.tbl,.tbl tbody,.tbl tr,.tbl td{display:block}
+ .tbl tr{padding:10px 0;border-bottom:1px solid var(--line2)}.tbl td{padding:2px 0;border:0}.tbl td.hide-m{display:none}
+ .modal{align-items:flex-end;padding:0}.modal .sheet{max-width:none;border-radius:28px 28px 0 0;max-height:92dvh}
+ .kpis{gap:10px}.kpi .v{font-size:26px}
+ .adm.previewing .mtab{display:none}.adm.previewing .main{padding:calc(12px + var(--sat)) 0 0}.adm.previewing .main>.row{padding:0 16px}.adm.previewing .phone{height:calc(100dvh - 108px - var(--sat))}.adm.previewing .main>p{display:none}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ============ ForgeHype Water — demo core ============ */
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parseYmd=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const TODAY_S=ymd(TODAY);
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const hm=ts=>{const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes())};
+const fmtD=(d,o)=>new Date(d).toLocaleDateString(LANG(),Object.assign({weekday:'short',day:'numeric',month:'short'},o||{}));
+const fmtDay=d=>new Date(d).toLocaleDateString(LANG(),{day:'numeric',month:'short'});
+const fmtLong=d=>new Date(d).toLocaleDateString(LANG(),{weekday:'long',day:'numeric',month:'long'});
+const money=n=>(S.data?S.data.settings.currency:'QAR')+' '+Number(n).toLocaleString('en-GB');
+const uid=()=>Math.random().toString(36).slice(2,9);
+const initials=n=>n.split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const sum=(a,f)=>a.reduce((s,x)=>s+(f?f(x):x),0);
+const rel=ts=>{const m=Math.round((Date.now()-new Date(ts))/60000);if(m<1)return 'just now';if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return h+' h ago';return fmtDay(ts)};
+let _tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('on'),2600)};
+const LANG=()=>(S.c&&S.c.ar&&S.role==='customer')?'ar-QA':'en-GB';
+
+/* ---- icons (stroke) ---- */
+const P={
+home:'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+clock:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+ticket:'M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6zM13 6v2M13 11v2M13 16v2',
+chat:'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z',
+user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+users:'M9 11.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M17 12a3 3 0 1 0 0-6M22 19a5 5 0 0 0-5-5',
+truck:'M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+route:'M6 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6 7v4a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4',
+grid:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+phone:'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z',
+nav:'M3 11l18-8-8 18-2-8z',
+camera:'M4 8h3l2-3h6l2 3h3v11H4zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z',
+check:'M5 12l5 5L20 7',
+x:'M6 6l12 12M18 6L6 18',
+plus:'M12 5v14M5 12h14',
+minus:'M5 12h14',
+left:'M15 5l-7 7 7 7',right:'M9 5l7 7-7 7',down:'M6 9l6 6 6-6',up:'M18 15l-6-6-6 6',
+bell:'M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 21h4',
+drop:'M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z',
+pause:'M8 5v14M16 5v14',
+cal:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 10h18M8 3v4M16 3v4',
+search:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5',
+sliders:'M4 7h10M18 7h2M4 17h4M12 17h8M16 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM8 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4z',
+download:'M12 4v12M7 11l5 5 5-5M4 20h16',
+mail:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
+pin:'M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+refresh:'M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5',
+logout:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+moon:'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z',
+sun:'M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+alert:'M12 9v4M12 17h.01M10.3 3.9L2 19h20L13.7 3.9a2 2 0 0 0-3.4 0z',
+chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',
+undo:'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3',
+globe:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18',
+card:'M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 10h18M7 15h4',
+info:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01',
+eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+copy:'M8 8h12v12H8zM4 16V4h12',
+send:'M22 2L11 13M22 2l-7 20-4-9-9-4z',
+box:'M3 8l9-5 9 5-9 5zM3 8v8l9 5 9-5V8M12 13v8',
+more:'M5 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
+edit:'M4 20h4l10-10-4-4L4 16zM13 7l4 4',
+wa:'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12zM9 9.5c.3 2.3 2.2 4.2 4.5 4.5l1-1.2 2 .9c-.3 1.6-1.7 2-3.4 1.5A8 8 0 0 1 8.3 10c-.5-1.7-.1-3.1 1.5-3.4l.9 2z',
+sparkle:'M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z',
+shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+list:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z'
+};
+const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+
+/* ---- state & persistence ---- */
+const LS='fh-water-demo-v1';
+let S={role:null,me:null,data:null,theme:null,
+ c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
+ d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
+ a:{tab:'home',preview:null,asId:null,f:{q:'',z:'All',c:'All',t:'All'},rdate:TODAY_S,repRange:14}};
+function save(){try{localStorage.setItem(LS,JSON.stringify({day:TODAY_S,data:S.data,role:S.role,me:S.me,theme:S.theme,a:{preview:S.a.preview,asId:S.a.asId},ar:S.c.ar}))}catch(e){}}
+function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return false;if(j.day!==TODAY_S){S.theme=j.theme;return false}
+ S.data=j.data;S.role=j.role;S.me=j.me;S.theme=j.theme;S.c.ar=!!j.ar;if(j.a){S.a.preview=j.a.preview;S.a.asId=j.a.asId}return true}catch(e){return false}}
+function applyTheme(){const r=document.documentElement;const dark=S.theme==='dark'||(!S.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=dark?'dark':'light';
+ if(S.data)r.style.setProperty('--acc',ACCENTS[S.data.settings.accent]||ACCENTS.orange)}
+const ACCENTS={orange:'#FF5A00',blue:'#1463F3',teal:'#0E9F8A',green:'#19A05B',navy:'#243B8A',plum:'#8A2E8A'};
+
+/* ---- seeded demo data ---- */
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const refCode=r=>{const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=A[Math.floor(r()*A.length)];return s};
+function genData(){
+ const r=rng(20261107);
+ const zones=[
+  {id:'z1',name:'Al Waab',drv:'d1',lat:25.258,lng:51.452},{id:'z2',name:'Al Rayyan',drv:'d1',lat:25.292,lng:51.424},{id:'z3',name:'Al Gharrafa',drv:'d1',lat:25.332,lng:51.433},
+  {id:'z4',name:'West Bay',drv:'d2',lat:25.322,lng:51.531},{id:'z5',name:'Al Dafna',drv:'d2',lat:25.311,lng:51.528},{id:'z6',name:'Lusail',drv:'d2',lat:25.418,lng:51.492},{id:'z7',name:'The Pearl',drv:'d2',lat:25.371,lng:51.552}];
+ const drivers=[
+  {id:'d1',name:'Mohammed Al-Marri',email:'driver1@forgehype.qa',phone:'+974 5511 2201',vehicle:'Van 1',plate:'384 921',active:true,zones:['z1','z2','z3']},
+  {id:'d2',name:'Yousef Al-Hajri',email:'driver2@forgehype.qa',phone:'+974 5511 2202',vehicle:'Van 2',plate:'517 044',active:true,zones:['z4','z5','z6','z7']}];
+ const staff=[{id:'a1',name:'Fatima Al-Sulaiti',email:'admin@forgehype.qa',role:'admin'},{id:'a2',name:'Aisha Al-Naimi',email:'support@forgehype.qa',role:'support'}];
+ const wd=TODAY.getDay(), T=n=>(wd+n+7)%7;
+ const C=(id,name,email,phone,building,street,zone,day,ws,we,bottles,target,gate,login)=>({id,name,email,phone,building,street,zone,weekday:T(day),ws,we,bottles,target,gate:gate||'',login:!!login,status:'active',holds:[],resched:null,emailSaved:!!login&&id!=='c1',lang:'en',notif:{wa:true,email:true}});
+ const customers=[
+  C('c1','Khalid Al-Thani','khalid@demo.qa','+974 5533 1001','Villa 12','Street 340, Al Waab','z1',0,'07:00','09:00',3,42,'Leave at the side gate if no answer',true),
+  C('c2','Noora Al-Kuwari','noora@demo.qa','+974 5533 1002','Apartment 1204, Tower 3','Diplomatic Street, West Bay','z4',0,'08:00','10:00',2,26,'Call from reception',true),
+  C('c3','Hamad Al-Mohannadi','hamad@demo.qa','+974 5533 1003','Villa 7','Street 921, Al Rayyan','z2',2,'09:00','11:00',4,7,'',true),
+  C('c4','Maryam Al-Sulaiti','maryam@demo.qa','+974 5533 1004','Villa 3','Al Dafna, near Doha Exhibition Centre','z5',3,'07:00','09:00',3,14,'Ring the bell twice',true),
+  C('c5','Ahmed Al-Emadi','ahmed@demo.qa','+974 5533 1005','Villa 21, Fox Hills','Lusail','z6',5,'10:00','12:00',5,88,'',true),
+  C('c6','Abdulla Al-Naimi','','+974 5540 2201','Villa 44','Street 820, Al Waab','z1',0,'07:00','09:00',2,33),
+  C('c7','Sara Al-Attiyah','','+974 5540 2202','Villa 9','Bu Hamour, Al Waab','z1',0,'07:00','09:00',3,51),
+  C('c8','Jassim Al-Kaabi','','+974 5540 2203','Villa 18','Street 905, Al Rayyan','z2',0,'08:00','10:00',3,19,'Gate code 2244'),
+  C('c9','Aisha Al-Mannai','','+974 5540 2204','Villa 2','Al Gharrafa, Street 50','z3',0,'08:00','10:00',4,60),
+  C('c10','Nasser Al-Dosari','','+974 5540 2205','Villa 30','Street 1010, Al Rayyan','z2',0,'09:00','11:00',2,11),
+  C('c11','Hessa Al-Muftah','','+974 5540 2206','Apartment 702, Zig Zag Tower','West Bay','z4',0,'07:00','09:00',2,38),
+  C('c12','Saad Al-Khater','','+974 5540 2207','Villa 5','Al Dafna','z5',0,'08:00','10:00',3,24),
+  C('c13','Latifa Al-Misnad','','+974 5540 2208','Villa 16, Fox Hills','Lusail','z6',0,'09:00','11:00',3,47),
+  C('c14','Rashid Al-Buainain','','+974 5540 2209','Apartment 1808, Porto Arabia','The Pearl','z7',0,'10:00','12:00',2,9),
+  C('c15','Moza Al-Ansari','','+974 5540 2210','Villa 11, Qanat Quartier','The Pearl','z7',0,'10:00','12:00',4,72),
+  C('c16','Faisal Al-Sada','','+974 5540 2211','Villa 27','Al Gharrafa','z3',1,'07:00','09:00',3,28),
+  C('c17','Dana Al-Mahmoud','','+974 5540 2212','Apartment 405, Marina Tower','Lusail','z6',2,'08:00','10:00',2,56),
+  C('c18','Ali Al-Hitmi','','+974 5540 2213','Villa 8','Street 361, Al Waab','z1',4,'07:00','09:00',3,35)];
+ /* more customers so every weekday has a route */
+ const EXTRA=['Hassan Al-Jaber','Amna Al-Siddiqi','Tamim Al-Kuwari','Shaikha Al-Mahmoud','Khalifa Al-Nuaimi','Reem Al-Hammadi','Saif Al-Shamsi','Noof Al-Darwish','Mubarak Al-Khulaifi','Wadha Al-Marri','Ghanim Al-Hajri','Alanoud Al-Thani','Ibrahim Al-Baker','Haya Al-Ansari','Majid Al-Kaabi','Lolwa Al-Obaidli','Turki Al-Sulaiti','Mariam Al-Emadi','Sultan Al-Mohannadi','Hind Al-Naimi','Abdulrahman Al-Attiyah','Fahad Al-Buainain','Jawaher Al-Misnad','Nawaf Al-Dosari'];
+ const ADDR={z1:['Villa ','Street 3',', Al Waab'],z2:['Villa ','Street 9',', Al Rayyan'],z3:['Villa ','Street ',', Al Gharrafa'],z4:['Apartment ','','West Bay'],z5:['Villa ','','Al Dafna'],z6:['Villa ','Fox Hills, ','Lusail'],z7:['Apartment ','Porto Arabia, ','The Pearl']};
+ const TOW=['Burj Doha','Tornado Tower','Palm Tower','Al Fardan Tower'];
+ const WIN=[['07:00','09:00'],['08:00','10:00'],['09:00','11:00'],['10:00','12:00'],['16:00','18:00']];
+ EXTRA.forEach((nm,i)=>{const z=zones[i%7],a=ADDR[z.id],w=WIN[i%5],day=1+(i%5);const n=3+Math.floor(r()*40);
+  const building=z.id==='z4'?'Apartment '+(400+Math.floor(r()*1800))+', '+TOW[i%4]:z.id==='z7'?'Apartment '+(100+Math.floor(r()*2000))+', Porto Arabia':'Villa '+n;
+  const street=z.id==='z4'?'West Bay':z.id==='z7'?'The Pearl':z.id==='z5'?'Al Dafna':z.id==='z6'?'Fox Hills, Lusail':(a[1]+(z.id==='z3'?Math.floor(10+r()*80):Math.floor(10+r()*89)))+a[2];
+  customers.push(C('c'+(19+i),nm,'','+974 5560 '+(3100+i*7),building,street,z.id,day,w[0],w[1],2+Math.floor(r()*3),8+Math.floor(r()*80),i%6===0?'Ring the bell twice':''))});
+ customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
+ /* ledger: 16 weeks of history */
+ const ledger=[];const packs=[{id:'p30',coupons:30,price:220},{id:'p60',coupons:60,price:420},{id:'p120',coupons:120,price:780}];
+ const push=e=>ledger.push(Object.assign({id:uid()},e));
+ const todayDone={c2:'08:12',c6:'07:08',c7:'07:31',c9:'08:15',c11:'07:20',c12:'08:40'},todayMiss={c8:['07:52','Gate or door locked']};
+ customers.forEach((c,ci)=>{
+  const diff=(c.weekday-wd+7)%7; const lastDate=addDays(TODAY,diff===0?0:diff-7);
+  const dates=[];for(let k=diff===0?16:15;k>=(diff===0?1:0);k--)dates.push(addDays(lastDate,-7*k));
+  const missIdx=(ci%3===0)?3+(ci%5):-1;
+  const used=dates.filter((d,i)=>i!==missIdx).length*c.bottles;
+  let k=Math.ceil((used+c.target-60)/60);k=clamp(k,1,4);let opening=c.target+used-60*k;if(opening<10){k--;opening+=60}
+  const tupAt=[];for(let j=0;j<k;j++)tupAt.push(Math.floor((j+ .6)*dates.length/k)-1);
+  push({cid:c.id,kind:'topup',at:addDays(dates[0],-3).toISOString(),coupons:opening,amount:null,detail:'Opening balance',pack:null});
+  dates.forEach((d,i)=>{
+   if(tupAt.includes(i)){const t=new Date(d);t.setHours(18,30+Math.floor(r()*20));t.setDate(t.getDate()-2);push({cid:c.id,kind:'topup',at:t.toISOString(),coupons:60,amount:420,detail:'Card payment',pack:'p60'})}
+   const t=new Date(d);const [h,m]=c.ws.split(':').map(Number);t.setHours(h,m+Math.floor(r()*90));
+   if(i===missIdx)push({cid:c.id,kind:'missed',at:t.toISOString(),coupons:0,detail:['No answer at the door','Phone not reachable','Customer is away'][ci%3]});
+   else push({cid:c.id,kind:'delivered',at:t.toISOString(),coupons:-c.bottles,bottles:c.bottles,empties:c.bottles,ref:refCode(r),driver:zones.find(z=>z.id===c.zone).drv});
+  });
+ });
+ /* recent top-ups, so this month's sales are not empty */
+ [['c12',2,'p60','Cash payment at office'],['c14',6,'p60','Card payment'],['c1',4,'p30','Card payment'],['c7',1,'p60','Card payment'],['c15',5,'p120','Card payment'],['c20',3,'p60','Apple Pay'],['c27',1,'p60','Card payment']].forEach(([cid,ago,pid,how])=>{
+  const op=ledger.find(e=>e.cid===cid&&e.detail==='Opening balance'),pk=packs.find(p=>p.id===pid);if(!op)return;op.coupons-=Math.max(0,Math.min(pk.coupons,op.coupons-10));
+  const t=addDays(TODAY,-ago);t.setHours(9+Math.floor(r()*11),Math.floor(r()*60));push({cid,kind:'topup',at:t.toISOString(),coupons:pk.coupons,amount:pk.price,detail:how,pack:pid})});
+ /* today's routes */
+ const nameOf={d1:'Al Waab & Al Rayyan',d2:'West Bay & Lusail'};
+ const routes=['d1','d2'].map(did=>{const dz=drivers.find(d=>d.id===did).zones;const cs=customers.filter(c=>c.weekday===wd&&dz.includes(c.zone));
+  cs.sort((a,b)=>a.ws.localeCompare(b.ws)||a.name.localeCompare(b.name));
+  if(did==='d1'){const o=['c6','c7','c8','c9','c1','c10'];cs.sort((a,b)=>o.indexOf(a.id)-o.indexOf(b.id))}else{const o=['c11','c2','c12','c13','c14','c15'];cs.sort((a,b)=>o.indexOf(a.id)-o.indexOf(b.id))}
+  return {id:'r_'+did+'_'+TODAY_S,date:TODAY_S,name:nameOf[did],driver:did,stops:cs.map((c,i)=>{const s={id:'s'+uid(),cid:c.id,seq:i+1,status:'pending',planned:c.bottles,delivered:0,empties:0,completed_at:null,miss_reason:null,photo:null,ref:null,gps:null};
+   if(todayDone[c.id]){const [h,m]=todayDone[c.id].split(':').map(Number);const t=new Date(TODAY);t.setHours(h,m);s.status='delivered';s.completed_at=t.toISOString();s.delivered=c.bottles;s.empties=c.bottles-(c.id==='c7'?1:0);s.ref=refCode(r);s.gps=[c.lat,c.lng];
+    push({cid:c.id,kind:'delivered',at:s.completed_at,coupons:-c.bottles,bottles:c.bottles,empties:s.empties,ref:s.ref,driver:did,stop:s.id})}
+   if(todayMiss[c.id]){const [h,m]=todayMiss[c.id][0].split(':').map(Number);const t=new Date(TODAY);t.setHours(h,m);s.status='missed';s.completed_at=t.toISOString();s.miss_reason=todayMiss[c.id][1];
+    push({cid:c.id,kind:'missed',at:s.completed_at,coupons:0,detail:s.miss_reason,stop:s.id})}
+   return s})}});
+ /* holds & reschedules */
+ customers.find(c=>c.id==='c4').holds.push({start:ymd(addDays(TODAY,6)),days:5});
+ /* tickets */
+ const iso=(dOff,h,m)=>{const t=addDays(TODAY,dOff);t.setHours(h,m);return t.toISOString()};
+ const tickets=[
+  {id:'t1',cid:'c3',subject:'Bottle seal was broken on one bottle',status:'open',created_at:iso(0,9,40),messages:[{from:'customer',body:'One of the four bottles delivered on my last delivery had a loose seal. Can you replace it?',at:iso(0,9,40)}]},
+  {id:'t2',cid:'c2',subject:'Driver arrived outside the time window',status:'in_progress',created_at:iso(-1,11,5),messages:[{from:'customer',body:'The delivery came at 10:40, after my 8 to 10 window. I was already out.',at:iso(-1,11,5)},{from:'support',body:'Sorry about that, Noora. We have flagged it with Yousef and moved you earlier on the route from this week.',at:iso(-1,12,20)}]},
+  {id:'t3',cid:'c14',subject:'Need an invoice for last top-up',status:'open',created_at:iso(-1,16,12),messages:[{from:'customer',body:'Please send a tax invoice for the 60-coupon pack I bought on the 1st.',at:iso(-1,16,12)}]},
+  {id:'t4',cid:'c5',subject:'Change delivery to the afternoon',status:'resolved',created_at:iso(-6,14,0),messages:[{from:'customer',body:'Can my delivery window be moved to 2 to 4 pm?',at:iso(-6,14,0)},{from:'support',body:'Done. Your window is now 10 to 12 on the same day, which is the latest slot in Lusail. Let us know if that works.',at:iso(-6,15,30)},{from:'customer',body:'That works, thanks.',at:iso(-6,16,0)}]}];
+ const notes=[];
+ const settings={company:'ForgeHype Water',accent:'orange',currency:'QAR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
+ const audit=[{at:iso(-1,12,20),who:'Aisha Al-Naimi',what:'Replied to ticket from Noora Al-Kuwari'},{at:iso(-1,9,2),who:'Fatima Al-Sulaiti',what:'Generated routes for '+fmtD(TODAY)},{at:iso(-2,17,45),who:'Fatima Al-Sulaiti',what:'Added 60 coupons to Saad Al-Khater (card payment at office)'}];
+ return {zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
+}
+
+/* ---- derived data ---- */
+const D=()=>S.data;
+const cust=id=>D().customers.find(c=>c.id===id);
+const drv=id=>D().drivers.find(d=>d.id===id);
+const zone=id=>D().zones.find(z=>z.id===id);
+const zname=c=>{const z=zone(c.zone);return z?z.name:''};
+const bal=cid=>sum(D().ledger.filter(e=>e.cid===cid),e=>e.coupons);
+const ledgerOf=cid=>D().ledger.filter(e=>e.cid===cid).sort((a,b)=>new Date(b.at)-new Date(a.at));
+const usedBetween=(cid,from,to)=>-sum(D().ledger.filter(e=>e.cid===cid&&e.kind==='delivered'&&new Date(e.at)>=from&&new Date(e.at)<to),e=>e.coupons);
+const avgMonthly=cid=>Math.round(usedBetween(cid,addDays(TODAY,-84),addDays(TODAY,1))/84*30);
+const daysLeft=cid=>{const a=avgMonthly(cid);return a?Math.round(bal(cid)/(a/30)):null};
+const status=c=>{const b=bal(c.id),s=D().settings;return b<=s.lowAt?['rose','Low']:b<=s.warnAt?['sand','Running low']:['mint','Healthy']};
+const lastTopup=cid=>ledgerOf(cid).find(e=>e.kind==='topup'&&e.amount);
+const onHold=(c,ds)=>c.holds.some(h=>{const s=parseYmd(h.start),e=addDays(s,h.days-1);const d=parseYmd(ds);return d>=s&&d<=e});
+const nextHold=c=>c.holds.map(h=>({...h,end:ymd(addDays(parseYmd(h.start),h.days-1))})).filter(h=>h.end>=TODAY_S).sort((a,b)=>a.start.localeCompare(b.start))[0];
+const stopsOf=cid=>D().routes.flatMap(r=>r.stops.filter(s=>s.cid===cid).map(s=>({...s,route:r})));
+const todayStop=cid=>stopsOf(cid).find(s=>s.route.date===TODAY_S);
+function nextDelivery(c){
+ const ts=todayStop(c.id);if(ts&&ts.status==='pending')return {date:TODAY_S,today:true,stop:ts};
+ let d=addDays(TODAY,1);for(let i=0;i<60;i++){const s=ymd(d);
+  if(d.getDay()===c.weekday&&!onHold(c,s)){if(c.resched&&c.resched.from===s)return {date:c.resched.to,moved:true};return {date:s}}
+  if(c.resched&&c.resched.to===s&&!onHold(c,s))return {date:s,moved:true};
+  d=addDays(d,1)}
+ return {date:null}}
+const driverFor=c=>drv(zone(c.zone).drv);
+const openTickets=()=>D().tickets.filter(t=>t.status!=='resolved');
+const monthStart=()=>new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
+function audit(what){D().audit.unshift({at:new Date().toISOString(),who:S.me?S.me.name:'System',what});D().audit=D().audit.slice(0,60)}
+function notify(cid,kind,body){D().notes.unshift({id:uid(),cid,kind,body,at:new Date().toISOString(),read:false})}
+
+/* ---- business actions (shared by driver + admin) ---- */
+const ACT={
+ confirm(stopId,full,empties,photo,gps){const {s,r}=findStop(stopId);if(!s||s.status!=='pending')return 'Stop is not pending';const c=cust(s.cid);
+  if(bal(c.id)<full)notify(c.id,'low','Delivery of '+full+' bottles took your balance below zero. Please top up.');
+  s.status='delivered';s.completed_at=new Date().toISOString();s.delivered=full;s.empties=empties;s.photo=photo||null;s.ref=refCode(Math.random);s.gps=gps||[c.lat,c.lng];
+  D().ledger.push({id:uid(),cid:c.id,kind:'delivered',at:s.completed_at,coupons:-full,bottles:full,empties,ref:s.ref,driver:r.driver,stop:s.id});
+  c.empties=Math.max(0,c.empties+full-empties);
+  notify(c.id,'ok',full+' bottles delivered. Ref '+s.ref+'. '+bal(c.id)+' coupons left.');
+  const b=bal(c.id);if(b<=D().settings.lowAt)notify(c.id,'low','Only '+b+' coupons left. Top up to keep deliveries coming.');
+  save();return null},
+ miss(stopId,reason,photo){const {s}=findStop(stopId);if(!s||s.status!=='pending')return 'Stop is not pending';const c=cust(s.cid);
+  s.status='missed';s.completed_at=new Date().toISOString();s.miss_reason=reason;s.photo=photo||null;
+  D().ledger.push({id:uid(),cid:c.id,kind:'missed',at:s.completed_at,coupons:0,detail:reason,stop:s.id});
+  notify(c.id,'bad','We came by at '+hm(s.completed_at)+' but could not reach you ('+reason.toLowerCase()+'). No coupons were used. Reschedule from the app.');
+  save();return null},
+ undo(stopId){const {s}=findStop(stopId);if(!s||s.status==='pending')return 'Nothing to undo';if(Date.now()-new Date(s.completed_at)>30*60000)return 'Undo is only available for 30 minutes';
+  const c=cust(s.cid);if(s.status==='delivered')c.empties=Math.max(0,c.empties-s.delivered+s.empties);
+  D().ledger=D().ledger.filter(e=>e.stop!==s.id);D().notes=D().notes.filter(n=>!(n.cid===c.id&&Math.abs(new Date(n.at)-new Date(s.completed_at))<2000));
+  s.status='pending';s.completed_at=null;s.delivered=0;s.empties=0;s.miss_reason=null;s.photo=null;s.ref=null;save();return null},
+ order(routeId,ids){const r=D().routes.find(r=>r.id===routeId);ids.forEach((id,i)=>{const s=r.stops.find(s=>s.id===id);if(s)s.seq=i+1});r.stops.sort((a,b)=>a.seq-b.seq);save()},
+ topup(cid,packId,method){const p=D().packs.find(p=>p.id===packId);D().ledger.push({id:uid(),cid,kind:'topup',at:new Date().toISOString(),coupons:p.coupons,amount:p.price,detail:method||'Card payment',pack:p.id});
+  notify(cid,'top','+'+p.coupons+' coupons added. Payment of '+money(p.price)+' received.');audit('Top-up of '+p.coupons+' coupons by '+cust(cid).name+' ('+(method||'card')+')');save()},
+ adjust(cid,delta,note){D().ledger.push({id:uid(),cid,kind:'topup',at:new Date().toISOString(),coupons:delta,amount:null,detail:note||'Admin adjustment',pack:null,adjust:true});audit((delta>0?'Added ':'Removed ')+Math.abs(delta)+' coupons for '+cust(cid).name+(note?' ('+note+')':''));save()},
+ generate(dateS){const d=parseYmd(dateS),wd=d.getDay();let added=0;
+  D().drivers.filter(x=>x.active).forEach(dr=>{const cs=D().customers.filter(c=>c.status==='active'&&dr.zones.includes(c.zone)&&!onHold(c,dateS)&&((c.weekday===wd&&!(c.resched&&c.resched.from===dateS))||(c.resched&&c.resched.to===dateS)));
+   if(!cs.length)return;let r=D().routes.find(r=>r.date===dateS&&r.driver===dr.id);
+   if(!r){r={id:'r_'+dr.id+'_'+dateS,date:dateS,name:dr.id==='d1'?'Al Waab & Al Rayyan':'West Bay & Lusail',driver:dr.id,stops:[]};D().routes.push(r)}
+   cs.sort((a,b)=>a.ws.localeCompare(b.ws)).forEach(c=>{if(r.stops.some(s=>s.cid===c.id))return;r.stops.push({id:'s'+uid(),cid:c.id,seq:r.stops.length+1,status:'pending',planned:c.bottles,delivered:0,empties:0,completed_at:null,miss_reason:null,photo:null,ref:null,gps:null});added++})});
+  audit('Generated routes for '+fmtD(d)+' ('+added+' stops added)');save();return added},
+ ticket(cid,subject,body){const t={id:'t'+uid(),cid,subject,status:'open',created_at:new Date().toISOString(),messages:[{from:'customer',body,at:new Date().toISOString()}]};D().tickets.unshift(t);save();return t},
+ reply(tid,from,body){const t=D().tickets.find(t=>t.id===tid);t.messages.push({from,body,at:new Date().toISOString()});if(from==='support'){if(t.status==='open')t.status='in_progress';notify(t.cid,'chat','Support replied to "'+t.subject+'".')}save()},
+ ticketStatus(tid,st){const t=D().tickets.find(t=>t.id===tid);t.status=st;if(st==='resolved'){t.resolved_at=new Date().toISOString();notify(t.cid,'ok','Your request "'+t.subject+'" was marked resolved.')}save()}
+};
+function findStop(id){for(const r of D().routes){const s=r.stops.find(s=>s.id===id);if(s)return {s,r}}return {}}
+
+/* ---- auth ---- */
+const DEMO_PW='0000';
+function accounts(){const a=[];D().staff.forEach(s=>a.push({kind:s.role,id:s.id,name:s.name,email:s.email,label:s.role==='admin'?'Admin':'Support'}));
+ D().drivers.forEach(d=>a.push({kind:'driver',id:d.id,name:d.name,email:d.email,label:'Driver, '+d.vehicle}));
+ D().customers.filter(c=>c.login).forEach(c=>a.push({kind:'customer',id:c.id,name:c.name,email:c.email,label:'Customer, '+zname(c)}));return a}
+function signIn(email,pw){const a=accounts().find(x=>x.email.toLowerCase()===email.trim().toLowerCase());
+ if(!a)return 'No account with that email. Use one of the demo accounts below.';if(pw!==DEMO_PW)return 'Wrong password. The demo password is 0000.';
+ S.me={kind:a.kind,id:a.id,name:a.name,email:a.email};S.role=a.kind==='support'?'admin':a.kind;S.a.preview=null;S.a.asId=null;
+ if(S.role==='customer'){S.c.ar=cust(a.id).lang==='ar'}
+ save();render();toast('Signed in as '+a.name.split(' ')[0]);return null}
+function signOut(){S.me=null;S.role=null;S.a.preview=null;S.a.asId=null;S.c.tab='home';S.d.scr='route';S.a.tab='home';save();render()}
+function resetDemo(){try{localStorage.removeItem(LS)}catch(e){}S.data=genData();S.a.preview=null;S.a.asId=null;S.c=Object.assign(S.c,{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S});S.d=Object.assign(S.d,{scr:'route',tab:'route',cur:null,photo:null,busy:false});S.a.tab='home';applyTheme();save();render();toast('Demo data reset')}
+function toggleTheme(){const dark=document.documentElement.dataset.theme==='dark';S.theme=dark?'light':'dark';applyTheme();save();render()}
+
+/* ---- login view ---- */
+function loginView(){const acc=accounts();const grp=k=>acc.filter(a=>a.kind===k);
+ const row=a=>`<button class="acct" onclick="fillLogin('${a.email}')"><span class="avatar sm ${a.kind==='customer'?'tint-sky':a.kind==='driver'?'tint-mint':'tint-acc'}">${initials(a.name)}</span><span class="grow"><b>${esc(a.name)}</b><span class="sub" style="display:block">${esc(a.label)}</span></span><span class="xs mute">${esc(a.email)}</span></button>`;
+ return `<div class="login"><div class="box">
+ <div class="brand" style="justify-content:center;margin-bottom:28px"><span class="mark">${ic('drop')}</span>${esc(D().settings.company)}</div>
+ <div class="card" style="padding:22px" id="loginCard">
+  <h1 class="title" style="font-size:24px">Sign in</h1><p class="sub mt4">One sign-in for customers, drivers and the office.</p>
+  <form onsubmit="event.preventDefault();doLogin()">
+   <div class="grp mt16"><input class="in" id="lemail" type="email" placeholder="Email" autocomplete="username" required><input class="in" id="lpw" type="password" placeholder="Password" autocomplete="current-password" required></div>
+   <div class="sm mt8" id="lerr" style="color:var(--rose-i);min-height:18px"></div>
+   <button class="btn p w lg mt4" type="submit">Sign in</button>
+  </form>
+ </div>
+ <div class="row sp mt20 mb8"><span class="h3">Demo accounts</span><span class="pill tint-sand">Password 0000</span></div>
+ <p class="sub mb12">Tap an account to fill it in. Everything here is sample data for ${esc(fmtLong(TODAY))}; nothing leaves this browser.</p>
+ <div class="sm sb ink2 mt12">Office</div>${grp('admin').map(row).join('')}${grp('support').map(row).join('')}
+ <div class="sm sb ink2 mt16">Drivers</div>${grp('driver').map(row).join('')}
+ <div class="sm sb ink2 mt16">Customers</div>${grp('customer').map(row).join('')}
+ <div class="row sp mt24 sub"><span>ForgeHype Water, demo build</span><span class="row"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button><button class="btn sm g" onclick="resetDemo()">Reset data</button></span></div>
+ </div></div>`}
+function fillLogin(e){$('#lemail').value=e;$('#lpw').value=DEMO_PW;$('#lpw').focus();$('#lerr').textContent=''}
+function doLogin(){const err=signIn($('#lemail').value,$('#lpw').value);if(err){$('#lerr').textContent=err;const c=$('#loginCard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}}
+
+/* ---- phone shell ---- */
+let _clock;
+function phone(inner,dir){return `<div class="phone"><div class="screen" dir="${dir||'ltr'}"><div class="island"></div><div class="statusbar"><span id="clk">${hm(new Date())}</span><span class="sig"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4zM4.7 7.3a4.7 4.7 0 0 1 6.6 0M2 4.4a8.5 8.5 0 0 1 12 0" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg><svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" stroke="currentColor" opacity=".4" fill="none"/><rect x="2" y="2" width="19" height="9" rx="2" fill="currentColor"/><path d="M24.5 4.5v4a2 2 0 0 0 0-4z" fill="currentColor" opacity=".4"/></svg></span></div>${inner}<div id="sheetHost"></div></div></div>`}
+function sheet(html,opts){const host=$('#sheetHost')||document.body;const d=document.createElement('div');d.className=host.id==='sheetHost'?'dim':'modal';d.id='dim';d.innerHTML=`<div class="sheet" role="dialog" aria-modal="true">${host.id==='sheetHost'?'<div class="grab"></div>':''}${html}</div>`;
+ d.onclick=e=>{if(e.target.id==='dim')closeSheet()};const old=$('#dim');if(old)old.remove();host.appendChild(d);const f=d.querySelector('input,textarea,select');if(f&&opts&&opts.focus)f.focus()}
+function closeSheet(cb){const d=$('#dim');if(d)d.remove();if(typeof cb==='function')cb()}
+function tabbar(items,cur,fn){return `<div class="tabbar">${items.map(t=>`<button class="${cur===t[0]?'on':''}" onclick="${fn}('${t[0]}')">${ic(t[1])}<span>${t[2]}</span></button>`).join('')}</div>`}
+function demoPill(){return `<button class="demo-pill" onclick="demoSheet()">${ic('sparkle','s')} Demo</button>`}
+function demoSheet(){const m=S.me;sheet(`<h2 class="title">Demo controls</h2><p class="sub mt4">Signed in as ${esc(m.name)} (${m.kind}).</p>
+ <div class="card mt16 tight"><div class="li tap" onclick="toggleTheme();closeSheet()"><span class="ic tint-grey">${ic('moon')}</span><span class="grow b">Switch light / dark</span></div>
+ <div class="li tap" onclick="closeSheet();resetDemo()"><span class="ic tint-grey">${ic('refresh')}</span><span class="grow b">Reset demo data</span><span class="sub">Fresh sample data</span></div>
+ <div class="li tap" onclick="closeSheet();signOut()"><span class="ic tint-rose">${ic('logout')}</span><span class="grow b">Sign out</span><span class="sub">Try another account</span></div></div>
+ <button class="btn g w mt8" onclick="closeSheet()">Close</button>`)}
+function railView(){const m=S.me;return `<aside class="rail"><div class="brand mb16"><span class="mark">${ic('drop')}</span>${esc(D().settings.company)}</div>
+ <div class="card"><div class="sm sb mute">Signed in</div><div class="row mt8"><span class="avatar ${m.kind==='driver'?'tint-mint':'tint-sky'}">${initials(m.name)}</span><div><b>${esc(m.name)}</b><div class="sub">${m.kind==='driver'?'Driver app':'Customer app'}</div></div></div>
+ <p class="sub mt12">This is what ${m.kind==='driver'?'a driver':'a customer'} sees on their phone. Use it like a real app: tap, scroll, confirm.</p>
+ <div class="row mt16 wrap"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button><button class="btn sm g" onclick="resetDemo()">${ic('refresh','s')} Reset data</button><button class="btn sm g" onclick="signOut()">${ic('logout','s')} Sign out</button></div></div>
+ <div class="card flat"><div class="h3">Tips for the demo</div><ul class="sub" style="margin:8px 0 0;padding-left:18px;line-height:1.6">${m.kind==='driver'?'<li>Start the next stop, add a photo and confirm. The customer app and admin update instantly.</li><li>Try “No response” to see the missed-delivery flow.</li><li>Undo is available for 30 minutes.</li>':'<li>Khalid’s delivery is on the way today; Noora’s was delivered this morning.</li><li>Top up to see the payment flow (no card is charged).</li><li>Report a problem, then answer it from the admin panel.</li>'}</ul></div></aside>`}
+
+/* ---- root render ---- */
+function render(){const root=$('#root');applyTheme();
+ if(!S.me){root.innerHTML=loginView();document.documentElement.dir='ltr';return}
+ document.documentElement.dir='ltr';
+ if(S.role==='admin'){root.innerHTML=AD.view();return}
+ const inner=S.role==='driver'?DR.view():CU.view();
+ root.innerHTML=`<div class="stage">${railView()}${phone(inner,S.role==='customer'&&S.c.ar?'rtl':'ltr')}</div>${demoPill()}`;
+ clearInterval(_clock);_clock=setInterval(()=>{const c=$('#clk');if(c)c.textContent=hm(new Date())},15000)}
+/* ============ Customer app ============ */
+const AR={'Home':'الرئيسية','History':'السجل','Coupons':'القسائم','Help':'مساعدة','Profile':'حسابي','Good morning':'صباح الخير','Good afternoon':'مساء الخير','Good evening':'مساء الخير','Coupons left':'القسائم المتبقية','Healthy':'جيد','Running low':'تنخفض','Low':'منخفض','Top up':'شحن','Used this month':'مستخدم هذا الشهر','Used in total':'المجموع المستخدم','Empties with you':'قوارير فارغة لديك','Next delivery':'التوصيل القادم','Arriving today':'يصل اليوم','Delivered today':'تم التوصيل اليوم','Reschedule':'إعادة جدولة','Hold':'إيقاف مؤقت','bottles':'قوارير','Address':'العنوان','Empty bottles':'القوارير الفارغة','Amount due':'المبلغ المستحق','All paid':'مدفوع بالكامل','Calendar':'التقويم','Weekly':'أسبوعي','Monthly':'شهري','All':'الكل','Delivered':'تم التوصيل','Missed':'فائت','Top-up':'شحن','Deliveries':'التوصيلات','Used':'مستخدم','Added':'مضاف','Top-ups':'الشحنات','Coupon packs':'باقات القسائم','Report a problem':'الإبلاغ عن مشكلة','Call us':'اتصل بنا','WhatsApp':'واتساب','Your requests':'طلباتك','Language':'اللغة','Theme':'المظهر','Sign out':'تسجيل الخروج','Delivery':'التوصيل','Notifications':'الإشعارات','Get alerts by email':'تنبيهات عبر البريد','Add':'إضافة','Last top-up':'آخر شحن','Hold planned':'إيقاف مجدول','Window':'الفترة','Driver':'السائق','Nothing on this day':'لا شيء في هذا اليوم','Today':'اليوم','Load older weeks':'أسابيع أقدم','Bottles delivered':'تم توصيل القوارير','Delivery missed':'توصيل فائت','Coupons topped up':'تم شحن القسائم','Coupons adjusted':'تعديل القسائم','Pay':'ادفع','Open':'مفتوح','In progress':'قيد المعالجة','Resolved':'تم الحل','Send':'إرسال','Save':'حفظ','Cancel':'إلغاء','Done':'تم','Customer':'العميل','On the way':'في الطريق','Recent activity':'النشاط الأخير','Rate':'قيّم'};
+const t=k=>(S.c.ar&&AR[k])?AR[k]:k;
+const CU={
+ me(){return cust(S.role==='customer'?S.me.id:S.a.asId)},
+ go(tab){S.c.tab=tab;render()},
+ view(){const c=CU.me();const body=CU[S.c.tab==='me'?'meView':S.c.tab](c);
+  return `<div class="body" id="cbody">${body}</div>${tabbar([['home','home',t('Home')],['hist','clock',t('History')],['cpn','ticket',t('Coupons')],['help','chat',t('Help')],['me','user',t('Profile')]],S.c.tab,'CU.go')}`},
+ head(c,title,extra){const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';const unread=D().notes.filter(n=>n.cid===c.id&&!n.read).length;
+  return `<div class="row sp" style="padding-top:8px"><div class="row"><span class="avatar tint-sky">${initials(c.name)}</span><div><div class="sub">${title?'':t(g)}</div><div class="h2" style="line-height:1.15">${title?esc(title):esc(c.name.split(' ')[0])}</div></div></div>
+  <div class="row"><button class="ib" style="position:relative" onclick="CU.bell()" aria-label="Notifications">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button>${extra||''}</div></div>`},
+ /* --- Home --- */
+ home(c){const b=bal(c.id),[tone,lab]=status(c),nd=nextDelivery(c),ts=todayStop(c.id),lt=lastTopup(c.id),pct=clamp(b/120*100,4,100),hold=nextHold(c),dr=driverFor(c);
+  const usedM=usedBetween(c.id,monthStart(),addDays(TODAY,1)),usedT=-sum(D().ledger.filter(e=>e.cid===c.id&&e.kind==='delivered'),e=>e.coupons);
+  const weeks=Math.floor(b/c.bottles);
+  let deliv='';
+  if(ts&&ts.status==='pending'){const r=ts.route,before=r.stops.filter(s=>s.status==='pending'&&s.seq<ts.seq).length,done=r.stops.filter(s=>s.status!=='pending').length;
+   deliv=`<div class="card"><div class="row sp"><span class="sub">${t('Today')}</span><span class="pill tint-mint"><span class="dot"></span>${t('On the way')}</span></div>
+   <div class="mid mt8">${t('Arriving today')}</div><div class="ink2 mt4">${c.ws} – ${c.we}<span class="sep"></span>${c.bottles} ${t('bottles')}</div>
+   <div class="row mt16"><span class="avatar sm tint-mint">${initials(dr.name)}</span><div class="grow"><b>${esc(dr.name.split(' ')[0])}</b> <span class="sub">${esc(dr.vehicle)}</span><div class="sub">${before===0?'You are the next stop':before+' stop'+(before>1?'s':'')+' before you'}</div></div><a class="ib flat" href="tel:${dr.phone.replace(/\s/g,'')}" aria-label="Call driver">${ic('phone')}</a></div>
+   <div class="row mt12" style="gap:4px">${r.stops.map(s=>`<i style="flex:1;height:6px;border-radius:6px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':s.id===ts.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div>
+   <div class="two mt16"><button class="btn g" onclick="CU.resched()">${ic('cal','s')} ${t('Reschedule')}</button><button class="btn g" onclick="CU.hold()">${ic('pause','s')} ${t('Hold')}</button></div></div>`}
+  else if(ts&&ts.status==='delivered'){deliv=`<div class="card"><div class="row sp"><span class="sub">${t('Today')}</span><span class="pill tint-mint">${ic('check','s')} ${t('Delivered')}</span></div>
+   <div class="mid mt8">${t('Delivered today')}</div><div class="ink2 mt4">${hm(ts.completed_at)}<span class="sep"></span>${ts.delivered} ${t('bottles')}<span class="sep"></span>Ref ${ts.ref}</div>
+   <div class="card flat" style="margin:14px 0 0;padding:12px 14px"><div class="row sp"><span class="sub">${t('Next delivery')}</span><b>${nd.date?fmtD(nd.date,{weekday:'long'}):'—'}</b></div><div class="two mt12"><button class="btn sm c2" onclick="CU.resched()">${t('Reschedule')}</button><button class="btn sm c2" onclick="CU.hold()">${t('Hold')}</button></div></div></div>`}
+  else if(ts&&ts.status==='missed'){deliv=`<div class="card"><div class="row sp"><span class="sub">${t('Today')}</span><span class="pill tint-rose">${t('Missed')}</span></div><div class="mid mt8">We missed you</div><div class="ink2 mt4">${hm(ts.completed_at)}, ${esc(ts.miss_reason.toLowerCase())}. No coupons were used.</div>
+   <div class="two mt16"><button class="btn p" onclick="CU.resched()">${t('Reschedule')}</button><button class="btn g" onclick="CU.hold()">${t('Hold')}</button></div></div>`}
+  else{deliv=`<div class="card"><div class="row sp"><span class="sub">${t('Next delivery')}</span>${nd.moved?`<span class="pill tint-sky">Moved</span>`:`<span class="pill tint-mint"><span class="dot"></span>Scheduled</span>`}</div>
+   <div class="mid mt8">${nd.date?fmtD(nd.date,{weekday:'long'}):'—'}</div><div class="ink2 mt4">${c.ws} – ${c.we}<span class="sep"></span>${c.bottles} ${t('bottles')}<span class="sep"></span>${esc(dr.name.split(' ')[0])}, ${esc(dr.vehicle)}</div>
+   ${hold?`<div class="mt12"><span class="pill tint-lilac lg">${ic('pause','s')} ${t('Hold planned')} ${fmtDay(hold.start)} – ${fmtDay(hold.end)}</span></div>`:''}
+   <div class="two mt16"><button class="btn g" onclick="CU.resched()">${ic('cal','s')} ${t('Reschedule')}</button><button class="btn g" onclick="CU.hold()">${ic('pause','s')} ${t('Hold')}</button></div></div>`}
+  return `${CU.head(c)}
+  <div class="card mt16"><div class="row sp"><span class="sub">${t('Coupons left')}</span><span class="pill tint-${tone}"><span class="dot"></span>${t(lab)}</span></div>
+   <div class="row mt12" style="gap:16px"><div class="gauge ${tone==='rose'?'low':tone==='sand'?'warn':''}"><i style="height:${pct}%"></i></div>
+    <div class="grow"><div class="big num">${b}</div><div class="sub mt8">${weeks>0?'About '+weeks+' week'+(weeks>1?'s':'')+' at '+c.bottles+' a week.':'Top up before your next delivery.'}${lt?' '+t('Last top-up')+' '+fmtDay(lt.at)+', +'+lt.coupons+'.':''}</div></div></div>
+   <button class="btn ${tone==='mint'?'t':'p'} w mt16" onclick="CU.topup()">${ic('plus','s')} ${t('Top up')}</button>
+   <div class="stat3 mt12"><div class="tint-sky"><b class="num">${usedM}</b><span>${t('Used this month')}</span></div><div class="tint-lilac"><b class="num">${usedT}</b><span>${t('Used in total')}</span></div><div class="tint-mint"><b class="num">${c.empties}</b><span>${t('Empties with you')}</span></div></div></div>
+  ${deliv}
+  ${c.emailSaved?'':`<div class="card tint-sand row" style="padding:14px 16px"><span class="ic" style="width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:rgba(255,255,255,.5)">${ic('mail')}</span><div class="grow"><b>${t('Get alerts by email')}</b><div class="sm" style="opacity:.85">For missed deliveries and low coupons.</div></div><button class="btn sm" style="background:var(--ink);color:var(--bg)" onclick="CU.addEmail()">${t('Add')}</button></div>`}
+  <div class="tiles mb12"><button class="tile" onclick="CU.address()"><span class="ic tint-acc">${ic('pin')}</span><b>${t('Address')}</b><span>${esc(c.building)}</span></button>
+   <button class="tile" onclick="CU.empties()"><span class="ic tint-sky">${ic('drop')}</span><b>${t('Empty bottles')}</b><span>${c.empties} with you</span></button>
+   <button class="tile" onclick="toast('Nothing due. Deliveries are prepaid with coupons.')"><span class="ic tint-mint">${ic('card')}</span><b>${t('Amount due')}</b><span>${money(0)}, ${t('All paid').toLowerCase()}</span></button>
+   <button class="tile" onclick="CU.go('hist')"><span class="ic tint-lilac">${ic('clock')}</span><b>${t('History')}</b><span>${t('Recent activity')}</span></button></div>`},
+ bell(){const c=CU.me();const n=D().notes.filter(x=>x.cid===c.id);n.forEach(x=>x.read=true);save();
+  const tone={ok:'mint',bad:'rose',top:'sky',low:'sand',chat:'lilac'},icn={ok:'check',bad:'alert',top:'plus',low:'alert',chat:'chat'};
+  sheet(`<h2 class="title">${t('Notifications')}</h2><div class="card mt16 tight">${n.length?n.map(x=>`<div class="li"><span class="ic tint-${tone[x.kind]||'grey'}">${ic(icn[x.kind]||'info')}</span><div class="grow"><div>${esc(x.body)}</div><div class="sub xs">${rel(x.at)}</div></div></div>`).join(''):`<div class="empty">No notifications yet. Delivery updates and coupon alerts appear here.</div>`}</div><button class="btn g w" onclick="closeSheet(render)">${t('Done')}</button>`)},
+ addEmail(){const c=CU.me();sheet(`<h2 class="title">${t('Get alerts by email')}</h2><p class="sub mt4">We email you if a delivery is missed or coupons run low.</p><input class="in mt16" id="em" type="email" placeholder="you@example.com" value="${esc(c.email||'')}"><button class="btn p w lg mt16" onclick="(function(){const v=$('#em').value;if(!/.+@.+\\..+/.test(v))return toast('Enter a valid email');const c=CU.me();c.email=v;c.emailSaved=true;save();closeSheet(render);toast('Email saved')})()">${t('Save')}</button>`,{focus:true})},
+ resched(){const c=CU.me(),nd=nextDelivery(c),base=nd.date?parseYmd(nd.date):addDays(TODAY,1);const opts=[1,2,3].map(n=>addDays(base,n));
+  sheet(`<h2 class="title">${t('Reschedule')}</h2><p class="sub mt4">Move your ${fmtD(base)} delivery to one of the next three days. Your regular day stays the same after that.</p>
+  ${opts.map(d=>`<button class="opt" onclick="CU.doResched('${ymd(base)}','${ymd(d)}')">${fmtD(d,{weekday:'long'})}<small>${c.ws} – ${c.we}</small></button>`).join('')}
+  ${c.resched?`<button class="btn g w mt12" onclick="(function(){CU.me().resched=null;save();closeSheet(render);toast('Back to your regular day')})()">Keep my regular day</button>`:''}`)},
+ doResched(from,to){const c=CU.me();const ts=todayStop(c.id);if(ts&&ts.status==='pending'&&from===TODAY_S){ts.status='missed';ts.completed_at=new Date().toISOString();ts.miss_reason='Customer rescheduled';D().ledger.push({id:uid(),cid:c.id,kind:'missed',at:ts.completed_at,coupons:0,detail:'Rescheduled by customer',stop:ts.id})}
+  c.resched={from,to};notify(c.id,'ok','Delivery moved to '+fmtD(to)+'.');audit(c.name+' rescheduled '+fmtD(from)+' to '+fmtD(to));save();closeSheet(render);toast('Moved to '+fmtD(to))},
+ hold(){const c=CU.me(),h=nextHold(c),mx=D().settings.holdMax;const start=h?h.start:ymd(addDays(TODAY,1));
+  sheet(`<h2 class="title">${t('Hold')} deliveries</h2><p class="sub mt4">Going away? Pause deliveries for up to ${mx} days. Coupons are kept.</p>
+  <label class="field"><span>Start date</span><input class="in" type="date" id="hs" value="${start}" min="${TODAY_S}"></label>
+  <div class="two mt12" style="grid-template-columns:1fr 1fr 1fr">${[3,7,14].map(n=>`<button class="opt ${h&&h.days===n?'on':''}" style="margin:0;justify-content:center;text-align:center" onclick="CU.doHold(${n})">${n} days</button>`).join('')}</div>
+  ${h?`<button class="btn g w mt16" onclick="(function(){CU.me().holds=[];save();closeSheet(render);toast('Hold removed')})()">Remove planned hold</button>`:''}`)},
+ doHold(n){const c=CU.me(),s=$('#hs').value||ymd(addDays(TODAY,1));c.holds=[{start:s,days:n}];notify(c.id,'ok','Deliveries on hold '+fmtDay(s)+' to '+fmtDay(addDays(parseYmd(s),n-1))+'.');audit(c.name+' set a '+n+'-day hold from '+fmtDay(s));save();closeSheet(render);toast('Hold set for '+n+' days')},
+ address(){const c=CU.me();sheet(`<h2 class="title">${t('Address')}</h2><p class="sub mt4">Drivers see this exactly as written.</p>
+  <label class="field"><span>Villa or building</span><input class="in" id="ab" value="${esc(c.building)}"></label><label class="field"><span>Street and area</span><input class="in" id="as" value="${esc(c.street)}"></label><label class="field"><span>Gate note for the driver</span><input class="in" id="ag" value="${esc(c.gate)}" placeholder="e.g. Leave at the side gate"></label>
+  <div class="row mt12 sub">${ic('pin','s')} Pin: ${c.lat}, ${c.lng}<span class="grow"></span><a href="https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}" target="_blank" rel="noopener" class="sb" style="color:var(--acc-i)">Open in Maps</a></div>
+  <button class="btn p w lg mt16" onclick="(function(){const c=CU.me();c.building=$('#ab').value.trim()||c.building;c.street=$('#as').value.trim()||c.street;c.gate=$('#ag').value.trim();audit(c.name+' updated their address');save();closeSheet(render);toast('Address updated')})()">${t('Save')}</button>`)},
+ empties(){const c=CU.me();sheet(`<h2 class="title">${t('Empty bottles')}</h2><p class="sub mt4">You have <b>${c.empties}</b> empty bottle${c.empties===1?'':'s'}. Leave them out on delivery day and the driver takes them back. No deposit is charged while you are an active customer.</p><button class="btn g w mt16" onclick="closeSheet()">${t('Done')}</button>`)},
+ /* --- Top up & payment --- */
+ topup(){const c=CU.me();const best=D().packs.reduce((a,p)=>p.price/p.coupons<a.price/a.coupons?p:a);
+  sheet(`<h2 class="title">${t('Top up')}</h2><p class="sub mt4">One coupon is one bottle. Pay by card in the app, coupons are added instantly.</p>
+  ${D().packs.map(p=>`<button class="opt" onclick="CU.pay('${p.id}')"><span>${p.coupons} coupons<small>${money(p.price)}, ${(p.price/p.coupons).toFixed(2)} per bottle</small></span>${p.id===best.id?'<span class="pill tint-mint">Best value</span>':ic('right')}</button>`).join('')}
+  <p class="xs mute mt12 c">Prices include VAT where applicable. A tax invoice is emailed after payment.</p>`)},
+ pay(pid){const p=D().packs.find(p=>p.id===pid);sheet(`<h2 class="title">${t('Pay')} ${money(p.price)}</h2><p class="sub mt4">${p.coupons} coupons. Demo mode: no card is charged.</p>
+  <div class="seg mt16" id="pm"><button class="on" onclick="CU.pm(this,'card')">Card</button><button onclick="CU.pm(this,'apple')">Apple Pay</button><button onclick="CU.pm(this,'cash')">Cash to driver</button></div>
+  <div id="payform">${CU.payForm('card')}</div>
+  <button class="btn p w lg mt16" id="paybtn" onclick="CU.doPay('${pid}')">${t('Pay')} ${money(p.price)}</button>
+  <div class="row mt12 xs mute" style="justify-content:center">${ic('shield','s')} Secured by your payment gateway (Skipcash, Dibsy or Stripe in production)</div>`)},
+ _pm:'card',pm(b,m){CU._pm=m;$$('#pm button').forEach(x=>x.classList.toggle('on',x===b));$('#payform').innerHTML=CU.payForm(m)},
+ payForm(m){if(m==='card')return `<div class="grp mt16"><input class="in" value="4242 4242 4242 4242" inputmode="numeric" aria-label="Card number"><div class="row" style="gap:0"><input class="in" value="12 / 28" aria-label="Expiry" style="border-right:1px solid var(--line2)"><input class="in" value="123" aria-label="CVC"></div><input class="in" value="${esc(CU.me().name)}" aria-label="Name on card"></div>`;
+  if(m==='apple')return `<div class="card flat mt16 c" style="padding:22px">${ic('card','l')}<div class="b mt8">Double-click to pay with Apple Pay</div><div class="sub">Demo: the button below completes it.</div></div>`;
+  return `<div class="card flat mt16"><b>Pay the driver on your next delivery</b><div class="sub mt4">Coupons are added when the driver confirms the cash. Your next delivery is not blocked.</div></div>`},
+ doPay(pid){const b=$('#paybtn');b.disabled=true;b.textContent='Processing…';setTimeout(()=>{const c=CU.me();const m={card:'Card payment',apple:'Apple Pay',cash:'Cash to driver (pending)'}[CU._pm];const p=D().packs.find(p=>p.id===pid);
+   if(CU._pm==='cash'){notify(c.id,'top','Cash top-up of '+p.coupons+' coupons noted. Pay '+money(p.price)+' to your driver.');audit(c.name+' requested a cash top-up of '+p.coupons+' coupons');save();closeSheet(render);toast('Noted. Pay the driver on delivery.');return}
+   ACT.topup(c.id,pid,m);closeSheet();sheet(`<div class="c" style="padding:10px 0"><div class="bigok">${ic('check')}</div><h2 class="title">Payment received</h2><p class="sub mt8">+${p.coupons} coupons added. You now have <b>${bal(c.id)}</b>.</p><p class="xs mute mt8">Receipt ${refCode(Math.random)} emailed to ${esc(c.email||'you')}.</p></div><button class="btn p w lg mt8" onclick="closeSheet(render)">${t('Done')}</button>`)},900)},
+ /* --- History --- */
+ hist(c){return `${CU.head(c,t('History'))}<div class="seg mt16">${[['cal','Calendar'],['wk','Weekly'],['mo','Monthly']].map(x=>`<button class="${S.c.hist===x[0]?'on':''}" onclick="S.c.hist='${x[0]}';render()">${t(x[1])}</button>`).join('')}</div>${CU['h_'+S.c.hist](c)}`},
+ evKind:{delivered:['mint','check','Bottles delivered'],missed:['rose','alert','Delivery missed'],topup:['sky','plus','Coupons topped up'],adjust:['lilac','sliders','Coupons adjusted'],hold:['lilac','pause','Delivery hold']},
+ evRow(e){const k=e.adjust?'adjust':e.kind,[tone,icn,lab]=CU.evKind[k];const n=e.coupons;
+  return `<div class="li"><span class="ic tint-${tone}">${ic(icn)}</span><div class="grow"><b>${t(lab)}</b><div class="sub sm">${fmtD(e.at)}, ${hm(e.at)}${e.ref?', ref '+e.ref:e.detail?', '+esc(e.detail):''}</div></div><b class="num" style="font-size:18px;color:${n>0?'var(--mint-i)':n<0?'var(--acc-i)':'var(--mute)'}">${n>0?'+':''}${n||'—'}</b></div>`},
+ filtered(c,list){const f=S.c.flt;return list.filter(e=>f==='All'||(f==='Delivered'&&e.kind==='delivered')||(f==='Missed'&&e.kind==='missed')||(f==='Top-up'&&e.kind==='topup'))},
+ h_cal(c){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()+S.c.mOff,1),first=m.getDay(),len=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),ms=ymd(m).slice(0,7);
+  const all=ledgerOf(c.id).filter(e=>e.at.slice(0,7)===ms),list=CU.filtered(c,all);const byDay={};list.forEach(e=>{const d=+e.at.slice(8,10);(byDay[d]=byDay[d]||[]).push(e)});
+  const nd=nextDelivery(c);const holdDay=d=>onHold(c,ymd(new Date(m.getFullYear(),m.getMonth(),d)))&&(S.c.flt==='All'||S.c.flt==='Hold');
+  let g=['S','M','T','W','T','F','S'].map(d=>`<div class="h">${d}</div>`).join('');for(let i=0;i<first;i++)g+=`<button class="o" disabled></button>`;
+  for(let d=1;d<=len;d++){const ds=ymd(new Date(m.getFullYear(),m.getMonth(),d)),ks=(byDay[d]||[]).map(e=>CU.evKind[e.adjust?'adjust':e.kind][0]);if(holdDay(d))ks.push('lilac');
+   g+=`<button class="${ds===TODAY_S?'t':''} ${ds===nd.date?'n':''} ${S.c.sel===ds?'sel':''}" onclick="S.c.sel='${ds}';render()">${d}<u>${[...new Set(ks)].slice(0,3).map(k=>`<s style="background:var(--${k}-i)"></s>`).join('')}</u></button>`}
+  const sel=S.c.sel&&S.c.sel.slice(0,7)===ms?S.c.sel:null,ev=sel?(byDay[+sel.slice(8,10)]||[]):[];
+  const cnt=k=>all.filter(e=>e.kind===k).length;
+  return `<div class="chips mt12">${['All','Delivered','Missed','Top-up','Hold'].map(f=>`<button class="chip ${S.c.flt===f?'on':''}" onclick="S.c.flt='${f}';render()">${f!=='All'?`<span class="dot" style="background:var(--${{Delivered:'mint',Missed:'rose','Top-up':'sky',Hold:'lilac'}[f]}-i)"></span>`:''}${t(f)}</button>`).join('')}</div>
+  <div class="row sp mt8 mb8"><button class="ib flat" onclick="S.c.mOff--;S.c.sel=null;render()" ${S.c.mOff<=-5?'disabled':''}>${ic('left')}</button><b class="h2">${m.toLocaleDateString(LANG(),{month:'long',year:'numeric'})}</b><button class="ib flat" onclick="S.c.mOff++;S.c.sel=null;render()" ${S.c.mOff>=0?'disabled':''}>${ic('right')}</button></div>
+  <div class="stat3 mb12" style="grid-template-columns:repeat(4,1fr)"><div class="tint-mint"><b class="num">${cnt('delivered')}</b><span>${t('Deliveries')}</span></div><div class="tint-acc"><b class="num">${-sum(all.filter(e=>e.kind==='delivered'),e=>e.coupons)}</b><span>${t('Used')}</span></div><div class="tint-sky"><b class="num">${cnt('topup')}</b><span>${t('Top-ups')}</span></div><div class="tint-rose"><b class="num">${cnt('missed')}</b><span>${t('Missed')}</span></div></div>
+  <div class="card" style="padding:12px"><div class="cal">${g}</div></div>
+  <div class="card tight"><div class="li" style="padding-bottom:6px"><b class="h3">${sel?fmtD(sel,{weekday:'long'}):'Pick a day'}</b>${sel===TODAY_S?`<span class="pill tint-acc">${t('Today')}</span>`:sel===nd.date?`<span class="pill tint-sky">${t('Next delivery')}</span>`:''}</div>
+  ${ev.length?ev.map(CU.evRow).join(''):sel&&onHold(c,sel)?`<div class="li"><span class="ic tint-lilac">${ic('pause')}</span><div><b>${t('Delivery hold')}</b><div class="sub sm">No delivery on this day. Coupons kept.</div></div></div>`:`<div class="empty">${t('Nothing on this day')}.</div>`}</div>`},
+ _wk:4,
+ h_wk(c){const list=CU.filtered(c,ledgerOf(c.id)).filter(e=>e.kind!=='topup'||e.amount);const wk=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-x.getDay());return ymd(x)};
+  const groups=[];list.forEach(e=>{const k=wk(e.at);let g=groups.find(g=>g.k===k);if(!g){g={k,l:[]};groups.push(g)}g.l.push(e)});const show=groups.slice(0,CU._wk);
+  return `<div class="chips mt12">${['All','Delivered','Missed','Top-up'].map(f=>`<button class="chip ${S.c.flt===f?'on':''}" onclick="S.c.flt='${f}';render()">${t(f)}</button>`).join('')}</div>
+  ${show.map(g=>{const s=parseYmd(g.k),e=addDays(s,6),d=g.l.filter(x=>x.kind==='delivered').length;return `<div class="row sp mt12 mb8" style="padding:0 4px"><b>${fmtDay(s)} – ${fmtDay(e)}</b><span class="sub sm">${d} deliver${d===1?'y':'ies'}</span></div><div class="card tight">${g.l.map(CU.evRow).join('')}</div>`}).join('')||`<div class="empty">Nothing here yet.</div>`}
+  ${groups.length>CU._wk?`<button class="btn g w" onclick="CU._wk+=4;render()">${t('Load older weeks')}</button>`:''}`},
+ h_mo(c){const months=[];for(let i=3;i>=0;i--){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()-i,1),ms=ymd(m).slice(0,7),l=ledgerOf(c.id).filter(e=>e.at.slice(0,7)===ms);months.push({m,ms,used:-sum(l.filter(e=>e.kind==='delivered'),e=>e.coupons),del:l.filter(e=>e.kind==='delivered').length,added:sum(l.filter(e=>e.kind==='topup'&&e.amount),e=>e.coupons),miss:l.filter(e=>e.kind==='missed').length})}
+  const mx=Math.max(1,...months.map(x=>x.used));
+  return `<div class="card mt12"><div class="sub">Coupons used per month</div><div class="spark mt12" style="height:150px">${months.map((x,i)=>`<div class="${i===3?'on':''}"><b class="ink2">${x.used}</b><i style="height:${Math.max(4,x.used/mx*100)}%"></i><span>${x.m.toLocaleDateString(LANG(),{month:'short'})}</span></div>`).join('')}</div></div>
+  ${[...months].reverse().map((x,i)=>`<div class="card"><div class="row sp"><b class="h3">${x.m.toLocaleDateString(LANG(),{month:'long',year:'numeric'})}</b>${i===0?'<span class="pill tint-acc">To date</span>':''}</div><div class="stat3 mt12" style="grid-template-columns:repeat(4,1fr)"><div class="tint-mint"><b class="num">${x.del}</b><span>${t('Deliveries')}</span></div><div class="tint-acc"><b class="num">${x.used}</b><span>${t('Used')}</span></div><div class="tint-sky"><b class="num">${x.added?'+'+x.added:0}</b><span>${t('Added')}</span></div><div class="tint-rose"><b class="num">${x.miss}</b><span>${t('Missed')}</span></div></div></div>`).join('')}`},
+ /* --- Coupons --- */
+ cpn(c){const b=bal(c.id),[tone,lab]=status(c),dl=daysLeft(c.id),tops=ledgerOf(c.id).filter(e=>e.kind==='topup').slice(0,5);const best=D().packs.reduce((a,p)=>p.price/p.coupons<a.price/a.coupons?p:a);
+  return `${CU.head(c,t('Coupons'))}<div class="card mt16"><div class="row sp"><span class="sub">${t('Coupons left')}</span><span class="pill tint-${tone}"><span class="dot"></span>${t(lab)}</span></div><div class="big num mt8">${b}</div><div class="sub mt8">${dl!=null?'About '+dl+' days at your usual use ('+avgMonthly(c.id)+' a month).':'Usage will show after a few deliveries.'}</div></div>
+  <div class="h3 mt20 mb8" style="padding:0 4px">${t('Coupon packs')}</div>${D().packs.map(p=>`<button class="opt" style="margin-top:8px" onclick="CU.pay('${p.id}')"><span>${p.coupons} coupons<small>${money(p.price)}, ${(p.price/p.coupons).toFixed(2)} per bottle</small></span>${p.id===best.id?'<span class="pill tint-mint">Best value</span>':ic('right')}</button>`).join('')}
+  <div class="h3 mt20 mb8" style="padding:0 4px">${t('Top-ups')}</div><div class="card tight">${tops.map(CU.evRow).join('')||'<div class="empty">No top-ups yet.</div>'}</div>`},
+ /* --- Help --- */
+ help(c){const my=D().tickets.filter(x=>x.cid===c.id);const st={open:['sand','Open'],in_progress:['sky','In progress'],resolved:['mint','Resolved']};const s=D().settings;
+  return `${CU.head(c,t('Help'))}<div class="tiles mt16 mb12"><a class="tile" href="https://wa.me/${s.supportWa.replace(/\D/g,'')}" target="_blank" rel="noopener"><span class="ic tint-mint">${ic('wa')}</span><b>${t('WhatsApp')}</b><span>${esc(s.supportWa)}</span></a><a class="tile" href="tel:${s.supportPhone.replace(/\s/g,'')}"><span class="ic tint-sky">${ic('phone')}</span><b>${t('Call us')}</b><span>7 am to 9 pm</span></a></div>
+  <button class="opt" style="margin-top:0" onclick="CU.newTicket()"><span class="row">${ic('alert')} ${t('Report a problem')}</span>${ic('right')}</button>
+  <div class="h3 mt20 mb8" style="padding:0 4px">${t('Your requests')}</div><div class="card tight">${my.map(x=>`<div class="li tap" onclick="CU.ticket('${x.id}')"><div class="grow"><b>${esc(x.subject)}</b><div class="sub sm">${rel(x.messages[x.messages.length-1].at)}, ${x.messages.length} message${x.messages.length>1?'s':''}</div></div><span class="pill tint-${st[x.status][0]}">${t(st[x.status][1])}</span></div>`).join('')||'<div class="empty">No requests yet. If a delivery is late or a bottle is damaged, tell us here.</div>'}</div>`},
+ newTicket(){sheet(`<h2 class="title">${t('Report a problem')}</h2><p class="sub mt4">Support replies here and on WhatsApp.</p><label class="field"><span>What is it about?</span><select class="in" id="ts"><option>Late or missed delivery</option><option>Damaged or leaking bottle</option><option>Wrong number of bottles</option><option>Coupon balance looks wrong</option><option>Something else</option></select></label><label class="field"><span>Tell us more</span><textarea class="in" id="tb" placeholder="What happened, and when?"></textarea></label><button class="btn p w lg mt16" onclick="(function(){const b=$('#tb').value.trim();if(!b)return toast('Add a few words about what happened');const tk=ACT.ticket(CU.me().id,$('#ts').value,b);closeSheet();CU.ticket(tk.id);toast('Sent to support')})()">${t('Send')}</button>`)},
+ ticket(id){const x=D().tickets.find(t=>t.id===id);const st={open:['sand','Open'],in_progress:['sky','In progress'],resolved:['mint','Resolved']};
+  sheet(`<div class="row sp"><h2 class="title" style="font-size:20px">${esc(x.subject)}</h2><span class="pill tint-${st[x.status][0]}">${t(st[x.status][1])}</span></div><div class="sub mt4">Opened ${fmtD(x.created_at)}</div>
+  <div class="mt16">${x.messages.map(m=>`<div style="display:flex;justify-content:${m.from==='customer'?'flex-end':'flex-start'};margin-top:8px"><div style="max-width:84%;padding:10px 14px;border-radius:18px;${m.from==='customer'?'background:var(--acc);color:#fff;border-bottom-right-radius:6px':'background:var(--card);border-bottom-left-radius:6px;box-shadow:var(--sh)'}"><div>${esc(m.body)}</div><div class="xs mt4" style="opacity:.7">${m.from==='support'?'Support, ':''}${hm(m.at)}</div></div></div>`).join('')}</div>
+  ${x.status!=='resolved'?`<div class="row mt16"><input class="in grow" id="tr" placeholder="Write a reply"><button class="btn p" onclick="(function(){const v=$('#tr').value.trim();if(!v)return;ACT.reply('${id}','customer',v);CU.ticket('${id}')})()">${ic('send')}</button></div>`:`<button class="btn g w mt16" onclick="closeSheet(render)">${t('Done')}</button>`}`)},
+ /* --- Profile --- */
+ meView(c){const dr=driverFor(c);return `${CU.head(c,t('Profile'))}
+  <div class="card mt16 row"><span class="avatar lg tint-sky">${initials(c.name)}</span><div class="grow"><b class="h3">${esc(c.name)}</b><div class="sub">${t('Customer')} ${c.no}</div><div class="sub">${esc(c.phone)}${c.email?', '+esc(c.email):''}</div></div></div>
+  <div class="card tight"><div class="li"><span class="ic tint-acc">${ic('cal')}</span><div class="grow"><b>${t('Delivery')}</b><div class="sub sm">${DAYS[c.weekday]}s, ${c.ws} – ${c.we}, ${c.bottles} ${t('bottles')}</div></div><button class="btn sm g" onclick="CU.schedule()">Change</button></div>
+  <div class="li"><span class="ic tint-sky">${ic('pin')}</span><div class="grow"><b>${esc(c.building)}</b><div class="sub sm">${esc(c.street)}${c.gate?'. '+esc(c.gate):''}</div></div><button class="btn sm g" onclick="CU.address()">Edit</button></div>
+  <div class="li"><span class="ic tint-mint">${ic('truck')}</span><div class="grow"><b>${t('Driver')}: ${esc(dr.name)}</b><div class="sub sm">${esc(dr.vehicle)}, ${zname(c)} route</div></div></div></div>
+  <div class="card tight"><div class="li"><span class="ic tint-grey">${ic('globe')}</span><span class="grow b">${t('Language')}</span><div class="seg" style="padding:3px"><button class="${!S.c.ar?'on':''}" style="padding:6px 12px" onclick="CU.lang(false)">English</button><button class="${S.c.ar?'on':''}" style="padding:6px 12px" onclick="CU.lang(true)">العربية</button></div></div>
+  <div class="li"><span class="ic tint-grey">${ic('moon')}</span><span class="grow b">${t('Theme')}</span><button class="btn sm g" onclick="toggleTheme()">${document.documentElement.dataset.theme==='dark'?'Light':'Dark'}</button></div>
+  <div class="li"><span class="ic tint-grey">${ic('wa')}</span><span class="grow b">${t('WhatsApp')} ${t('Notifications').toLowerCase()}</span><button class="sw ${c.notif.wa?'on':''}" onclick="CU.me().notif.wa=!CU.me().notif.wa;save();render()" aria-label="WhatsApp notifications"></button></div>
+  <div class="li"><span class="ic tint-grey">${ic('mail')}</span><span class="grow b">Email ${t('Notifications').toLowerCase()}</span><button class="sw ${c.notif.email&&c.emailSaved?'on':''}" onclick="(function(){const c=CU.me();if(!c.emailSaved)return CU.addEmail();c.notif.email=!c.notif.email;save();render()})()" aria-label="Email notifications"></button></div></div>
+  <button class="btn g w" onclick="signOut()">${t('Sign out')}</button><p class="xs mute c mt12">Member since ${fmtDay(c.since)}. ${esc(D().settings.company)} app, demo build.</p>`},
+ lang(ar){S.c.ar=ar;const c=CU.me();c.lang=ar?'ar':'en';save();render()},
+ schedule(){const c=CU.me();sheet(`<h2 class="title">${t('Delivery')} schedule</h2><p class="sub mt4">Changes apply from next week. Your driver is told automatically.</p>
+  <label class="field"><span>Delivery day</span><select class="in" id="sd">${DAYS.map((d,i)=>`<option value="${i}" ${i===c.weekday?'selected':''}>${d}</option>`).join('')}</select></label>
+  <label class="field"><span>Time window</span><select class="in" id="sw">${[['07:00','09:00'],['08:00','10:00'],['09:00','11:00'],['10:00','12:00'],['16:00','18:00']].map(w=>`<option value="${w[0]}-${w[1]}" ${w[0]===c.ws?'selected':''}>${w[0]} – ${w[1]}</option>`).join('')}</select></label>
+  <label class="field"><span>Bottles per delivery</span><div class="step mt4"><button onclick="(function(e){const i=$('#sb');i.value=Math.max(1,+i.value-1)})()">${ic('minus')}</button><input class="in" id="sb" type="number" min="1" max="20" value="${c.bottles}" style="width:80px;text-align:center"><button class="p" onclick="(function(){const i=$('#sb');i.value=Math.min(20,+i.value+1)})()">${ic('plus')}</button></div></label>
+  <button class="btn p w lg mt16" onclick="(function(){const c=CU.me();c.weekday=+$('#sd').value;const w=$('#sw').value.split('-');c.ws=w[0];c.we=w[1];c.bottles=clamp(+$('#sb').value||c.bottles,1,20);audit(c.name+' changed their schedule to '+DAYS[c.weekday]+'s '+c.ws);save();closeSheet(render);toast('Schedule updated')})()">${t('Save')}</button>`)}
+};
+/* ============ Driver app ============ */
+const DR={
+ me(){return drv(S.role==='driver'?S.me.id:S.a.asId)},
+ routes(){return D().routes.filter(r=>r.date===TODAY_S&&r.driver===DR.me().id)},
+ stops(){return DR.routes().flatMap(r=>r.stops.map(s=>Object.assign(s,{route:r}))).sort((a,b)=>a.seq-b.seq)},
+ next(){return DR.stops().find(s=>s.status==='pending')},
+ stop(id){return DR.stops().find(s=>s.id===id)},
+ go(s){S.d.scr=s;if(['route','sum','me'].includes(s))S.d.tab=s;render()},
+ view(){const scr=S.d.scr;const main=DR[scr==='stop'?'stopView':scr==='me'?'meView':scr]();const tabs=['route','sum','me'].includes(scr);
+  return main+(tabs?tabbar([['route','route','Route'],['sum','chart','Summary'],['me','user','Me']],S.d.tab,'DR.go'):'')},
+ head(label,back){return `<div class="row sp" style="padding-top:8px"><button class="ib" onclick="DR.go('${back||'route'}')" aria-label="Back">${ic('left')}</button><span class="pill lg" style="background:var(--ink);color:var(--bg)">${label}</span><span style="width:40px"></span></div>`},
+ /* --- map --- */
+ map(stops,nx){if(!stops.length)return '';const W=358,H=190,p=28;const la=stops.map(s=>cust(s.cid).lat),lo=stops.map(s=>cust(s.cid).lng);let minLa=Math.min(...la),maxLa=Math.max(...la),minLo=Math.min(...lo),maxLo=Math.max(...lo);
+  if(maxLa-minLa<.004){minLa-=.002;maxLa+=.002}if(maxLo-minLo<.004){minLo-=.002;maxLo+=.002}
+  const pt=s=>{const c=cust(s.cid);return [p+(c.lng-minLo)/(maxLo-minLo)*(W-2*p),H-p-(c.lat-minLa)/(maxLa-minLa)*(H-2*p)]};
+  const pts=stops.map(pt);for(let it=0;it<30;it++){for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[j][0]-pts[i][0],dy=pts[j][1]-pts[i][1],dd=Math.hypot(dx,dy)||.01;if(dd<34){const f=(34-dd)/2,ux=dx/dd,uy=dy/dd;pts[i][0]-=ux*f;pts[i][1]-=uy*f;pts[j][0]+=ux*f;pts[j][1]+=uy*f}}pts.forEach(q=>{q[0]=clamp(q[0],18,W-18);q[1]=clamp(q[1],18,H-18)})}
+  const ptOf=s=>pts[stops.indexOf(s)];let d='';pts.forEach((q,i)=>{if(!i){d='M'+q[0]+' '+q[1];return}const a=pts[i-1],mx=(a[0]+q[0])/2;d+=` C${mx} ${a[1]} ${mx} ${q[1]} ${q[0]} ${q[1]}`});
+  const col=s=>s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--card)';
+  const txt=s=>s.status==='pending'&&!(nx&&s.id===nx.id)?'var(--ink)':'#fff';
+  const lastDone=[...stops].reverse().find(s=>s.status!=='pending');
+  return `<div class="mapbox"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Route overview">
+  <defs><pattern id="g" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="var(--line2)" stroke-width="1"/></pattern></defs>
+  <rect width="${W}" height="${H}" fill="var(--card)"/><rect width="${W}" height="${H}" fill="url(#g)"/>
+  <path d="${d}" fill="none" stroke="var(--line)" stroke-width="8" stroke-linecap="round"/><path d="${d}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="1 7" stroke-linecap="round" opacity=".45"/>
+  ${stops.map((s,i)=>{const [x,y]=pts[i];const isN=nx&&s.id===nx.id;return `${isN?`<circle cx="${x}" cy="${y}" r="20" fill="var(--acc)" opacity=".18"/>`:''}<circle cx="${x}" cy="${y}" r="13" fill="${col(s)}" stroke="${s.status==='pending'&&!isN?'var(--ink)':'var(--card)'}" stroke-width="2"/><text x="${x}" y="${y+4.5}" text-anchor="middle" font-size="12" font-weight="700" fill="${txt(s)}" font-family="inherit">${s.status==='delivered'?'✓':s.status==='missed'?'!':s.seq}</text>`}).join('')}
+  ${lastDone?(()=>{const [x,y]=ptOf(lastDone);return `<g transform="translate(${x+14},${y-26})"><rect width="54" height="20" rx="10" fill="var(--ink)"/><text x="27" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="var(--bg)" font-family="inherit">You</text></g>`})():''}
+  </svg><div class="row sp xs mute" style="padding:8px 14px 10px"><span class="row" style="gap:6px"><i class="dot" style="background:var(--mint-i)"></i>Delivered <i class="dot" style="background:var(--acc);margin-left:8px"></i>Next <i class="dot" style="background:var(--rose-i);margin-left:8px"></i>Missed</span><span class="ell" style="max-width:45%">${stops.map(s=>zname(cust(s.cid))).filter((v,i,a)=>a.indexOf(v)===i).join(', ')}</span></div></div>`},
+ /* --- Route --- */
+ route(){const me=DR.me(),R=DR.stops(),nx=DR.next(),done=R.filter(s=>s.status==='delivered').length,miss=R.filter(s=>s.status==='missed').length,left=R.filter(s=>s.status==='pending');
+  const rn=DR.routes().map(r=>r.name).join(', ');
+  return `<div class="body"><div class="row sp" style="padding-top:8px"><div><div class="sub">${fmtD(TODAY,{weekday:'long'})}</div><div class="h2">${rn||'No route today'}</div></div><div class="row"><button class="ib" onclick="render();toast('Route refreshed')" aria-label="Refresh">${ic('refresh')}</button><span class="avatar tint-mint">${initials(me.name)}</span></div></div>
+  ${R.length?`<div class="card mt16"><div class="row sp"><div><span class="mid num">${done}</span><span class="sub"> of ${R.length} delivered</span></div><div class="c"><div class="h3 num">${sum(left,s=>s.planned)}</div><div class="sub xs">bottles to go</div></div></div>
+   <div class="row mt12" style="gap:4px">${R.map(s=>`<i style="flex:1;height:7px;border-radius:7px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div>
+   <div class="row sp sub sm mt8"><span>${left.length} stop${left.length===1?'':'s'} left${miss?', '+miss+' missed':''}</span><span>${left.length?'Last window ends '+cust(left[left.length-1].cid).we:'All done'}</span></div></div>
+  ${DR.map(R,nx)}
+  <div class="row sp mb8" style="padding:0 4px"><span class="sub">Stops, use the arrows to reorder</span><button class="btn sm g" onclick="DR.optimize()">Optimize</button></div>
+  ${R.map(s=>{const c=cust(s.cid),isN=nx&&s.id===nx.id,cls=s.status==='delivered'?'done':s.status==='missed'?'miss':isN?'next':'';
+   return `<div class="stop ${cls}" ${s.status==='pending'?`onclick="DR.start('${s.id}')" style="cursor:pointer"`:`onclick="DR.detail('${s.id}')" style="cursor:pointer"`}><div class="n">${s.status==='delivered'?ic('check','s'):s.status==='missed'?'!':s.seq}</div>
+   <div class="grow" style="min-width:0">${isN?'<div class="xs sb" style="color:var(--acc-i)">Next stop</div>':''}<b class="ell" style="display:block;font-size:16px">${esc(c.name)}</b><div class="sub sm ell">${s.status==='delivered'?hm(s.completed_at)+', '+s.delivered+' delivered, '+s.empties+' empties back':s.status==='missed'?'Missed, '+esc(s.miss_reason):zname(c)+', '+c.ws+' – '+c.we}</div></div>
+   ${s.status==='pending'?`<span class="pill tint-sky">×${s.planned}</span><div class="mv" onclick="event.stopPropagation()"><button onclick="DR.mv('${s.id}',-1)" aria-label="Move up">${ic('up','s')}</button><button onclick="DR.mv('${s.id}',1)" aria-label="Move down">${ic('down','s')}</button></div>`:s.status==='delivered'?`<span class="pill tint-mint">Done</span>`:`<span class="pill tint-rose">Missed</span>`}</div>`}).join('')}`
+  :`<div class="card mt16 c" style="padding:30px 20px"><span class="ic tint-grey" style="width:56px;height:56px;border-radius:18px;display:inline-grid;place-items:center">${ic('route','l')}</span><div class="h3 mt12">No route assigned for today</div><p class="sub mt4">The office generates routes each morning. Pull to refresh or ask admin.</p></div>`}
+  </div>
+  <div class="foot">${nx?`<button class="btn p w lg" onclick="DR.start('${nx.id}')">Start stop ${nx.seq}, ${esc(cust(nx.cid).name.split(' ')[0])}</button>`:`<button class="btn g w lg" disabled>${R.length?'Route complete':'No stops today'}</button>`}</div>`},
+ mv(id,d){const s=DR.stop(id),L=s.route.stops.slice().sort((a,b)=>a.seq-b.seq),i=L.findIndex(x=>x.id===id);let j=i+d;while(L[j]&&L[j].status!=='pending')j+=d;if(!L[j])return;[L[i],L[j]]=[L[j],L[i]];ACT.order(s.route.id,L.map(x=>x.id));render()},
+ optimize(){const nx=DR.next();if(!nx)return toast('Nothing left to optimize');const L=nx.route.stops.slice().sort((a,b)=>a.seq-b.seq),p=L.filter(s=>s.status==='pending').sort((a,b)=>cust(a.cid).ws.localeCompare(cust(b.cid).ws)||cust(a.cid).lat-cust(b.cid).lat),k=[...p];ACT.order(nx.route.id,L.map(s=>s.status==='pending'?k.shift().id:s.id));render();toast('Reordered by delivery window')},
+ detail(id){const s=DR.stop(id),c=cust(s.cid);sheet(`<div class="row sp"><h2 class="title" style="font-size:22px">${esc(c.name)}</h2><span class="pill tint-${s.status==='delivered'?'mint':'rose'}">${s.status==='delivered'?'Delivered':'Missed'}</span></div><div class="sub mt4">${esc(c.building)}, ${esc(c.street)}</div>
+  <div class="card mt16 tight">${s.status==='delivered'?`<div class="li"><span class="grow">Delivered</span><b>${s.delivered} bottles</b></div><div class="li"><span class="grow">Empties collected</span><b>${s.empties}</b></div><div class="li"><span class="grow">Reference</span><b>${s.ref}</b></div>`:`<div class="li"><span class="grow">Reason</span><b>${esc(s.miss_reason)}</b></div>`}<div class="li"><span class="grow">Time</span><b>${hm(s.completed_at)}</b></div></div>
+  ${s.photo?`<img src="${s.photo}" alt="Proof photo" style="width:100%;border-radius:16px;display:block">`:''}
+  ${Date.now()-new Date(s.completed_at)<30*60000?`<button class="btn o w mt12" onclick="closeSheet();DR.undoStop('${s.id}')">${ic('undo','s')} Undo and edit</button>`:'<p class="xs mute c mt12">Undo is available for 30 minutes after a stop.</p>'}
+  <button class="btn g w mt8" onclick="closeSheet()">Close</button>`)},
+ /* --- Stop --- */
+ start(id){const s=DR.stop(id);S.d.cur=id;S.d.full=s.planned;S.d.empty=Math.min(s.planned,cust(s.cid).empties);S.d.photo=null;S.d.why='No answer at the door';S.d.busy=false;DR.go('stop')},
+ adj(k,v){if(k==='full')S.d.full=clamp(S.d.full+v,0,20);else S.d.empty=clamp(S.d.empty+v,0,20);render()},
+ photoBox(label){return `<label class="photo">${S.d.photo?`<img src="${S.d.photo}" alt="${label}">`:`<span>${ic('camera','l')}<div class="mt8">${label}</div><div class="sub sm" style="font-weight:500">Opens the camera on a phone</div></span>`}<input type="file" accept="image/*" capture="environment" hidden onchange="DR.pic(this)"></label>
+  <div class="row mt8" style="justify-content:center;gap:14px">${S.d.photo?`<button class="btn sm g" onclick="S.d.photo=null;render()">Retake</button>`:`<button class="btn sm g" onclick="DR.samplePhoto()">${ic('sparkle','s')} Use a sample photo (demo)</button>`}</div>`},
+ async pic(el){const f=el.files[0];if(!f)return;try{const b=await createImageBitmap(f),sc=Math.min(1,720/Math.max(b.width,b.height)),c=document.createElement('canvas');c.width=Math.round(b.width*sc);c.height=Math.round(b.height*sc);c.getContext('2d').drawImage(b,0,0,c.width,c.height);S.d.photo=c.toDataURL('image/jpeg',.7)}catch(e){const r=new FileReader();r.onload=()=>{S.d.photo=r.result;render()};r.readAsDataURL(f);return}render()},
+ samplePhoto(){const c=document.createElement('canvas');c.width=640;c.height=420;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,420);g.addColorStop(0,'#cfd6dc');g.addColorStop(1,'#8d969e');x.fillStyle=g;x.fillRect(0,0,640,420);x.fillStyle='#b9a98f';x.fillRect(0,300,640,120);x.fillStyle='#6f7a83';x.fillRect(0,0,640,40);
+  const bottle=(bx,by)=>{x.fillStyle='#1c6fd8';x.globalAlpha=.85;x.beginPath();x.roundRect(bx,by,78,170,22);x.fill();x.fillStyle='#8cc5ff';x.beginPath();x.roundRect(bx+14,by+30,16,110,8);x.fill();x.fillStyle='#1c6fd8';x.beginPath();x.roundRect(bx+24,by-24,30,30,8);x.fill();x.globalAlpha=1};
+  const n=Math.max(1,Math.min(5,S.d.full||3));for(let i=0;i<n;i++)bottle(80+i*100,150);
+  x.fillStyle='rgba(0,0,0,.55)';x.fillRect(0,380,640,40);x.fillStyle='#fff';x.font='600 16px Figtree,sans-serif';x.fillText(fmtD(new Date())+' '+hm(new Date())+'   '+cust(DR.stop(S.d.cur).cid).building+'   sample photo for demo',14,406);
+  S.d.photo=c.toDataURL('image/jpeg',.72);render()},
+ gps(){return new Promise(r=>{let done=false;const fb=()=>{if(done)return;done=true;const c=cust(DR.stop(S.d.cur).cid);r([+(c.lat+(Math.random()-.5)*.0004).toFixed(5),+(c.lng+(Math.random()-.5)*.0004).toFixed(5)])};try{navigator.geolocation.getCurrentPosition(p=>{if(done)return;done=true;r([+p.coords.latitude.toFixed(5),+p.coords.longitude.toFixed(5)])},fb,{timeout:2500,maximumAge:60000})}catch(e){fb()}setTimeout(fb,2600)})},
+ stopView(){const s=DR.stop(S.d.cur),c=cust(s.cid),R=DR.stops();const ph=c.phone.replace(/\s/g,'');
+  return `<div class="body">${DR.head('Stop '+s.seq+' of '+R.length)}
+  <div class="mt20 sub">Deliver to</div><h1 class="title">${esc(c.name)}</h1><div class="ink2 mt4">${esc(c.building)}, ${esc(c.street)}</div><div class="row mt8 wrap" style="gap:6px"><span class="pill tint-sky">${ic('clock','s')} ${c.ws} – ${c.we}</span><span class="pill tint-grey">${bal(c.id)} coupons</span>${c.empties?`<span class="pill tint-grey">${c.empties} empties expected</span>`:''}</div>
+  <div class="acts"><a class="tint-grey" href="tel:${ph}">${ic('phone')}Call</a><a class="tint-mint" href="https://wa.me/${ph.replace('+','')}" target="_blank" rel="noopener">${ic('wa')}WhatsApp</a><a class="tint-sky" href="https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lng}" target="_blank" rel="noopener">${ic('nav')}Navigate</a></div>
+  ${c.gate?`<div class="card tint-sand row" style="padding:12px 14px">${ic('info')}<div><b>Gate note</b><div class="sm">${esc(c.gate)}</div></div></div>`:''}
+  <div class="card"><div class="row sp"><div><b style="font-size:16px">Full bottles delivered</b><div class="sub sm">Planned ${s.planned}</div></div><div class="step"><button onclick="DR.adj('full',-1)" aria-label="Fewer">${ic('minus')}</button><span class="num">${S.d.full}</span><button class="p" onclick="DR.adj('full',1)" aria-label="More">${ic('plus')}</button></div></div>
+  <div class="row sp mt16" style="padding-top:16px;border-top:1px solid var(--line2)"><div><b style="font-size:16px">Empty bottles collected</b><div class="sub sm">Count what you take back</div></div><div class="step"><button onclick="DR.adj('empty',-1)" aria-label="Fewer">${ic('minus')}</button><span class="num">${S.d.empty}</span><button class="p" onclick="DR.adj('empty',1)" aria-label="More">${ic('plus')}</button></div></div></div>
+  <div class="card"><div class="row sp"><b style="font-size:16px">Photo proof</b><span class="pill tint-${S.d.photo?'mint':'rose'}">${S.d.photo?'Added':'Required'}</span></div>${DR.photoBox('Photo of the delivered bottles')}</div>
+  ${bal(c.id)<S.d.full?`<div class="card tint-rose row" style="padding:12px 14px">${ic('alert')}<div class="sm"><b>Only ${bal(c.id)} coupons left.</b> You can still deliver; the customer will be asked to top up.</div></div>`:''}
+  </div>
+  <div class="foot card-like"><button class="btn p w lg" ${S.d.photo&&!S.d.busy?'':'disabled'} onclick="DR.deliver()">${S.d.busy?'Saving…':S.d.photo?'Confirm delivery':'Take a photo to confirm'}</button><button class="btn o w mt8" onclick="DR.go('noresp')">No response</button><div class="xs mute c mt8">The customer gets a notification and their balance updates immediately.</div></div>`},
+ async deliver(){if(S.d.busy||!S.d.photo)return;S.d.busy=true;render();const gps=await DR.gps();const err=ACT.confirm(S.d.cur,S.d.full,S.d.empty,S.d.photo,gps);S.d.busy=false;if(err){toast(err);return render()}DR.go('done')},
+ /* --- No response --- */
+ noresp(){const s=DR.stop(S.d.cur),c=cust(s.cid),R=DR.stops(),reasons=['No answer at the door','Phone not reachable','Gate or door locked','Customer is away'];
+  return `<div class="body">${DR.head('Stop '+s.seq+' of '+R.length,'stop')}<div class="mt20 sub">Could not deliver</div><h1 class="title">No response</h1><div class="ink2 mt4">${esc(c.name)}, ${esc(c.building)}</div>
+  <div class="mt16 h3" style="padding:0 4px">What happened?</div>${reasons.map(o=>`<button class="opt ${S.d.why===o?'on':''}" onclick="S.d.why='${o}';render()">${o}${S.d.why===o?ic('check'):''}</button>`).join('')}
+  <div class="card mt16"><div class="row sp"><b style="font-size:16px">Photo of the door</b><span class="pill tint-grey">Optional</span></div>${DR.photoBox('Photo of the door or gate')}</div>
+  <div class="card"><div class="sub">The customer will receive</div><div class="card flat mt8" style="margin:8px 0 0;padding:12px 14px">We came by at ${hm(new Date())} but could not reach you (${S.d.why.toLowerCase()}). No coupons were used. Tap to reschedule or put deliveries on hold.</div><div class="sub sm mt8">Admin is alerted and the stop moves to the missed list.</div></div></div>
+  <div class="foot card-like"><button class="btn d w lg" ${S.d.busy?'disabled':''} onclick="DR.miss()">${S.d.busy?'Saving…':'Confirm no response'}</button><button class="btn g w mt8" onclick="DR.go('stop')">Back</button></div>`},
+ miss(){if(S.d.busy)return;S.d.busy=true;render();setTimeout(()=>{const err=ACT.miss(S.d.cur,S.d.why,S.d.photo);S.d.busy=false;if(err){toast(err);return render()}toast('Marked as missed. Admin alerted.');DR.go('route')},400)},
+ /* --- Delivered --- */
+ done(){const s=DR.stop(S.d.cur),c=cust(s.cid),n=DR.next(),R=DR.stops(),d=R.filter(x=>x.status==='delivered').length;
+  return `<div class="body"><div class="row sp" style="padding-top:8px"><span class="pill lg" style="background:var(--ink);color:var(--bg)">${d} of ${R.length} done</span><span class="sub">${hm(s.completed_at)}</span></div>
+  <div class="bigok">${ic('check')}</div><h1 class="title c" style="font-size:34px">Delivered</h1><div class="c ink2 mt4">${esc(c.name)}, ${s.delivered} bottles, ref ${s.ref}</div>
+  <div class="card mt20 tight"><div class="li"><span class="ic tint-mint">${ic('bell')}</span><div class="grow"><b>Customer notified</b><div class="sub sm">App and WhatsApp, with the reference</div></div><span class="pill tint-mint">Sent</span></div>
+  <div class="li"><span class="ic tint-sky">${ic('ticket')}</span><div class="grow"><b>Coupons updated</b><div class="sub sm">${bal(c.id)+s.delivered} to ${bal(c.id)}, ${s.empties} empties collected</div></div><span class="pill tint-mint">Done</span></div>
+  <div class="li"><span class="ic tint-lilac">${ic('camera')}</span><div class="grow"><b>Photo and location saved</b><div class="sub sm">${s.gps?s.gps[0]+', '+s.gps[1]:'Location unavailable'}</div></div><span class="pill tint-mint">Saved</span></div></div>
+  ${n?`<div class="card" style="box-shadow:inset 0 0 0 2px var(--acc),var(--sh)"><div class="xs sb" style="color:var(--acc-i)">Next stop ${n.seq}</div><b style="font-size:18px">${esc(cust(n.cid).name)}</b><div class="sub sm">${zname(cust(n.cid))}, ${cust(n.cid).ws} – ${cust(n.cid).we}, ×${n.planned}</div></div>`:`<div class="card tint-mint c" style="padding:18px"><b>That was the last stop. Route complete.</b><div class="sm mt4">Head back to the depot. Today's summary is in the Summary tab.</div></div>`}</div>
+  <div class="foot">${n?`<button class="btn p w lg" onclick="DR.start('${n.id}')">Next stop</button>`:`<button class="btn p w lg" onclick="DR.go('route')">Back to route</button>`}<button class="btn o w mt8" onclick="DR.undoStop('${s.id}')">${ic('undo','s')} Undo and edit this delivery</button></div>`},
+ undoStop(id){const s=DR.stop(id);const full=s.delivered,emp=s.empties;const err=ACT.undo(id);if(err)return toast(err);S.d.cur=id;S.d.full=full||s.planned;S.d.empty=emp;S.d.photo=null;toast('Delivery reversed, edit and confirm again');DR.go('stop')},
+ /* --- Summary & Me --- */
+ sum(){const R=DR.stops(),del=R.filter(s=>s.status==='delivered'),miss=R.filter(s=>s.status==='missed');const me=DR.me();
+  const wk=[];for(let i=6;i>=0;i--){const d=addDays(TODAY,-i),ds=ymd(d);const n=i===0?del.length:D().ledger.filter(e=>e.kind==='delivered'&&e.driver===me.id&&e.at.slice(0,10)===ds).length;wk.push({d,n})}const mx=Math.max(1,...wk.map(x=>x.n));
+  return `<div class="body"><div style="padding-top:8px"><div class="sub">${fmtD(TODAY,{weekday:'long'})}</div><h1 class="title">Today's summary</h1></div>
+  <div class="tiles mt16 mb12"><div class="kpi"><div class="v num">${del.length}<span class="sub" style="font-size:16px;font-weight:600">/${R.length}</span></div><div class="l">Stops delivered</div></div><div class="kpi"><div class="v num">${sum(del,s=>s.delivered)}</div><div class="l">Bottles delivered</div></div><div class="kpi"><div class="v num">${sum(del,s=>s.empties)}</div><div class="l">Empties collected</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed</div></div></div>
+  <div class="card"><div class="row sp"><b>Deliveries this week</b><span class="sub sm">${sum(wk,x=>x.n)} total</span></div><div class="spark mt12">${wk.map((x,i)=>`<div class="${i===6?'on':''}"><i style="height:${Math.max(4,x.n/mx*100)}%"></i><span>${x.d.toLocaleDateString('en-GB',{weekday:'short'}).slice(0,2)}</span></div>`).join('')}</div></div>
+  <div class="card tight"><div class="li" style="padding-bottom:6px"><b class="h3">Completed stops</b></div>${R.filter(s=>s.status!=='pending').sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at)).map(s=>`<div class="li tap" onclick="DR.detail('${s.id}')"><span class="ic tint-${s.status==='delivered'?'mint':'rose'}">${ic(s.status==='delivered'?'check':'alert')}</span><div class="grow"><b>${esc(cust(s.cid).name)}</b><div class="sub sm">${hm(s.completed_at)}, ${s.status==='delivered'?s.delivered+' bottles, ref '+s.ref:esc(s.miss_reason)}</div></div>${ic('right')}</div>`).join('')||'<div class="empty">No stops completed yet.</div>'}</div></div>`},
+ meView(){const me=DR.me(),R=DR.stops();const month=D().ledger.filter(e=>e.kind==='delivered'&&e.driver===me.id&&new Date(e.at)>=monthStart());
+  return `<div class="body"><div style="padding-top:8px"><h1 class="title">Me</h1></div>
+  <div class="card mt16 row"><span class="avatar lg tint-mint">${initials(me.name)}</span><div class="grow"><b class="h3">${esc(me.name)}</b><div class="sub">${esc(me.vehicle)}, plate ${esc(me.plate)}</div><div class="sub">${esc(me.phone)}</div></div></div>
+  <div class="card tight"><div class="li"><span class="grow">Zones</span><b>${me.zones.map(z=>zone(z).name).join(', ')}</b></div><div class="li"><span class="grow">Deliveries this month</span><b class="num">${month.length}</b></div><div class="li"><span class="grow">Bottles this month</span><b class="num">${-sum(month,e=>e.coupons)}</b></div><div class="li"><span class="grow">Today</span><b class="num">${R.filter(s=>s.status==='delivered').length} of ${R.length}</b></div></div>
+  <div class="card tight"><div class="li"><span class="ic tint-grey">${ic('moon')}</span><span class="grow b">Theme</span><button class="btn sm g" onclick="toggleTheme()">${document.documentElement.dataset.theme==='dark'?'Light':'Dark'}</button></div><div class="li"><span class="ic tint-grey">${ic('phone')}</span><span class="grow b">Call the office</span><a class="btn sm g" href="tel:${D().settings.supportPhone.replace(/\s/g,'')}">${esc(D().settings.supportPhone)}</a></div></div>
+  <button class="btn g w" onclick="signOut()">Sign out</button></div>`}
+};
+/* ============ Admin panel ============ */
+const AD={
+ isAdmin(){return S.me.kind==='admin'},
+ go(t){S.a.tab=t;S.a.preview=null;render();window.scrollTo(0,0)},
+ preview(kind,id){S.a.preview=kind;S.a.asId=id||(kind==='driver'?D().drivers[0].id:D().customers.find(c=>c.login).id);if(kind==='driver'){S.d.scr='route';S.d.tab='route'}else{S.c.tab='home'}save();render()},
+ NAV:[['home','grid','Overview'],['cust','users','Customers'],['route','route','Routes'],['drv','truck','Drivers'],['sup','chat','Support'],['rep','chart','Reports'],['set','sliders','Settings']],
+ view(){const me=S.me;const tab=S.a.preview?'':S.a.tab;
+  const side=`<aside class="side"><div class="brand"><span class="mark">${ic('drop')}</span>${esc(D().settings.company)}</div>
+  <div class="nav">${AD.NAV.map(n=>`<button class="${tab===n[0]?'on':''}" onclick="AD.go('${n[0]}')">${ic(n[1])}${n[2]}</button>`).join('')}
+  <span class="lbl">Preview the apps</span><button class="${S.a.preview==='driver'?'on':''}" onclick="AD.preview('driver')">${ic('phone')}Driver app</button><button class="${S.a.preview==='customer'?'on':''}" onclick="AD.preview('customer')">${ic('phone')}Customer app</button></div>
+  <div class="me"><div class="row"><span class="avatar sm tint-acc">${initials(me.name)}</span><div class="grow"><b class="sm">${esc(me.name)}</b><div class="xs mute">${me.kind==='admin'?'Admin':'Support'}</div></div><button class="ib flat" onclick="toggleTheme()" aria-label="Theme">${ic(document.documentElement.dataset.theme==='dark'?'sun':'moon')}</button><button class="ib flat" onclick="signOut()" aria-label="Sign out">${ic('logout')}</button></div></div></aside>`;
+  const mt=`<nav class="mtab">${[['home','grid','Overview'],['cust','users','Customers'],['route','route','Routes'],['sup','chat','Support'],['more','more','More']].map(n=>`<button class="${(tab===n[0]||(n[0]==='more'&&(['drv','rep','set'].includes(tab)||S.a.preview)))?'on':''}" onclick="AD.go('${n[0]}')">${ic(n[1])}<span>${n[2]}</span></button>`).join('')}</nav>`;
+  let main;if(S.a.preview){main=AD.previewView()}else main=AD[tab]();
+  return `<div class="adm ${S.a.preview?'previewing':''}">${side}<main class="main ${S.a.preview?'center':''}">${main}</main>${mt}</div>`},
+ previewView(){const k=S.a.preview;const list=k==='driver'?D().drivers:D().customers;const inner=k==='driver'?DR.view():CU.view();
+  return `<div class="row sp wrap" style="width:100%;max-width:820px;margin-bottom:22px"><div class="row"><button class="ib" onclick="AD.go('home')" aria-label="Back">${ic('left')}</button><div><div class="sub">Previewing the ${k} app as</div><select class="in" style="padding:6px 36px 6px 10px;width:auto;font-weight:700;border:0;background-color:transparent" onchange="AD.preview('${k}',this.value)">${list.map(x=>`<option value="${x.id}" ${x.id===S.a.asId?'selected':''}>${esc(x.name)}${k==='customer'&&x.login?' (demo login)':''}</option>`).join('')}</select></div></div>
+  <div class="row"><button class="btn sm g" onclick="AD.preview('${k==='driver'?'customer':'driver'}')">${ic('phone','s')} ${k==='driver'?'Customer':'Driver'} app</button><button class="btn sm g" onclick="AD.go('home')">Back to admin</button></div></div>
+  ${phone(inner,k==='customer'&&S.c.ar?'rtl':'ltr')}
+  <p class="sub mt16 c" style="max-width:520px">Live preview with the same data. Anything you do here, like confirming a stop or topping up, shows across the admin panel instantly.</p>`},
+ head(title,sub,right){return `<div class="pagehead"><div><h1 class="title">${title}</h1>${sub?`<p class="sub mt4">${sub}</p>`:''}</div><div class="row wrap">${right||''}</div></div>`},
+ todayStops(){return D().routes.filter(r=>r.date===TODAY_S).flatMap(r=>r.stops.map(s=>Object.assign({},s,{route:r})))},
+ /* --- Overview --- */
+ home(){const st=AD.todayStops(),del=st.filter(s=>s.status==='delivered'),miss=st.filter(s=>s.status==='missed'),low=D().customers.filter(c=>c.status==='active'&&bal(c.id)<=D().settings.lowAt).sort((a,b)=>bal(a.id)-bal(b.id)),open=openTickets();
+  const m0=monthStart(),sold=D().ledger.filter(e=>e.kind==='topup'&&e.amount&&new Date(e.at)>=m0);
+  const feed=[...D().notes.slice(0,6).map(n=>({at:n.at,cls:n.kind==='ok'?'ok':n.kind==='bad'?'bad':n.kind==='top'?'top':'',txt:cust(n.cid).name+': '+n.body})),...D().audit.slice(0,4).map(a=>({at:a.at,cls:'',txt:a.who+' '+a.what.charAt(0).toLowerCase()+a.what.slice(1)}))].sort((a,b)=>new Date(b.at)-new Date(a.at)).slice(0,8);
+  return AD.head('Overview',fmtLong(TODAY),`<button class="btn g" onclick="AD.go('route')">${ic('route','s')} Today's routes</button><button class="btn p" onclick="AD.newCust()">${ic('plus','s')} New customer</button>`)+
+  `<div class="kpis"><div class="kpi"><div class="v num">${del.length}<span class="mute" style="font-size:18px;font-weight:600">/${st.length}</span></div><div class="l">Delivered today</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed stops</div></div><div class="kpi"><div class="v num" style="color:${low.length?'var(--sand-i)':'inherit'}">${low.length}</div><div class="l">Customers low on coupons</div></div><div class="kpi"><div class="v num">${open.length}</div><div class="l">Open tickets</div></div></div>
+  <div class="kpis"><div class="kpi"><div class="v num">${sum(sold,e=>e.coupons)}</div><div class="l">Coupons sold this month</div></div><div class="kpi"><div class="v num">${money(sum(sold,e=>e.amount))}</div><div class="l">Revenue this month</div></div><div class="kpi"><div class="v num">${-sum(D().ledger.filter(e=>e.kind==='delivered'&&new Date(e.at)>=m0),e=>e.coupons)}</div><div class="l">Bottles delivered this month</div></div><div class="kpi"><div class="v num">${D().customers.filter(c=>c.status==='active').length}</div><div class="l">Active customers</div></div></div>
+  <div class="cols"><div><div class="card"><div class="row sp mb12"><b class="h3">Routes today</b><button class="btn sm g" onclick="AD.go('route')">Manage</button></div>
+   ${D().routes.filter(r=>r.date===TODAY_S).map(r=>{const d=r.stops.filter(s=>s.status==='delivered').length,nx=r.stops.find(s=>s.status==='pending');return `<div class="li"><span class="avatar sm tint-mint">${initials(drv(r.driver).name)}</span><div class="grow"><div class="row sp"><b>${esc(drv(r.driver).name)}</b><span class="sub sm num">${d}/${r.stops.length}</span></div><div class="sub sm">${esc(r.name)}${nx?', next: '+esc(cust(nx.cid).name):', complete'}</div><div class="row mt8" style="gap:3px">${r.stops.map(s=>`<i style="flex:1;height:6px;border-radius:6px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div></div><button class="ib flat" onclick="AD.preview('driver','${r.driver}')" aria-label="Open driver app">${ic('phone')}</button></div>`}).join('')||'<div class="empty">No routes generated for today.</div>'}</div>
+   <div class="card"><b class="h3">Recent activity</b><div class="feed mt12">${feed.map(f=>`<div class="li ${f.cls}"><div class="grow"><div class="sm">${esc(f.txt)}</div><div class="xs mute">${rel(f.at)}</div></div></div>`).join('')}</div></div></div>
+  <div><div class="card"><div class="row sp mb8"><b class="h3">Missed today</b>${miss.length?`<span class="pill tint-rose">${miss.length}</span>`:''}</div>${miss.map(s=>`<div class="li"><span class="ic tint-rose">${ic('alert')}</span><div class="grow"><b>${esc(cust(s.cid).name)}</b><div class="sub sm">${hm(s.completed_at)}, ${esc(s.miss_reason)}, ${esc(s.route.name)}</div></div><button class="btn sm g" onclick="AD.cdet('${s.cid}')">Open</button></div>`).join('')||'<div class="empty">Nothing missed so far today.</div>'}</div>
+   <div class="card"><div class="row sp mb8"><b class="h3">Low on coupons</b><span class="sub sm">${D().settings.lowAt} or fewer</span></div>${low.map(c=>`<div class="li tap" onclick="AD.cdet('${c.id}')"><span class="avatar sm tint-sand">${initials(c.name)}</span><div class="grow"><b>${esc(c.name)}</b><div class="sub sm">${zname(c)}, next ${nextDelivery(c).date?fmtD(nextDelivery(c).date):'—'}</div></div><span class="pill tint-${bal(c.id)<=5?'rose':'sand'}">${bal(c.id)} left</span></div>`).join('')||'<div class="empty">Everyone has enough coupons.</div>'}</div>
+   <div class="card"><div class="row sp mb8"><b class="h3">Open tickets</b><button class="btn sm g" onclick="AD.go('sup')">All</button></div>${open.slice(0,4).map(x=>`<div class="li tap" onclick="AD.tkt('${x.id}')"><div class="grow"><b>${esc(x.subject)}</b><div class="sub sm">${esc(cust(x.cid).name)}, ${rel(x.created_at)}</div></div><span class="pill tint-${x.status==='open'?'sand':'sky'}">${x.status.replace('_',' ')}</span></div>`).join('')||'<div class="empty">No open tickets.</div>'}</div></div></div>`},
+ /* --- Customers --- */
+ custFiltered(){const f=S.a.f;return D().customers.filter(c=>(f.z==='All'||zname(c)===f.z)&&(f.c==='All'||status(c)[1]===f.c||(f.c==='Paused'&&c.status==='paused'))&&(c.name+' '+c.no+' '+c.phone+' '+(c.email||'')).toLowerCase().includes(f.q.toLowerCase())).sort((a,b)=>a.no-b.no)},
+ cust(){const zs=['All',...D().zones.map(z=>z.name)],l=AD.custFiltered();
+  return AD.head('Customers',D().customers.length+' customers, '+D().customers.filter(c=>c.status==='active').length+' active',`<button class="btn g" onclick="AD.csv('customers')">${ic('download','s')} Export</button><button class="btn p" onclick="AD.newCust()">${ic('plus','s')} New customer</button>`)+
+  `<div class="search mb12">${ic('search')}<input class="in" placeholder="Search by name, ID, phone or email" value="${esc(S.a.f.q)}" oninput="S.a.f.q=this.value;AD.custList()"></div>
+  <div class="chips mb8">${zs.map(z=>`<button class="chip ${S.a.f.z===z?'on':''}" onclick="S.a.f.z='${z}';render()">${z}</button>`).join('')}</div>
+  <div class="chips mb12">${['All','Healthy','Running low','Low','Paused'].map(z=>`<button class="chip ${S.a.f.c===z?'on':''}" onclick="S.a.f.c='${z}';render()">${z}</button>`).join('')}</div>
+  <div class="card" id="clist">${AD.custTable(l)}</div>`},
+ custList(){const el=$('#clist');if(el)el.innerHTML=AD.custTable(AD.custFiltered())},
+ custTable(l){if(!l.length)return '<div class="empty">No customers match. Try another search or filter.</div>';
+  return `<table class="tbl"><thead><tr><th>Customer</th><th>Zone</th><th>Delivery</th><th>Coupons</th><th>Use / month</th><th>Cover</th><th>Status</th></tr></thead><tbody>${l.map(c=>{const [tone,lab]=status(c),b=bal(c.id),dl=daysLeft(c.id);
+  return `<tr class="tap" onclick="AD.cdet('${c.id}')"><td><div class="row"><span class="avatar sm tint-${tone==='mint'?'sky':tone}">${initials(c.name)}</span><div><b>${esc(c.name)}</b>${c.login?' <span class="pill tint-lilac" style="padding:1px 7px;font-size:10px">demo login</span>':''}<div class="sub xs">${c.no}, ${esc(c.phone)}</div></div></div></td><td class="hide-m">${zname(c)}</td><td class="hide-m">${DAYS[c.weekday].slice(0,3)}, ${c.ws} – ${c.we}, ×${c.bottles}</td><td><div class="row" style="gap:8px;min-width:120px"><div class="bar grow ${tone==='rose'?'rose':tone==='sand'?'sand':''}"><i style="width:${clamp(b/120*100,2,100)}%"></i></div><b class="num" style="min-width:26px;text-align:right">${b}</b></div></td><td class="hide-m num">${avgMonthly(c.id)}</td><td class="hide-m num">${dl!=null?dl+' days':'—'}</td><td>${c.status!=='active'?`<span class="pill tint-grey">${c.status}</span>`:`<span class="pill tint-${tone}">${lab}</span>`}</td></tr>`}).join('')}</tbody></table>`},
+ cdet(id){const c=cust(id),[tone,lab]=status(c),h=ledgerOf(id).slice(0,6),nd=nextDelivery(c),dr=driverFor(c),hold=nextHold(c),tk=D().tickets.filter(t=>t.cid===id&&t.status!=='resolved');
+  sheet(`<div class="row sp"><div class="row"><span class="avatar tint-sky">${initials(c.name)}</span><div><h2 class="title" style="font-size:22px">${esc(c.name)}</h2><div class="sub">Customer ${c.no}, since ${fmtDay(c.since)}</div></div></div><button class="ib flat" onclick="closeSheet()" aria-label="Close">${ic('x')}</button></div>
+  <div class="stat3 mt16"><div class="tint-${tone}"><b class="num">${bal(id)}</b><span>coupons left, ${lab.toLowerCase()}</span></div><div class="tint-grey"><b class="num">${avgMonthly(id)}</b><span>used per month</span></div><div class="tint-grey"><b class="num">${daysLeft(id)??'—'}</b><span>days of cover</span></div></div>
+  <div class="card mt12 tight"><div class="li"><span class="grow mute">Phone</span><b>${esc(c.phone)}</b></div>${c.email?`<div class="li"><span class="grow mute">Email</span><b>${esc(c.email)}</b></div>`:''}<div class="li"><span class="grow mute">Address</span><b style="text-align:end">${esc(c.building)}<div class="sub sm" style="font-weight:500">${esc(c.street)}</div></b></div><div class="li"><span class="grow mute">Delivery</span><b>${DAYS[c.weekday]}s, ${c.ws} – ${c.we}, ${c.bottles} bottles</b></div><div class="li"><span class="grow mute">Next</span><b>${nd.date?fmtD(nd.date):'—'}${nd.moved?' (moved)':''}${hold?', hold '+fmtDay(hold.start)+' – '+fmtDay(hold.end):''}</b></div><div class="li"><span class="grow mute">Zone and driver</span><b>${zname(c)}, ${esc(dr.name.split(' ')[0])}</b></div><div class="li"><span class="grow mute">Empties with customer</span><b class="num">${c.empties}</b></div>${c.gate?`<div class="li"><span class="grow mute">Gate note</span><b>${esc(c.gate)}</b></div>`:''}</div>
+  ${tk.length?`<div class="card tint-sand row" style="padding:12px 14px">${ic('chat')}<div class="grow sm"><b>${tk.length} open ticket${tk.length>1?'s':''}:</b> ${esc(tk[0].subject)}</div><button class="btn sm" style="background:var(--ink);color:var(--bg)" onclick="AD.tkt('${tk[0].id}')">Open</button></div>`:''}
+  <div class="card tight"><div class="li" style="padding-bottom:6px"><b>Recent activity</b></div>${h.map(e=>`<div class="li"><div class="grow"><span>${e.kind==='delivered'?'Delivered '+e.bottles:e.kind==='missed'?'Missed':e.adjust?'Adjusted':'Top-up'}</span><div class="sub xs">${fmtD(e.at)}, ${hm(e.at)}${e.ref?', ref '+e.ref:e.detail?', '+esc(e.detail):''}</div></div><b class="num" style="color:${e.coupons>0?'var(--mint-i)':e.coupons<0?'var(--acc-i)':'var(--mute)'}">${e.coupons>0?'+':''}${e.coupons||'—'}</b></div>`).join('')}</div>
+  <div class="two"><button class="btn t" onclick="AD.editCust('${id}')">${ic('edit','s')} Edit details</button>${AD.isAdmin()?`<button class="btn t" onclick="AD.adjust('${id}')">${ic('ticket','s')} Adjust coupons</button>`:`<button class="btn g" disabled>Adjust coupons (admin)</button>`}</div>
+  <div class="two mt8"><a class="btn g" href="tel:${c.phone.replace(/\s/g,'')}">${ic('phone','s')} Call</a><a class="btn g" href="https://wa.me/${c.phone.replace(/\D/g,'')}" target="_blank" rel="noopener">${ic('wa','s')} WhatsApp</a></div>
+  ${c.login?`<button class="btn o w mt8" onclick="closeSheet();AD.preview('customer','${id}')">${ic('phone','s')} Open their customer app</button>`:''}`)},
+ adjust(id){const c=cust(id);sheet(`<h2 class="title" style="font-size:22px">Adjust coupons</h2><p class="sub mt4">${esc(c.name)} has ${bal(id)} coupons. Every change is written to the ledger with your name.</p>
+  <label class="field"><span>Coupons to add (use a minus to remove)</span><input class="in" id="ad" type="number" value="60" inputmode="numeric"></label><label class="field"><span>Reason</span><select class="in" id="an"><option>Cash payment at office</option><option>Bank transfer received</option><option>Goodwill for missed delivery</option><option>Correction</option><option>Promotion</option></select></label>
+  <div class="two mt16"><button class="btn g" onclick="AD.cdet('${id}')">Cancel</button><button class="btn p" onclick="(function(){const d=parseInt($('#ad').value);if(!d)return toast('Enter a number other than 0');ACT.adjust('${id}',d,$('#an').value);toast('Coupons updated, now '+bal('${id}'));AD.cdet('${id}');render()})()">Save</button></div>`)},
+ editCust(id){const c=cust(id);sheet(`<div class="row sp"><h2 class="title" style="font-size:22px">Edit customer</h2><span class="sub">ID ${c.no}</span></div>
+  <label class="field"><span>Full name</span><input class="in" id="en" value="${esc(c.name)}"></label><div class="two"><label class="field"><span>Mobile (locked)</span><input class="in" value="${esc(c.phone)}" disabled></label><label class="field"><span>Email</span><input class="in" id="ee" type="email" value="${esc(c.email||'')}"></label></div>
+  <div class="two"><label class="field"><span>Status</span><select class="in" id="es">${['active','paused','closed'].map(s=>`<option ${c.status===s?'selected':''}>${s}</option>`).join('')}</select></label><label class="field"><span>Zone</span><select class="in" id="ez">${D().zones.map(z=>`<option value="${z.id}" ${c.zone===z.id?'selected':''}>${esc(z.name)}</option>`).join('')}</select></label></div>
+  <label class="field"><span>Villa or building</span><input class="in" id="eb" value="${esc(c.building)}"></label><label class="field"><span>Street and area</span><input class="in" id="et" value="${esc(c.street)}"></label><label class="field"><span>Gate note for the driver</span><input class="in" id="eg" value="${esc(c.gate)}"></label>
+  <label class="field"><span>Map pin (paste a Google Maps link or "lat, lng")</span><input class="in" id="el" placeholder="${c.lat}, ${c.lng}"></label>
+  <div class="two"><label class="field"><span>Delivery day</span><select class="in" id="ed">${DAYS.map((d,i)=>`<option value="${i}" ${c.weekday===i?'selected':''}>${d}</option>`).join('')}</select></label><label class="field"><span>Bottles per delivery</span><input class="in" id="eq" type="number" min="1" value="${c.bottles}"></label></div>
+  <div class="two"><label class="field"><span>Window from</span><input class="in" id="ew" type="time" value="${c.ws}"></label><label class="field"><span>Window to</span><input class="in" id="ex" type="time" value="${c.we}"></label></div>
+  <div class="two mt16"><button class="btn g" onclick="AD.cdet('${id}')">Cancel</button><button class="btn p" onclick="AD.saveCust('${id}')">Save changes</button></div>`)},
+ parsePin(t){try{t=decodeURIComponent(t.trim())}catch(e){t=t.trim()}if(!t)return null;const m=t.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||t.match(/[?&](?:q|ll|query)=(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/^(-?\d+\.?\d*)[ ,]+(-?\d+\.?\d*)$/);return m?[+m[1],+m[2]]:false},
+ saveCust(id){const c=cust(id);const v=i=>$('#'+i).value.trim();if(!v('en'))return toast('Name is required');const pin=AD.parsePin(v('el'));if(pin===false)return toast('Map pin not understood. Paste a Google Maps link or "25.26, 51.45".');
+  Object.assign(c,{name:v('en'),email:v('ee')||'',status:v('es'),zone:v('ez'),building:v('eb'),street:v('et'),gate:v('eg'),weekday:+v('ed'),bottles:clamp(+v('eq')||c.bottles,1,20),ws:v('ew')||c.ws,we:v('ex')||c.we});if(pin){c.lat=pin[0];c.lng=pin[1]}
+  audit('Edited customer '+c.name);save();toast('Saved');AD.cdet(id);render()},
+ _last:{d:TODAY.getDay(),w:'07:00',x:'09:00',q:3},
+ newCust(){const L=AD._last;sheet(`<h2 class="title" style="font-size:22px">New customer</h2><p class="sub mt4">They sign in with this mobile number. Opening coupons are added to the ledger.</p>
+  <label class="field"><span>Full name</span><input class="in" id="cn" placeholder="e.g. Salem Al-Kubaisi"></label><label class="field"><span>Mobile number</span><input class="in" id="cp" type="tel" placeholder="5555 1234" oninput="AD.chkPhone(this.value)"><div class="xs mt4" id="pwarn" style="color:var(--rose-i);min-height:16px"></div></label>
+  <label class="field" style="margin-top:0"><span>Email (optional)</span><input class="in" id="ce" type="email"></label>
+  <div class="two"><label class="field"><span>Villa or building</span><input class="in" id="cb"></label><label class="field"><span>Street and area</span><input class="in" id="cs"></label></div>
+  <label class="field"><span>Zone</span><select class="in" id="cz">${D().zones.map(z=>`<option value="${z.id}">${esc(z.name)}, ${esc(drv(z.drv).name.split(' ')[0])}</option>`).join('')}</select></label>
+  <label class="field"><span>Map pin (Google Maps link or "lat, lng", optional)</span><input class="in" id="cl2"></label><label class="field"><span>Gate note (optional)</span><input class="in" id="cg"></label>
+  <div class="two"><label class="field"><span>Delivery day</span><select class="in" id="cd">${DAYS.map((d,i)=>`<option value="${i}" ${i===L.d?'selected':''}>${d}</option>`).join('')}</select></label><label class="field"><span>Bottles per delivery</span><input class="in" id="cq" type="number" min="1" value="${L.q}"></label></div>
+  <div class="two"><label class="field"><span>Window from</span><input class="in" id="cw" type="time" value="${L.w}"></label><label class="field"><span>Window to</span><input class="in" id="cx" type="time" value="${L.x}"></label></div>
+  <label class="field"><span>Opening coupons</span><select class="in" id="cc"><option value="0">0, pay later</option>${D().packs.map(p=>`<option value="${p.id}">${p.coupons} coupons, ${money(p.price)} paid</option>`).join('')}</select></label>
+  <button class="btn p w lg mt16" onclick="AD.saveNew(false)">Create customer</button><button class="btn g w mt8" onclick="AD.saveNew(true)">Create and add another</button>`,{focus:true})},
+ norm(p){p=p.replace(/[^\d+]/g,'');if(p.startsWith('00'))p='+'+p.slice(2);if(!p.startsWith('+'))p=p.length===8?'+974'+p:'+'+p;return p.replace(/^(\+974)(\d{4})(\d{4})$/,'$1 $2 $3')},
+ chkPhone(v){const el=$('#pwarn');if(!el)return;if(v.replace(/\D/g,'').length<8){el.textContent='';return}const p=AD.norm(v);const ex=D().customers.find(c=>c.phone.replace(/\s/g,'')===p.replace(/\s/g,''));el.textContent=ex?'Already a customer: '+ex.name:''},
+ saveNew(another){const v=i=>$('#'+i).value.trim();if(!v('cn')||v('cp').replace(/\D/g,'').length<8)return toast('Name and a valid mobile number are required');const p=AD.norm(v('cp'));if(D().customers.some(c=>c.phone.replace(/\s/g,'')===p.replace(/\s/g,'')))return toast('That number already belongs to a customer');
+  const pin=AD.parsePin(v('cl2'));if(pin===false)return toast('Map pin not understood');const z=zone(v('cz'));AD._last={d:+v('cd'),w:v('cw'),x:v('cx'),q:+v('cq')||3};
+  const c={id:'c'+uid(),no:Math.max(...D().customers.map(c=>c.no))+1,name:v('cn'),email:v('ce'),phone:p,building:v('cb'),street:v('cs'),zone:z.id,lat:pin?pin[0]:+(z.lat+(Math.random()-.5)*.02).toFixed(5),lng:pin?pin[1]:+(z.lng+(Math.random()-.5)*.02).toFixed(5),gate:v('cg'),weekday:AD._last.d,ws:AD._last.w,we:AD._last.x,bottles:AD._last.q,login:false,status:'active',holds:[],resched:null,emailSaved:!!v('ce'),lang:'en',notif:{wa:true,email:true},empties:0,since:TODAY_S,target:0};
+  D().customers.push(c);const pk=v('cc');if(pk!=='0'){const P=D().packs.find(p=>p.id===pk);D().ledger.push({id:uid(),cid:c.id,kind:'topup',at:new Date().toISOString(),coupons:P.coupons,amount:P.price,detail:'Opening pack, paid at sign-up',pack:P.id})}
+  audit('Created customer '+c.name);save();toast('Customer created');if(another)AD.newCust();else closeSheet();render()},
+ /* --- Drivers --- */
+ drv(){return AD.head('Drivers',D().drivers.filter(d=>d.active).length+' active',AD.isAdmin()?`<button class="btn p" onclick="AD.newDrv()">${ic('plus','s')} New driver</button>`:'')+
+  `<div class="cols">${D().drivers.map(d=>{const r=D().routes.find(r=>r.date===TODAY_S&&r.driver===d.id),st=r?r.stops:[],done=st.filter(s=>s.status==='delivered').length,m=D().ledger.filter(e=>e.kind==='delivered'&&e.driver===d.id&&new Date(e.at)>=monthStart());
+  return `<div class="card"><div class="row sp"><div class="row"><span class="avatar tint-mint">${initials(d.name)}</span><div><b class="h3">${esc(d.name)}</b><div class="sub sm">${esc(d.vehicle)}, plate ${esc(d.plate)}, ${esc(d.phone)}</div></div></div><span class="pill tint-${d.active?'mint':'grey'}">${d.active?'Active':'Inactive'}</span></div>
+  <div class="row mt12 wrap" style="gap:6px">${d.zones.map(z=>`<span class="pill tint-grey">${esc(zone(z).name)}</span>`).join('')}</div>
+  <div class="row sp mt16"><span class="sub sm">Today</span><b class="num sm">${done} of ${st.length} stops</b></div><div class="bar mint mt4"><i style="width:${st.length?done/st.length*100:0}%"></i></div>
+  <div class="stat3 mt12"><div class="tint-grey"><b class="num">${m.length}</b><span>deliveries this month</span></div><div class="tint-grey"><b class="num">${-sum(m,e=>e.coupons)}</b><span>bottles this month</span></div><div class="tint-grey"><b class="num">${D().customers.filter(c=>d.zones.includes(c.zone)&&c.status==='active').length}</b><span>customers covered</span></div></div>
+  <div class="two mt12"><button class="btn t" onclick="AD.preview('driver','${d.id}')">${ic('phone','s')} Open driver app</button>${AD.isAdmin()?`<button class="btn g" onclick="AD.editDrv('${d.id}')">${ic('edit','s')} Edit</button>`:`<a class="btn g" href="tel:${d.phone.replace(/\s/g,'')}">${ic('phone','s')} Call</a>`}</div></div>`}).join('')}</div>`},
+ newDrv(){sheet(`<h2 class="title" style="font-size:22px">New driver</h2><p class="sub mt4">Creates their sign-in and driver profile. Give them the email and password.</p>
+  <label class="field"><span>Full name</span><input class="in" id="dn"></label><label class="field"><span>Email (used to sign in)</span><input class="in" id="de" type="email"></label><label class="field"><span>Temporary password</span><input class="in" id="dp" value="0000"></label>
+  <div class="two"><label class="field"><span>Mobile</span><input class="in" id="dm" type="tel"></label><label class="field"><span>Vehicle</span><input class="in" id="dv" placeholder="Van 3"></label></div>
+  <div class="field"><span>Zones</span><div class="row wrap" style="gap:6px">${D().zones.map(z=>`<label class="chip" style="cursor:pointer"><input type="checkbox" value="${z.id}" class="dz" style="margin:0 2px 0 0">${esc(z.name)}</label>`).join('')}</div></div>
+  <button class="btn p w lg mt16" onclick="(function(){const v=i=>$('#'+i).value.trim();if(!v('dn')||!v('de'))return toast('Name and email are required');const zs=$$('.dz:checked').map(x=>x.value);const d={id:'d'+uid(),name:v('dn'),email:v('de'),phone:v('dm')?AD.norm(v('dm')):'',vehicle:v('dv')||'Van',plate:'',active:true,zones:zs};D().drivers.push(d);audit('Created driver '+d.name);save();closeSheet();render();toast('Driver created. They can sign in now.')})()">Create driver</button>`,{focus:true})},
+ editDrv(id){const d=drv(id);sheet(`<h2 class="title" style="font-size:22px">Edit driver</h2>
+  <label class="field"><span>Full name</span><input class="in" id="dn" value="${esc(d.name)}"></label><div class="two"><label class="field"><span>Mobile</span><input class="in" id="dm" value="${esc(d.phone)}"></label><label class="field"><span>Vehicle</span><input class="in" id="dv" value="${esc(d.vehicle)}"></label></div>
+  <div class="field"><span>Zones</span><div class="row wrap" style="gap:6px">${D().zones.map(z=>`<label class="chip" style="cursor:pointer"><input type="checkbox" value="${z.id}" class="dz" ${d.zones.includes(z.id)?'checked':''} style="margin:0 2px 0 0">${esc(z.name)}</label>`).join('')}</div></div>
+  <div class="li mt12" style="border-top:0"><span class="grow b">Active (can sign in and receive routes)</span><button class="sw ${d.active?'on':''}" id="dact" onclick="this.classList.toggle('on')"></button></div>
+  <div class="two mt12"><button class="btn g" onclick="closeSheet()">Cancel</button><button class="btn p" onclick="(function(){const v=i=>$('#'+i).value.trim();const d=drv('${id}');d.name=v('dn')||d.name;d.phone=v('dm');d.vehicle=v('dv');d.zones=$$('.dz:checked').map(x=>x.value);d.active=$('#dact').classList.contains('on');d.zones.forEach(z=>zone(z).drv=d.id);audit('Edited driver '+d.name);save();closeSheet();render();toast('Saved')})()">Save</button></div>`)},
+ /* --- Routes --- */
+ route(){const rs=D().routes.filter(r=>r.date===S.a.rdate).sort((a,b)=>a.name.localeCompare(b.name));const d=parseYmd(S.a.rdate);const due=D().customers.filter(c=>c.status==='active'&&c.weekday===d.getDay()&&!onHold(c,S.a.rdate)).length;
+  return AD.head('Routes','Build each day\'s routes from delivery days and zones. Drivers see them instantly.')+
+  `<div class="card"><div class="row wrap" style="gap:10px;align-items:flex-end"><label class="field grow" style="margin:0;max-width:220px"><span>Date</span><input class="in" type="date" value="${S.a.rdate}" onchange="S.a.rdate=this.value;render()"></label><div class="row" style="gap:8px"><button class="btn g" onclick="S.a.rdate='${TODAY_S}';render()">Today</button><button class="btn g" onclick="S.a.rdate='${ymd(addDays(d,1))}';render()">Next day</button></div><span class="grow"></span><button class="btn p" onclick="(function(){const n=ACT.generate(S.a.rdate);toast(n?n+' stops added':'Routes are already up to date');render()})()">${ic('route','s')} Generate routes</button></div>
+  <p class="sub sm mt12">${fmtLong(d)}: ${due} customer${due===1?'':'s'} due, holds skipped. Safe to run again, it never duplicates stops.</p></div>
+  ${rs.map(r=>{const st=[...r.stops].sort((a,b)=>a.seq-b.seq),done=st.filter(s=>s.status==='delivered').length,miss=st.filter(s=>s.status==='missed').length;
+   return `<div class="card"><div class="row sp wrap"><div><b class="h3">${esc(r.name)}</b><div class="sub sm">${done} of ${st.length} delivered${miss?', '+miss+' missed':''}, ${sum(st,s=>s.planned)} bottles planned</div></div><div class="row"><select class="in" style="width:auto;padding:8px 36px 8px 12px" onchange="(function(v){const r=D().routes.find(r=>r.id==='${r.id}');r.driver=v;audit('Reassigned '+r.name+' to '+drv(v).name);save();toast('Driver changed');render()})(this.value)">${D().drivers.map(x=>`<option value="${x.id}" ${x.id===r.driver?'selected':''}>${esc(x.name)}</option>`).join('')}</select><button class="ib flat" onclick="AD.preview('driver','${r.driver}')" aria-label="Open driver app">${ic('phone')}</button></div></div>
+   <div class="bar mint" style="margin:12px 0"><i style="width:${st.length?done/st.length*100:0}%"></i></div>
+   ${st.map(s=>{const c=cust(s.cid);return `<div class="li ${s.status!=='pending'?'tap':''}" ${s.status!=='pending'?`onclick="AD.stopDet('${s.id}')"`:''}><span class="stop-n num" style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none;background:${s.status==='delivered'?'var(--mint)':s.status==='missed'?'var(--rose)':'var(--card2)'};color:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':'var(--ink)'}">${s.seq}</span><div class="grow"><b>${esc(c.name)}</b><div class="sub sm">${zname(c)}, ${c.ws} – ${c.we}, ×${s.planned}${s.status==='delivered'?', done '+hm(s.completed_at)+', ref '+s.ref:s.status==='missed'?', '+esc(s.miss_reason):''}</div></div><span class="pill tint-${s.status==='delivered'?'mint':s.status==='missed'?'rose':'sky'}">${s.status}</span></div>`}).join('')}</div>`}).join('')||`<div class="card c" style="padding:36px"><span class="ic tint-grey" style="width:56px;height:56px;border-radius:18px;display:inline-grid;place-items:center">${ic('route','l')}</span><div class="h3 mt12">No routes for ${fmtD(d)}</div><p class="sub mt4">Generate them above. ${due} customer${due===1?' is':'s are'} due that day.</p></div>`}`},
+ stopDet(id){const {s,r}=findStop(id),c=cust(s.cid);sheet(`<div class="row sp"><h2 class="title" style="font-size:22px">${esc(c.name)}</h2><span class="pill tint-${s.status==='delivered'?'mint':'rose'}">${s.status}</span></div><div class="sub mt4">${esc(r.name)}, ${fmtD(r.date)}, stop ${s.seq}, ${esc(drv(r.driver).name)}</div>
+  <div class="card mt16 tight">${s.status==='delivered'?`<div class="li"><span class="grow mute">Bottles delivered</span><b>${s.delivered}</b></div><div class="li"><span class="grow mute">Empties collected</span><b>${s.empties}</b></div><div class="li"><span class="grow mute">Reference</span><b>${s.ref}</b></div>`:`<div class="li"><span class="grow mute">Reason</span><b>${esc(s.miss_reason)}</b></div>`}<div class="li"><span class="grow mute">Time</span><b>${hm(s.completed_at)}</b></div>${s.gps?`<div class="li"><span class="grow mute">GPS</span><a class="b" style="color:var(--acc-i)" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${s.gps[0]},${s.gps[1]}">${s.gps[0]}, ${s.gps[1]}</a></div>`:''}</div>
+  ${s.photo?`<img src="${s.photo}" alt="Proof photo" style="width:100%;border-radius:16px;display:block">`:'<div class="card flat c sub">No photo stored for this stop (seeded history).</div>'}
+  <div class="two mt12"><button class="btn g" onclick="closeSheet()">Close</button><button class="btn t" onclick="AD.cdet('${c.id}')">Open customer</button></div>`)},
+ /* --- Support --- */
+ sup(){const l=D().tickets.filter(x=>S.a.f.t==='All'||x.status===S.a.f.t.toLowerCase().replace(' ','_')).sort((a,b)=>new Date(b.messages[b.messages.length-1].at)-new Date(a.messages[a.messages.length-1].at));const st={open:['sand','Open'],in_progress:['sky','In progress'],resolved:['mint','Resolved']};
+  return AD.head('Support',openTickets().length+' open, replies reach the customer in their app and on WhatsApp')+
+  `<div class="chips mb12">${['All','Open','In progress','Resolved'].map(z=>`<button class="chip ${S.a.f.t===z?'on':''}" onclick="S.a.f.t='${z}';render()">${z}</button>`).join('')}</div>
+  <div class="card tight">${l.map(x=>{const last=x.messages[x.messages.length-1];return `<div class="li tap" onclick="AD.tkt('${x.id}')"><span class="avatar sm tint-sky">${initials(cust(x.cid).name)}</span><div class="grow" style="min-width:0"><div class="row sp"><b class="ell">${esc(x.subject)}</b><span class="sub xs" style="flex:none">${rel(last.at)}</span></div><div class="sub sm ell">${esc(cust(x.cid).name)}: ${esc(last.body)}</div></div><span class="pill tint-${st[x.status][0]}">${st[x.status][1]}</span></div>`}).join('')||'<div class="empty">No tickets here.</div>'}</div>`},
+ tkt(id){const x=D().tickets.find(t=>t.id===id),c=cust(x.cid);const st={open:['sand','Open'],in_progress:['sky','In progress'],resolved:['mint','Resolved']};
+  sheet(`<div class="row sp"><div><h2 class="title" style="font-size:20px">${esc(x.subject)}</h2><div class="sub mt4">${esc(c.name)}, ${esc(c.phone)}, ${zname(c)}</div></div><button class="ib flat" onclick="closeSheet(render)" aria-label="Close">${ic('x')}</button></div>
+  <div class="seg mt12">${['open','in_progress','resolved'].map(s=>`<button class="${x.status===s?'on':''}" onclick="ACT.ticketStatus('${id}','${s}');AD.tkt('${id}')">${st[s][1]}</button>`).join('')}</div>
+  <div class="card mt12" style="padding:6px 14px 14px">${x.messages.map(m=>`<div style="display:flex;justify-content:${m.from==='support'?'flex-end':'flex-start'};margin-top:8px"><div style="max-width:84%;padding:10px 14px;border-radius:18px;${m.from==='support'?'background:var(--acc);color:#fff;border-bottom-right-radius:6px':'background:var(--card2);border-bottom-left-radius:6px'}"><div>${esc(m.body)}</div><div class="xs mt4" style="opacity:.7">${m.from==='support'?'Support':c.name.split(' ')[0]}, ${fmtDay(m.at)} ${hm(m.at)}</div></div></div>`).join('')}</div>
+  <div class="row"><input class="in grow" id="tr" placeholder="Reply to ${esc(c.name.split(' ')[0])}" onkeydown="if(event.key==='Enter')AD.sendReply('${id}')"><button class="btn p" onclick="AD.sendReply('${id}')">${ic('send')}</button></div>
+  <div class="row mt12 wrap" style="gap:8px"><button class="btn sm g" onclick="$('#tr').value='Thanks for letting us know. We are looking into it and will update you today.'">Acknowledge</button><button class="btn sm g" onclick="$('#tr').value='Sorry about this. We have added 2 goodwill coupons to your balance.'">Goodwill</button><a class="btn sm g" href="https://wa.me/${c.phone.replace(/\D/g,'')}" target="_blank" rel="noopener">${ic('wa','s')} WhatsApp</a><button class="btn sm g" onclick="AD.cdet('${c.id}')">Customer</button></div>`,{focus:true})},
+ sendReply(id){const v=$('#tr').value.trim();if(!v)return;ACT.reply(id,'support',v);if(/goodwill coupons/i.test(v)&&AD.isAdmin()){const t=D().tickets.find(t=>t.id===id);ACT.adjust(t.cid,2,'Goodwill for ticket')}toast('Reply sent');AD.tkt(id)},
+ /* --- Reports --- */
+ rep(){const m0=monthStart(),L=D().ledger.filter(e=>new Date(e.at)>=m0),del=L.filter(e=>e.kind==='delivered'),miss=L.filter(e=>e.kind==='missed'),sold=L.filter(e=>e.kind==='topup'&&e.amount);
+  const n=S.a.repRange;const days=[];for(let i=n-1;i>=0;i--){const d=addDays(TODAY,-i),ds=ymd(d);days.push({d,del:D().ledger.filter(e=>e.kind==='delivered'&&e.at.slice(0,10)===ds).length,miss:D().ledger.filter(e=>e.kind==='missed'&&e.at.slice(0,10)===ds).length})}const mx=Math.max(1,...days.map(x=>x.del+x.miss));
+  const zrows=D().zones.map(z=>{const cs=D().customers.filter(c=>c.zone===z.id),ids=cs.map(c=>c.id);return {z,n:cs.length,del:del.filter(e=>ids.includes(e.cid)).length,bot:-sum(del.filter(e=>ids.includes(e.cid)),e=>e.coupons),miss:miss.filter(e=>ids.includes(e.cid)).length,low:cs.filter(c=>bal(c.id)<=D().settings.lowAt).length}});
+  return AD.head('Reports',TODAY.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+' to date',`<button class="btn g" onclick="AD.csv('customers')">${ic('download','s')} Customers</button><button class="btn g" onclick="AD.csv('deliveries')">${ic('download','s')} Deliveries</button><button class="btn g" onclick="AD.csv('ledger')">${ic('download','s')} Coupon ledger</button>`)+
+  `<div class="kpis"><div class="kpi"><div class="v num">${del.length}</div><div class="l">Deliveries</div></div><div class="kpi"><div class="v num">${-sum(del,e=>e.coupons)}</div><div class="l">Bottles delivered</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed, ${del.length+miss.length?Math.round(miss.length/(del.length+miss.length)*100):0}% of stops</div></div><div class="kpi"><div class="v num">${money(sum(sold,e=>e.amount))}</div><div class="l">${sum(sold,e=>e.coupons)} coupons sold</div></div></div>
+  <div class="card"><div class="row sp"><b class="h3">Deliveries per day</b><div class="seg" style="padding:3px">${[7,14,30].map(k=>`<button class="${n===k?'on':''}" style="padding:6px 12px" onclick="S.a.repRange=${k};render()">${k} days</button>`).join('')}</div></div>
+   <div class="spark mt16" style="height:160px">${days.map((x,i)=>`<div class="${i===days.length-1?'on':''}" title="${fmtD(x.d)}: ${x.del} delivered, ${x.miss} missed"><div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:120px;gap:2px">${x.miss?`<i class="m" style="height:${x.miss/mx*100}%;flex:none;border-radius:6px 6px 0 0"></i>`:''}<i style="height:${Math.max(2,x.del/mx*100)}%;flex:none;border-radius:${x.miss?'0 0 4px 4px':'6px 6px 4px 4px'}"></i></div><span>${n>14&&i%3?'':x.d.getDate()}</span></div>`).join('')}</div>
+   <div class="row mt8 xs mute" style="gap:14px"><span class="row" style="gap:6px"><i class="dot" style="background:var(--acc)"></i>Delivered</span><span class="row" style="gap:6px"><i class="dot" style="background:var(--rose-i)"></i>Missed</span></div></div>
+  <div class="card"><b class="h3">By zone this month</b><table class="tbl mt8"><thead><tr><th>Zone</th><th>Driver</th><th>Customers</th><th>Deliveries</th><th>Bottles</th><th>Missed</th><th>Low on coupons</th></tr></thead><tbody>${zrows.map(r=>`<tr><td><b>${esc(r.z.name)}</b></td><td class="hide-m">${esc(drv(r.z.drv).name)}</td><td class="num">${r.n} customers</td><td class="num">${r.del} deliveries</td><td class="num hide-m">${r.bot}</td><td class="num">${r.miss?`<span class="pill tint-rose">${r.miss}</span>`:'0'} missed</td><td class="num">${r.low?`<span class="pill tint-sand">${r.low}</span>`:'0'} low</td></tr>`).join('')}</tbody></table></div>`},
+ csv(kind){let rows,name;const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  if(kind==='customers'){name='customers.csv';rows=D().customers.map(c=>({id:c.no,name:c.name,phone:c.phone,email:c.email,status:c.status,zone:zname(c),building:c.building,street:c.street,delivery_day:DAYS[c.weekday],window:c.ws+'-'+c.we,bottles:c.bottles,coupons_left:bal(c.id),avg_monthly_use:avgMonthly(c.id),days_of_cover:daysLeft(c.id)??'',empties_with_customer:c.empties,lat:c.lat,lng:c.lng}))}
+  else if(kind==='deliveries'){name='deliveries.csv';rows=D().ledger.filter(e=>(e.kind==='delivered'||e.kind==='missed')&&new Date(e.at)>=monthStart()).sort((a,b)=>new Date(a.at)-new Date(b.at)).map(e=>({date:e.at.slice(0,10),time:hm(e.at),customer:cust(e.cid).name,phone:cust(e.cid).phone,zone:zname(cust(e.cid)),status:e.kind,bottles:e.bottles||0,empties:e.empties||0,ref:e.ref||'',reason:e.detail||'',driver:e.driver?drv(e.driver).name:''}))}
+  else{name='coupon-ledger.csv';rows=D().ledger.slice().sort((a,b)=>new Date(a.at)-new Date(b.at)).map(e=>({date:e.at.slice(0,10),time:hm(e.at),customer:cust(e.cid).name,type:e.adjust?'adjustment':e.kind,coupons:e.coupons,amount:e.amount??'',detail:e.detail||e.ref||''}))}
+  const k=Object.keys(rows[0]||{}),txt=[k.join(','),...rows.map(r=>k.map(c=>q(r[c])).join(','))].join('\n');
+  sheet(`<div class="row sp"><h2 class="title" style="font-size:22px">${name}</h2><span class="pill tint-grey">${rows.length} rows</span></div><p class="sub mt4">Opens in Excel or Google Sheets.</p><textarea class="in mt12" readonly style="height:200px;font-size:12px;font-family:ui-monospace,monospace;white-space:pre">${esc(txt)}</textarea>
+  <div class="two mt12"><button class="btn g" onclick="AD.copyCsv(this)">${ic('copy','s')} Copy</button><button class="btn p" onclick="AD.dlCsv('${name}')">${ic('download','s')} Download</button></div>`);AD._csv=txt},
+ copyCsv(b){const ta=$('#dim textarea');ta.select();try{navigator.clipboard.writeText(AD._csv).then(()=>toast('Copied'),()=>{document.execCommand('copy');toast('Copied')})}catch(e){try{document.execCommand('copy');toast('Copied')}catch(x){toast('Select the text and copy it')}}},
+ dlCsv(name){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+AD._csv],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Downloading '+name+'. If nothing happens here, use Copy.')}catch(e){toast('Download blocked in this preview. Use Copy.')}},
+ /* --- Settings --- */
+ set(){const s=D().settings;const inp=(k,lab,type)=>`<label class="field"><span>${lab}</span><input class="in" type="${type||'text'}" value="${esc(s[k])}" onchange="D().settings['${k}']=${type==='number'?'+':''}this.value;save();applyTheme();toast('Saved');render()"></label>`;
+  return AD.head('Settings','White-label the apps for your company. Changes apply everywhere immediately.')+
+  `<div class="cols"><div><div class="card"><b class="h3">Brand</b>${inp('company','Company name shown in all three apps')}<div class="field"><span>Accent colour</span><div class="row" style="gap:12px">${Object.entries(ACCENTS).map(([k,v])=>`<button class="swatch ${s.accent===k?'on':''}" style="background:${v}" title="${k}" onclick="D().settings.accent='${k}';save();applyTheme();render()"></button>`).join('')}</div></div>${inp('currency','Currency code')}</div>
+   <div class="card"><b class="h3">Support contact</b>${inp('supportPhone','Phone shown to customers')}${inp('supportWa','WhatsApp number')}</div>
+   <div class="card"><b class="h3">Coupon rules</b><div class="two">${inp('warnAt','"Running low" at or below','number')}${inp('lowAt','"Low" alert at or below','number')}</div>${inp('holdMax','Maximum hold, days','number')}</div></div>
+  <div><div class="card"><div class="row sp"><b class="h3">Coupon packs</b><button class="btn sm g" onclick="D().packs.push({id:'p'+uid(),coupons:90,price:600});save();render()">${ic('plus','s')} Add pack</button></div><table class="tbl mt8"><thead><tr><th>Coupons</th><th>Price</th><th>Per bottle</th><th></th></tr></thead><tbody>${D().packs.map(p=>`<tr><td><input class="in" type="number" value="${p.coupons}" style="width:90px;padding:8px 10px" onchange="(function(v){const p=D().packs.find(x=>x.id==='${p.id}');p.coupons=+v||p.coupons;save();render()})(this.value)"></td><td><input class="in" type="number" value="${p.price}" style="width:100px;padding:8px 10px" onchange="(function(v){const p=D().packs.find(x=>x.id==='${p.id}');p.price=+v||p.price;save();render()})(this.value)"></td><td class="num hide-m">${(p.price/p.coupons).toFixed(2)}</td><td style="text-align:end">${D().packs.length>1?`<button class="ib flat" onclick="D().packs=D().packs.filter(x=>x.id!=='${p.id}');save();render()" aria-label="Remove">${ic('x','s')}</button>`:''}</td></tr>`).join('')}</tbody></table></div>
+   <div class="card"><b class="h3">Zones and drivers</b><div class="mt4">${D().zones.map(z=>`<div class="li"><span class="grow">${esc(z.name)}</span><select class="in" style="width:auto;padding:6px 34px 6px 10px" onchange="(function(v){const z=zone('${z.id}');z.drv=v;D().drivers.forEach(d=>{d.zones=d.zones.filter(x=>x!=='${z.id}');if(d.id===v)d.zones.push('${z.id}')});save();render()})(this.value)">${D().drivers.map(d=>`<option value="${d.id}" ${z.drv===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></div>`).join('')}</div></div>
+   <div class="card"><b class="h3">Team</b>${D().staff.map(x=>`<div class="li"><span class="avatar sm tint-acc">${initials(x.name)}</span><div class="grow"><b>${esc(x.name)}</b><div class="sub xs">${esc(x.email)}</div></div><span class="pill tint-${x.role==='admin'?'lilac':'grey'}">${x.role}</span></div>`).join('')}<p class="sub sm mt8">Admins can adjust coupons and manage drivers. Support can do everything else.</p></div>
+   <div class="card"><b class="h3">Activity log</b><div class="feed mt12">${D().audit.slice(0,8).map(a=>`<div class="li"><div class="grow"><div class="sm">${esc(a.who)} ${esc(a.what.charAt(0).toLowerCase()+a.what.slice(1))}</div><div class="xs mute">${fmtD(a.at)}, ${hm(a.at)}</div></div></div>`).join('')}</div></div>
+   <div class="card"><b class="h3">Demo</b><p class="sub sm mt4">Sample data regenerates for the current date. Reset puts everything back, including anything you changed here.</p><div class="row mt12"><button class="btn g" onclick="toggleTheme()">${ic('moon','s')} Switch theme</button><button class="btn d" onclick="resetDemo()">${ic('refresh','s')} Reset demo data</button></div></div></div></div>`},
+ more(){return AD.head('More')+`<div class="card tight">${[['drv','truck','Drivers','Vehicles, zones and progress'],['rep','chart','Reports','Monthly numbers and exports'],['set','sliders','Settings','Brand, packs, zones, team']].map(n=>`<div class="li tap" onclick="AD.go('${n[0]}')"><span class="ic tint-grey">${ic(n[1])}</span><div class="grow"><b>${n[2]}</b><div class="sub sm">${n[3]}</div></div>${ic('right')}</div>`).join('')}</div>
+  <div class="card tight"><div class="li tap" onclick="AD.preview('driver')"><span class="ic tint-mint">${ic('phone')}</span><div class="grow"><b>Driver app</b><div class="sub sm">See what a driver sees today</div></div>${ic('right')}</div><div class="li tap" onclick="AD.preview('customer')"><span class="ic tint-sky">${ic('phone')}</span><div class="grow"><b>Customer app</b><div class="sub sm">Open any customer's app</div></div>${ic('right')}</div></div>
+  <div class="card tight"><div class="li tap" onclick="toggleTheme()"><span class="ic tint-grey">${ic('moon')}</span><span class="grow b">Switch light / dark</span></div><div class="li tap" onclick="signOut()"><span class="ic tint-rose">${ic('logout')}</span><span class="grow b">Sign out</span><span class="sub sm">${esc(S.me.name)}</span></div></div>`}
+};
+/* ---- boot ---- */
+(function(){if(!load()){S.data=genData();save()}applyTheme();render();
+ matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!S.theme){applyTheme()}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+})();
+</script>
+</body>
+</html>

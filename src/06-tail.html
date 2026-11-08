@@ -1,0 +1,8 @@
+/* ---- boot ---- */
+(function(){if(!load()){S.data=genData();save()}applyTheme();render();
+ matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!S.theme){applyTheme()}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+})();
+</script>
+</body>
+</html>
