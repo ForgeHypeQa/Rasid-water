@@ -3,7 +3,7 @@
 Prepaid 5-gallon water delivery platform: one sign-in, three apps, one shared data set.
 
 - **Customer app** — coupon balance, next delivery with live "on the way" status, reschedule and hold, top-up (card / Apple Pay / cash to driver), history (calendar, weekly, monthly), support tickets with replies, English and Arabic (RTL).
-- **Driver app** — today's route with overview map, reorder and optimise, stop screen with call / WhatsApp / navigate, photo proof, confirm or "no response", 30-minute undo, day summary.
+- **Driver app** — today's route on a live map (real Doha tiles, road-following route, numbered stops, moving driver marker with distance and ETA), reorder and optimise, stop screen with call / WhatsApp / navigate, photo proof, confirm or "no response", 30-minute undo, day summary.
 - **Admin panel** — overview, customers, drivers, routes (generate per day, reassign), support, reports with CSV export, settings for white-labelling (company name, accent colour, coupon packs, zones, thresholds), audit log, and a live preview of the driver and customer apps.
 
 ## Run the demo
@@ -22,6 +22,10 @@ Open `index.html` in a browser, or host it on any static host (Netlify, Vercel, 
 
 Sample data (42 customers across 7 Doha zones, 16 weeks of history, routes for every weekday) is generated for the day the demo is opened and kept in the browser's local storage. Use **Reset data** on the sign-in screen or in Settings to start fresh.
 
+## Live map
+
+The map uses Leaflet with CARTO basemap tiles and road geometry from the public OSRM server. The driver's position is simulated for the demo (it travels toward the next stop and resets when a stop is confirmed); a driver can switch on **Share my live location** in the Me tab to use the phone's real GPS instead. Customers see the same driver marker on their "Arriving today" card, and the admin overview shows every driver and stop on one map.
+
 ## Structure
 
 ```
@@ -29,11 +33,13 @@ index.html      the whole app, built from src/
 src/
   01-head.html  styles (iOS-style light/dark theme, components)
   02-core.js    utilities, icons, state, seeded demo data, business actions (ACT), auth, shell
+  02b-map.js    Leaflet maps, road routing, driver position simulation / GPS
   03-customer.js
   04-driver.js
   05-admin.js
   06-tail.html  boot
-build.sh        concatenates src/ into index.html
+vendor/         Leaflet 1.9.4 (inlined by the build)
+build.sh        concatenates src/ and vendor/ into index.html
 ```
 
 All data changes go through the `ACT` object in `02-core.js` (confirm, miss, undo, order, topup, adjust, generate, ticket, reply). Replacing those functions with Supabase calls connects the same screens to the live database.
