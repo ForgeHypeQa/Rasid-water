@@ -80,7 +80,8 @@ svg.i.s{width:16px;height:16px}svg.i.l{width:24px;height:24px}
 .bar.mint i{background:var(--mint-i)}.bar.rose i{background:var(--rose-i)}.bar.sand i{background:var(--sand-i)}
 .kpi{padding:16px;background:var(--card);border-radius:var(--r);box-shadow:var(--sh)}
 .kpi .v{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
-.kpi .l{color:var(--mute);font-size:13px;margin-top:4px}
+.kpi .l{color:var(--mute);font-size:13px;display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600}
+.ki{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile{background:var(--card);border-radius:var(--r);padding:14px;box-shadow:var(--sh);text-align:start;display:block;width:100%}
 .tile .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;margin-bottom:12px}
@@ -108,7 +109,7 @@ svg.i.s{width:16px;height:16px}svg.i.l{width:24px;height:24px}
 .ib.flat{background:var(--card2);box-shadow:none}
 .seg{display:flex;background:var(--card2);border-radius:14px;padding:4px;gap:2px}
 .seg button{flex:1;border-radius:11px;padding:9px 8px;font-weight:600;color:var(--mute);font-size:14px}
-.seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+.seg button.on{background:var(--acc);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.2),0 3px 8px color-mix(in srgb,var(--acc) 38%,transparent)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .chip{border-radius:999px;padding:8px 14px;font-weight:600;font-size:13px;background:var(--card);box-shadow:var(--sh);white-space:nowrap;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
 .chip.on{background:var(--ink);color:var(--bg);box-shadow:none}
@@ -147,7 +148,7 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 .tabbar button.on svg{stroke:var(--acc)}
 .foot{flex:none;padding:10px 16px calc(12px + var(--sab));background:linear-gradient(to top,var(--bg) 70%,transparent)}
 .foot.card-like{background:var(--card);border-top:1px solid var(--line2)}
-.dim{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center;z-index:50;animation:fade .18s ease}
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);display:flex;align-items:flex-end;justify-content:center;z-index:50;animation:fade .18s ease}
 .sheet{background:var(--bg);border-radius:28px 28px 0 0;width:100%;max-height:90%;overflow:auto;padding:10px 16px calc(22px + var(--sab));animation:up .24s cubic-bezier(.2,.8,.2,1)}
 .sheet .title{font-size:24px}
 @keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
@@ -239,7 +240,7 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 .search{position:relative}.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
 .search .in{padding-left:42px}
 [dir=rtl] .search svg{left:auto;right:14px}[dir=rtl] .search .in{padding-left:14px;padding-right:42px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px;animation:fade .18s}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px;animation:fade .18s}
 .modal .sheet{max-width:560px;border-radius:26px;max-height:92vh;padding:22px 22px 24px;animation:pop .22s cubic-bezier(.2,.8,.2,1)}
 @keyframes pop{from{transform:translateY(14px) scale(.98);opacity:.6}to{transform:none;opacity:1}}
 .swatch{width:30px;height:30px;border-radius:50%;box-shadow:0 0 0 2px var(--card),0 0 0 3px transparent;cursor:pointer}
@@ -269,14 +270,7 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 .body.home{display:flex;flex-direction:column;gap:10px;padding:0 16px 12px}
 .body.home>*{flex-shrink:0;margin-bottom:0}
 .hero{display:flex;gap:18px;align-items:center;padding:14px 16px}
-.ring{position:relative;width:104px;height:104px;flex:none}
-.ring svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
-.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
-.ring .trk{stroke:var(--line2)}
-.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.ring .rv b{font-size:32px;font-weight:800;letter-spacing:-.03em}
-.ring .rv span{font-size:11px;color:var(--mute);margin-top:4px;font-weight:600}
-.hcol{display:flex;flex-direction:column;gap:9px;min-width:0;align-items:flex-start}
+.hcol{display:flex;flex-direction:column;gap:10px;min-width:0;align-items:flex-start}
 .meta{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink);font-weight:600}
 .meta svg{color:var(--mute)}
 .btn.cmp{padding:9px 16px;font-size:14px;border-radius:12px;gap:6px}
@@ -304,8 +298,86 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 .qa button{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--ink2)}
 .qa i{width:46px;height:46px;border-radius:50%;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center;font-style:normal;color:var(--ink)}
 .rc .li{padding:9px 0}.rc .li .ic{width:32px;height:32px;border-radius:10px}
-@media(max-height:700px){.body.home{gap:8px}.hero{padding:10px 14px}.ring{width:86px;height:86px}.ring .rv b{font-size:26px}.hcol{gap:6px}.ms{padding:8px 12px 7px}.ms b{font-size:20px}.dcard{padding:12px 14px;gap:8px}.mapwrap.fill{flex-basis:84px}.qa i{width:40px;height:40px}.eta b{font-size:28px}}
+@media(max-height:700px){.body.home{gap:8px}.hero{padding:10px 14px}.bottle{width:50px;height:78px}.hnum b{font-size:34px}.hcol{gap:6px}.ms{padding:8px 12px 7px}.ms b{font-size:20px}.dcard{padding:12px 14px;gap:8px}.mapwrap.fill{flex-basis:84px}.qa i{width:40px;height:40px}.eta b{font-size:28px}}
 [data-app=customer] .btn.lg{padding:13px 16px;font-size:15px;border-radius:14px}
+
+/* bottle gauge, greeting, number */
+.bottle{width:60px;height:94px;flex:none;display:block}
+.hname{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.hnum{display:flex;align-items:center;gap:8px;line-height:1}
+.hnum b{font-size:40px;font-weight:800;letter-spacing:-.03em}
+.hnum span{display:flex;flex-direction:column;gap:4px}
+.hnum em{font-style:normal;font-size:11px;color:var(--mute);font-weight:600}
+.hnum strong{font-size:12px;font-weight:700;color:var(--acc-i);background:var(--acc-t);border-radius:6px;padding:2px 6px;align-self:flex-start;white-space:nowrap}
+.ms b small{font-size:13px;font-weight:600;color:var(--mute)}
+/* delivery status steps (customer sees status and time only) */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);padding:4px 0 0}
+.steps div{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--mute);text-align:center}
+.steps div::before{content:"";position:absolute;top:16px;inset-inline-end:50%;width:100%;height:3px;background:var(--line)}
+.steps div:first-child::before{display:none}
+.steps i{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;background:var(--card2);color:var(--mute);display:grid;place-items:center;font-style:normal;box-shadow:0 0 0 3px var(--card)}
+.steps .dn i,.steps .cu i{background:var(--acc);color:#fff}
+.steps .dn::before,.steps .cu::before{background:var(--acc)}
+.steps .dn{color:var(--ink2)}.steps .cu{color:var(--ink)}
+.steps .cu i::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--acc);opacity:.45;animation:pulse2 1.6s ease-out infinite}
+@keyframes pulse2{0%{transform:scale(.85);opacity:.6}100%{transform:scale(1.25);opacity:0}}
+.drow{padding-top:10px;border-top:1px solid var(--line2)}
+/* colourful 3D tabs */
+.seg3{display:flex;gap:8px;padding-top:12px}
+.seg3 button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 6px;border-radius:14px;font-weight:700;font-size:14px;background:var(--card);box-shadow:var(--sh);color:var(--k);transition:transform .12s}
+.seg3 .a{--k:var(--acc)}.seg3 .b{--k:#1C6FE8}.seg3 .c{--k:#6B4EE6}
+[data-theme=dark] .seg3 .b{--k:#4C93FF}[data-theme=dark] .seg3 .c{--k:#9580FF}
+.seg3 button.on{background:var(--k);color:#fff;transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.2),0 5px 12px color-mix(in srgb,var(--k) 40%,transparent)}
+/* history calendar */
+.calnav{padding:0 2px}.calnav .ib{width:34px;height:34px}
+.fts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ft{background:var(--card);border-radius:14px;box-shadow:var(--sh);padding:8px 10px;text-align:start;display:block}
+.ft .fv{display:flex;align-items:center;gap:5px}.ft .fv b{font-size:18px;font-weight:800;color:var(--ink)}
+.ft em{display:block;font-style:normal;font-size:10.5px;color:var(--mute);font-weight:600;margin-top:1px}
+.ft.on{box-shadow:inset 0 0 0 2px var(--ink)}
+.calc{padding:8px 8px 6px}
+.cal2{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center}
+.cal2 .h{font-size:10.5px;font-weight:600;color:var(--mute);padding:2px 0 4px}
+.cal2 button{height:38px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:13px;font-weight:500;color:var(--ink)}
+.cal2 button.t span{color:var(--acc-i);font-weight:800}
+.cal2 button.sel{background:var(--card2);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.cal2 u{display:flex;gap:2px;height:16px;text-decoration:none;align-items:center}
+.cal2 s{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;text-decoration:none;color:#fff;line-height:1}
+.b-d{background:#12A36B}.b-m{background:#D43C3C}.b-t{background:#1C6FE8}.b-h{background:var(--lilac);color:var(--lilac-i)!important;font-size:8px!important}
+.b-n{background:transparent;color:var(--acc-i)!important;box-shadow:inset 0 0 0 1.5px var(--acc)}
+/* monthly matrix */
+.mog{display:grid;grid-template-columns:86px repeat(4,1fr);gap:6px;align-items:end}
+.mb{height:110px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.mb b{font-size:13px;color:var(--ink2)}.mb i{display:block;width:100%;border-radius:8px 8px 4px 4px;background:var(--acc);opacity:.45}
+.mb.on i{opacity:1}.mb.on b{color:var(--ink)}
+.mn{text-align:center;font-size:12px;font-weight:600;color:var(--mute);padding-bottom:4px}.mn.on{color:var(--acc-i);font-weight:800}
+.rl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;align-self:center}.rl em{font-style:normal;color:var(--ink2)}
+.mc{text-align:center;font-weight:800;font-size:15px;border-radius:10px;padding:7px 0}.mc.z{opacity:.4;font-weight:600}
+/* coupons: balance + refill tiles */
+.balc{border-radius:var(--r);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;color:#fff;background:var(--acc);margin-top:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -3px 0 rgba(0,0,0,.16),0 6px 16px color-mix(in srgb,var(--acc) 30%,transparent)}
+.balc.sand{background:#C47A00}.balc.rose{background:#D43C3C}
+.balc .bl{font-size:13px;font-weight:600;opacity:.9}.balc .bn{font-size:52px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.balc .br{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.balc .bp{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
+.balc .bw{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700}
+.pks{display:grid;gap:10px}
+.pk{position:relative;border-radius:20px;padding:16px 6px 12px;color:#fff;text-align:center;display:flex;flex-direction:column;align-items:center;background:var(--k);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -4px 0 rgba(0,0,0,.2),0 6px 14px color-mix(in srgb,var(--k) 35%,transparent);transition:transform .1s}
+.pk:active{transform:translateY(3px);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.2)}
+.pk.blue{--k:#1C6FE8}.pk.purple{--k:#6B4EE6}.pk.green{--k:#0E9F6E}.pk.teal{--k:#0B8FA3}
+.pk b{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.pk span{font-size:11.5px;font-weight:600;opacity:.9;margin-top:2px}
+.pk em{font-style:normal;font-size:11px;font-weight:600;opacity:.95;margin-top:10px}
+.pk strong{font-size:12.5px;font-weight:800;margin-top:2px}
+.pk i{font-style:normal;font-size:10px;opacity:.85;margin-top:3px}
+.pk .bst{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#fff;color:var(--k);font-size:10px;font-weight:800;border-radius:999px;padding:2px 8px;margin:0;opacity:1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+/* menus */
+.pickbtn{display:flex;align-items:center;gap:8px;text-align:start;cursor:pointer}.pickbtn svg{color:var(--mute)}
+.menu-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.22);backdrop-filter:blur(10px) saturate(140%);-webkit-backdrop-filter:blur(10px) saturate(140%);animation:fade .15s}
+.menu{position:fixed;max-height:min(60vh,380px);overflow:auto;border-radius:16px;background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);box-shadow:0 18px 50px rgba(0,0,0,.28),0 0 0 1px rgba(128,128,128,.14);animation:menu .16s cubic-bezier(.2,.9,.3,1.1)}
+.menu button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 16px;font-size:15px;text-align:start;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);color:var(--ink)}
+.menu button:first-child{border-top:0}.menu button.on{font-weight:700}.menu button.on svg{color:var(--acc)}
+.menu button:hover,.menu button:active{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+@keyframes menu{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
 /* Rasid logo */
 .rlogo{position:relative;display:inline-block;vertical-align:middle;flex:none}
 .rlogo i{position:absolute;inset:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
@@ -1054,7 +1126,7 @@ const hm=ts=>{const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes
 const fmtD=(d,o)=>new Date(d).toLocaleDateString(LANG(),Object.assign({weekday:'short',day:'numeric',month:'short'},o||{}));
 const fmtDay=d=>new Date(d).toLocaleDateString(LANG(),{day:'numeric',month:'short'});
 const fmtLong=d=>new Date(d).toLocaleDateString(LANG(),{weekday:'long',day:'numeric',month:'long'});
-const money=n=>(S.data?S.data.settings.currency:'QAR')+' '+Number(n).toLocaleString('en-GB');
+const money=n=>(S.data?S.data.settings.currency:'QR')+' '+Number(n).toLocaleString('en-GB');
 const uid=()=>Math.random().toString(36).slice(2,9);
 const initials=n=>n.split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -1128,7 +1200,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v3';
+const LS='fh-water-demo-v4';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -1182,11 +1254,12 @@ function genData(){
   const building=z.id==='z4'?'Apartment '+(400+Math.floor(r()*1800))+', '+TOW[i%4]:z.id==='z7'?'Apartment '+(100+Math.floor(r()*2000))+', Porto Arabia':'Villa '+n;
   const street=z.id==='z4'?'West Bay':z.id==='z7'?'The Pearl':z.id==='z5'?'Al Dafna':z.id==='z6'?'Fox Hills, Lusail':(a[1]+(z.id==='z3'?Math.floor(10+r()*80):Math.floor(10+r()*89)))+a[2];
   customers.push(C('c'+(19+i),nm,'','+974 5560 '+(3100+i*7),building,street,z.id,day,w[0],w[1],2+Math.floor(r()*3),8+Math.floor(r()*80),i%6===0?'Ring the bell twice':''))});
+ const FEM='Noora Maryam Sara Aisha Hessa Latifa Moza Dana Amna Shaikha Reem Noof Wadha Alanoud Haya Lolwa Mariam Hind Jawaher'.split(' ');customers.forEach(c=>{c.title=FEM.includes(c.name.split(' ')[0])?'Ms.':'Mr.'});
  const QZ={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
  customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
  /* ledger: 16 weeks of history */
- const ledger=[];const packs=[{id:'p30',coupons:30,price:220},{id:'p60',coupons:60,price:420},{id:'p120',coupons:120,price:780}];
+ const ledger=[];const packs=[{id:'p25',coupons:25,price:185},{id:'p50',coupons:50,price:350},{id:'p100',coupons:100,price:650}];
  const push=e=>ledger.push(Object.assign({id:uid()},e));
  const todayDone={c2:'08:12',c6:'07:08',c7:'07:31',c9:'08:15',c11:'07:20',c12:'08:40'},todayMiss={c8:['07:52','Gate or door locked']};
  customers.forEach((c,ci)=>{
@@ -1194,18 +1267,18 @@ function genData(){
   const dates=[];for(let k=diff===0?16:15;k>=(diff===0?1:0);k--)dates.push(addDays(lastDate,-7*k));
   const missIdx=(ci%3===0)?3+(ci%5):-1;
   const used=dates.filter((d,i)=>i!==missIdx).length*c.bottles;
-  let k=Math.ceil((used+c.target-60)/60);k=clamp(k,1,4);let opening=c.target+used-60*k;if(opening<10){k--;opening+=60}
+  let k=Math.ceil((used+c.target-50)/50);k=clamp(k,1,5);let opening=c.target+used-50*k;if(opening<10){k--;opening+=50}
   const tupAt=[];for(let j=0;j<k;j++)tupAt.push(Math.floor((j+ .6)*dates.length/k)-1);
   push({cid:c.id,kind:'topup',at:addDays(dates[0],-3).toISOString(),coupons:opening,amount:null,detail:'Opening balance',pack:null});
   dates.forEach((d,i)=>{
-   if(tupAt.includes(i)){const t=new Date(d);t.setHours(18,30+Math.floor(r()*20));t.setDate(t.getDate()-2);push({cid:c.id,kind:'topup',at:t.toISOString(),coupons:60,amount:420,detail:'Card payment',pack:'p60'})}
+   if(tupAt.includes(i)){const t=new Date(d);t.setHours(18,30+Math.floor(r()*20));t.setDate(t.getDate()-2);push({cid:c.id,kind:'topup',at:t.toISOString(),coupons:50,amount:350,detail:'Card payment',pack:'p50'})}
    const t=new Date(d);const [h,m]=c.ws.split(':').map(Number);t.setHours(h,m+Math.floor(r()*90));
    if(i===missIdx)push({cid:c.id,kind:'missed',at:t.toISOString(),coupons:0,detail:['No answer at the door','Phone not reachable','Customer is away'][ci%3]});
    else push({cid:c.id,kind:'delivered',at:t.toISOString(),coupons:-c.bottles,bottles:c.bottles,empties:c.bottles,ref:refCode(r),driver:zones.find(z=>z.id===c.zone).drv});
   });
  });
  /* recent top-ups, so this month's sales are not empty */
- [['c12',2,'p60','Cash payment at office'],['c14',6,'p60','Card payment'],['c1',4,'p30','Card payment'],['c7',1,'p60','Card payment'],['c15',5,'p120','Card payment'],['c20',3,'p60','Apple Pay'],['c27',1,'p60','Card payment']].forEach(([cid,ago,pid,how])=>{
+ [['c12',2,'p50','Cash payment at office'],['c14',6,'p50','Card payment'],['c1',4,'p25','Card payment'],['c7',1,'p50','Card payment'],['c15',5,'p100','Card payment'],['c20',3,'p50','Apple Pay'],['c27',1,'p50','Card payment']].forEach(([cid,ago,pid,how])=>{
   const op=ledger.find(e=>e.cid===cid&&e.detail==='Opening balance'),pk=packs.find(p=>p.id===pid);if(!op)return;op.coupons-=Math.max(0,Math.min(pk.coupons,op.coupons-10));
   const t=addDays(TODAY,-ago);t.setHours(9+Math.floor(r()*11),Math.floor(r()*60));push({cid,kind:'topup',at:t.toISOString(),coupons:pk.coupons,amount:pk.price,detail:how,pack:pid})});
  /* today's routes */
@@ -1229,7 +1302,7 @@ function genData(){
   {id:'t3',cid:'c14',subject:'Need an invoice for last top-up',status:'open',created_at:iso(-1,16,12),messages:[{from:'customer',body:'Please send a tax invoice for the 60-coupon pack I bought on the 1st.',at:iso(-1,16,12)}]},
   {id:'t4',cid:'c5',subject:'Change delivery to the afternoon',status:'resolved',created_at:iso(-6,14,0),messages:[{from:'customer',body:'Can my delivery window be moved to 2 to 4 pm?',at:iso(-6,14,0)},{from:'support',body:'Done. Your window is now 10 to 12 on the same day, which is the latest slot in Lusail. Let us know if that works.',at:iso(-6,15,30)},{from:'customer',body:'That works, thanks.',at:iso(-6,16,0)}]}];
  const notes=[];
- const settings={company:'Rasid Water',accent:'orange',currency:'QAR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
+ const settings={company:'Rasid Water',accent:'orange',currency:'QR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
  const audit=[{at:iso(-1,12,20),who:'Aisha Al-Naimi',what:'Replied to ticket from Noora Al-Kuwari'},{at:iso(-1,9,2),who:'Fatima Al-Sulaiti',what:'Generated routes for '+fmtD(TODAY)},{at:iso(-2,17,45),who:'Fatima Al-Sulaiti',what:'Added 60 coupons to Saad Al-Khater (card payment at office)'}];
  return {zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
 }
@@ -1312,6 +1385,20 @@ function signIn(email,pw){const a=accounts().find(x=>x.email.toLowerCase()===ema
 function signOut(){S.me=null;S.role=null;S.a.preview=null;S.a.asId=null;S.c.tab='home';S.d.scr='route';S.a.tab='home';save();render()}
 function resetDemo(){try{localStorage.removeItem(LS)}catch(e){}S.data=genData();S.a.preview=null;S.a.asId=null;S.c=Object.assign(S.c,{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S});S.d=Object.assign(S.d,{scr:'route',tab:'route',cur:null,photo:null,busy:false});S.a.tab='home';applyTheme();save();render();toast('Demo data reset')}
 function toggleTheme(){const dark=document.documentElement.dataset.theme==='dark';S.theme=dark?'light':'dark';applyTheme();save();render()}
+
+/* ---- custom menus (replace native select pop-ups) ---- */
+const MENU={
+ enhance(){$$('select.in:not([data-m])').forEach(sel=>{sel.dataset.m='1';const b=document.createElement('button');b.type='button';b.className='in pickbtn';b.style.cssText=sel.style.cssText;if(sel.disabled)b.disabled=true;
+   const sync=()=>{const o=sel.options[sel.selectedIndex];b.innerHTML='<span class="grow ell">'+esc(o?o.text:'')+'</span>'+ic('down','s')};sync();sel.addEventListener('change',sync);sel.style.display='none';sel.after(b);
+   b.onclick=e=>{e.preventDefault();e.stopPropagation();MENU.open(b,sel)}})},
+ open(btn,sel){MENU.close();const r=btn.getBoundingClientRect(),ov=document.createElement('div');ov.className='menu-ov';ov.id='menuov';
+  ov.innerHTML='<div class="menu" role="listbox">'+[...sel.options].map((o,i)=>'<button role="option" aria-selected="'+(i===sel.selectedIndex)+'" class="'+(i===sel.selectedIndex?'on':'')+'" data-i="'+i+'"><span>'+esc(o.text)+'</span>'+(i===sel.selectedIndex?ic('check','s'):'')+'</button>').join('')+'</div>';
+  document.body.appendChild(ov);const m=ov.firstChild;m.style.width=Math.min(Math.max(r.width,230),innerWidth-24)+'px';const mh=m.offsetHeight,mw=m.offsetWidth;
+  let top=r.bottom+8;if(top+mh>innerHeight-12)top=r.top-mh-8;if(top<12)top=Math.max(12,(innerHeight-mh)/2);
+  m.style.top=top+'px';m.style.left=Math.min(Math.max(12,r.left),innerWidth-mw-12)+'px';m.style.transformOrigin=(top<r.top?'bottom':'top')+' left';
+  ov.onclick=e=>{const b=e.target.closest('[data-i]');MENU.close();if(b&&+b.dataset.i!==sel.selectedIndex){sel.selectedIndex=+b.dataset.i;sel.dispatchEvent(new Event('change',{bubbles:true}))}};
+  const on=m.querySelector('.on');if(on)on.scrollIntoView({block:'nearest'})},
+ close(){const o=document.getElementById('menuov');if(o)o.remove()}};
 
 /* ---- install as app ---- */
 const INST={evt:null,
@@ -1439,7 +1526,7 @@ const MAPS={inst:[],
   L.tileLayer(set[1],{maxZoom:18,maxNativeZoom:16,pane:'overlayPane',opacity:.9}).addTo(map);
   b.on('tileload',()=>{okd=true});b.on('tileerror',()=>{err++;if(!okd&&err>=2)fallback()});
   return map},
- mountAll(){MAPS.inst.forEach(i=>{try{i.map.remove()}catch(e){}});MAPS.inst=[];if(!MAPS.ok())return;$$('.lmap').forEach(el=>{try{MAPS.mount(el)}catch(e){console.error(e)}});if(MAPS.inst.some(i=>i.kind==='driver'))SIM.autoStart();if(!MAPS.timer)MAPS.timer=setInterval(MAPS.tick,1000)},
+ mountAll(){MAPS.inst.forEach(i=>{try{i.map.remove()}catch(e){}});MAPS.inst=[];if(!MAPS.timer)MAPS.timer=setInterval(MAPS.tick,1000);if(!MAPS.ok())return;$$('.lmap').forEach(el=>{try{MAPS.mount(el)}catch(e){console.error(e)}});if(MAPS.inst.some(i=>i.kind==='driver'))SIM.autoStart();if(!MAPS.timer)MAPS.timer=setInterval(MAPS.tick,1000)},
  mount(el){const kind=el.dataset.kind;const map=MAPS.base(el);const inst={el,map,kind,layers:L.layerGroup().addTo(map),drivers:{},rid:el.dataset.route,cid:el.dataset.cid,did:el.dataset.driver};MAPS.inst.push(inst);MAPS.draw(inst,true);
   const rc=document.createElement('button');rc.className='maprc'+(SIM.gps?' on':'');rc.setAttribute('aria-label',kind==='driver'?'Show my location':'Recenter');rc.innerHTML=ic(kind==='driver'?'locate':'nav','s');
   rc.onclick=e=>{e.stopPropagation();if(kind==='driver'&&!SIM.watch){SIM.off=false;SIM.denied=false;SIM.startGps(false);return}if(kind==='driver'&&SIM.gps){inst.userMoved=true;inst.map.setView(SIM.gps,16,{animate:true});return}MAPS.fit(inst)};el.appendChild(rc);map.on('dragstart',()=>{inst.userMoved=true})},
@@ -1473,51 +1560,53 @@ const MAPS={inst:[],
   if(inst.kind==='driver'){const r=routes[0];if(!r)return;const sim=SIM.route(r);if(!sim.next){chip.innerHTML='<b>Route complete</b><span>Head back to the depot</span>';return}
    const sub=sim.pos.far?'Your location is '+Math.round(sim.pos.remainingKm)+' km from this route':sim.pos.real?'About '+sim.pos.etaMin+' min, live GPS'+(sim.pos.acc?' ±'+Math.round(sim.pos.acc)+' m':''):SIM.watch?'Finding your location…':SIM.denied?'Location blocked, tap '+ic('locate','s')+' to retry':'Simulated, tap '+ic('locate','s')+' for your location';
    chip.innerHTML=`<b>Next: ${esc(cust(sim.next.cid).name.split(' ')[0])}, ${sim.pos.remainingKm.toFixed(1)} km</b><span>${sub}</span>`}},
- tick(){MAPS.inst.forEach(inst=>{if(!document.body.contains(inst.el))return;const routes=MAPS.routesFor(inst);routes.forEach(r=>{const m=inst.drivers[r.id];if(!m)return;const sim=SIM.route(r);m.setLatLng([sim.pos.lat,sim.pos.lng]);const svg=m.getElement()&&m.getElement().querySelector('svg');if(svg)svg.style.transform='rotate('+((sim.pos.heading||0)-45)+'deg)';if(inst.acc&&sim.pos.real){inst.acc.setLatLng([sim.pos.lat,sim.pos.lng]);if(sim.pos.acc)inst.acc.setRadius(Math.min(sim.pos.acc,500))}});MAPS.chips(inst)})}};
+ tick(){$$('[data-eta-cid]').forEach(el=>{const e=MAPS.custEta(el.dataset.etaCid);if(e)el.textContent=e.eta});MAPS.inst.forEach(inst=>{if(!document.body.contains(inst.el))return;const routes=MAPS.routesFor(inst);routes.forEach(r=>{const m=inst.drivers[r.id];if(!m)return;const sim=SIM.route(r);m.setLatLng([sim.pos.lat,sim.pos.lng]);const svg=m.getElement()&&m.getElement().querySelector('svg');if(svg)svg.style.transform='rotate('+((sim.pos.heading||0)-45)+'deg)';if(inst.acc&&sim.pos.real){inst.acc.setLatLng([sim.pos.lat,sim.pos.lng]);if(sim.pos.acc)inst.acc.setRadius(Math.min(sim.pos.acc,500))}});MAPS.chips(inst)})}};
 /* ============ Customer app ============ */
 const AR={'Home':'الرئيسية','History':'السجل','Coupons':'القسائم','Help':'مساعدة','Profile':'حسابي','Good morning':'صباح الخير','Good afternoon':'مساء الخير','Good evening':'مساء الخير','Coupons left':'القسائم المتبقية','Healthy':'جيد','Running low':'تنخفض','Low':'منخفض','Top up':'شحن','Used this month':'مستخدم هذا الشهر','Used in total':'المجموع المستخدم','Empties with you':'قوارير فارغة لديك','Next delivery':'التوصيل القادم','Arriving today':'يصل اليوم','Delivered today':'تم التوصيل اليوم','Reschedule':'إعادة جدولة','Hold':'إيقاف مؤقت','bottles':'قوارير','Address':'العنوان','Empty bottles':'القوارير الفارغة','Amount due':'المبلغ المستحق','All paid':'مدفوع بالكامل','Calendar':'التقويم','Weekly':'أسبوعي','Monthly':'شهري','All':'الكل','Delivered':'تم التوصيل','Missed':'فائت','Top-up':'شحن','Deliveries':'التوصيلات','Used':'مستخدم','Added':'مضاف','Top-ups':'الشحنات','Coupon packs':'باقات القسائم','Report a problem':'الإبلاغ عن مشكلة','Call us':'اتصل بنا','WhatsApp':'واتساب','Your requests':'طلباتك','Language':'اللغة','Theme':'المظهر','Sign out':'تسجيل الخروج','Delivery':'التوصيل','Notifications':'الإشعارات','Get alerts by email':'تنبيهات عبر البريد','Add':'إضافة','Last top-up':'آخر شحن','Hold planned':'إيقاف مجدول','Window':'الفترة','Driver':'السائق','Nothing on this day':'لا شيء في هذا اليوم','Today':'اليوم','Load older weeks':'أسابيع أقدم','Bottles delivered':'تم توصيل القوارير','Delivery missed':'توصيل فائت','Coupons topped up':'تم شحن القسائم','Coupons adjusted':'تعديل القسائم','Pay':'ادفع','Open':'مفتوح','In progress':'قيد المعالجة','Resolved':'تم الحل','Send':'إرسال','Save':'حفظ','Cancel':'إلغاء','Done':'تم','Customer':'العميل','On the way':'في الطريق','Recent activity':'النشاط الأخير','Rate':'قيّم'};
 Object.assign(AR,{'coupons':'قسيمة','weeks left':'أسابيع متبقية','week left':'أسبوع متبقٍ','Top up now':'اشحن الآن','This month':'هذا الشهر','All time':'الإجمالي','Empties':'الفوارغ','min':'د','You are next':'أنت التالي','stops before you':'محطات قبلك','stop before you':'محطة قبلك','Next':'القادم','Missed today':'فات اليوم','No coupons used':'لم تُخصم قسائم','Moved':'تم النقل','Scheduled':'مجدول','Report':'بلاغ'});
+Object.assign(AR,{'Hello':'مرحباً','wk':'أسبوع','Mr.':'السيد','Ms.':'السيدة','Packed':'تم التجهيز','Nearby':'قريب','Refill':'إعادة التعبئة','weeks of water':'أسابيع من الماء','Total':'الإجمالي','bottle':'قارورة','week':'أسبوع','Best value':'أفضل قيمة','Bottles':'القوارير','Pick a day':'اختر يوماً','Coupons used per month':'القسائم المستخدمة شهرياً','One coupon is one bottle':'القسيمة الواحدة تساوي قارورة واحدة','No top-ups yet':'لا توجد شحنات بعد'});
 const t=k=>(S.c.ar&&AR[k])?AR[k]:k;
 const CU={
  me(){return cust(S.role==='customer'?S.me.id:S.a.asId)},
  go(tab){S.c.tab=tab;render()},
  view(){const c=CU.me();const body=CU[S.c.tab==='me'?'meView':S.c.tab](c);
-  return `<div class="body ${S.c.tab==='home'?'home':''}" id="cbody">${body}</div>${tabbar([['home','home',t('Home')],['hist','clock',t('History')],['cpn','ticket',t('Coupons')],['help','chat',t('Help')],['me','user',t('Profile')]],S.c.tab,'CU.go')}`},
- head(c,title,extra){const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';const unread=D().notes.filter(n=>n.cid===c.id&&!n.read).length;
-  return `${logobar(`<button class="ib" style="position:relative" onclick="CU.bell()" aria-label="Notifications">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button>${extra||''}`)}
-  <div class="row" style="padding-top:14px">${title?'':`<span class="avatar tint-sky">${initials(c.name)}</span>`}<div><div class="sub">${title?'':t(g)}</div><div class="${title?'title':'h2'}" style="line-height:1.15">${title?esc(title):esc(c.name.split(' ')[0])}</div></div></div>`},
+  return `<div class="body ${['home','hist','cpn'].includes(S.c.tab)?'home':''}" id="cbody">${body}</div>${tabbar([['home','home',t('Home')],['hist','clock',t('History')],['cpn','ticket',t('Coupons')],['help','chat',t('Help')],['me','user',t('Profile')]],S.c.tab,'CU.go')}`},
+ bar(c){const unread=D().notes.filter(n=>n.cid===c.id&&!n.read).length;return logobar(`<button class="ib" style="position:relative" onclick="CU.bell()" aria-label="${t('Notifications')}">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button><button class="avatar tint-sky" style="width:40px;height:40px;font-size:14px" onclick="CU.go('me')" aria-label="${t('Profile')}">${initials(c.name)}</button>`)},
+ head(c,title){return `${CU.bar(c)}<div style="padding-top:14px"><div class="title">${esc(title)}</div></div>`},
+ bottle(frac,tone){const y=(98-frac*76).toFixed(1),col=tone==='rose'?'var(--rose-i)':tone==='sand'?'var(--sand-i)':'var(--acc)',B='M25 14h14v6c0 6 17 6 17 20v44a14 14 0 0 1-14 14h-20a14 14 0 0 1-14-14v-44c0-14 17-14 17-20z';
+  return `<svg class="bottle" viewBox="0 0 64 100" aria-hidden="true"><defs><clipPath id="bcl"><path d="${B}"/></clipPath></defs><path d="${B}" fill="var(--card2)"/><g clip-path="url(#bcl)"><rect x="0" y="${y}" width="64" height="100" fill="${col}"/><ellipse cx="32" cy="${y}" rx="26" ry="3.2" fill="#fff" opacity=".28"/></g><path d="${B}" fill="none" stroke="var(--line)" stroke-width="1.5"/><rect x="21" y="3" width="22" height="12" rx="4" fill="#8FC3FF"/><rect x="21" y="10.5" width="22" height="2" fill="#5FA5F5"/></svg>`},
+ hello(c){return (c.title?t(c.title)+' ':'')+esc(c.name.split(' ')[0])},
+ evMini(e){const [tn,icn,lb]=CU.evKind[e.adjust?'adjust':e.kind],n=e.coupons;return `<div class="li"><span class="ic tint-${tn}">${ic(icn,'s')}</span><div class="grow"><b class="sm">${t(lb)}</b><div class="sub xs">${fmtD(e.at)}, ${hm(e.at)}${e.ref?', '+e.ref:''}</div></div><b class="num" style="color:${n>0?'var(--mint-i)':n<0?'var(--acc-i)':'var(--mute)'}">${n>0?'+':''}${n||'—'}</b></div>`},
  /* --- Home --- */
  home(c){const b=bal(c.id),[tone,lab]=status(c),nd=nextDelivery(c),ts=todayStop(c.id),hold=nextHold(c),dr=driverFor(c);
   const usedM=usedBetween(c.id,monthStart(),addDays(TODAY,1)),usedT=-sum(D().ledger.filter(e=>e.cid===c.id&&e.kind==='delivered'),e=>e.coupons);
-  const weeks=Math.floor(b/c.bottles),unread=D().notes.filter(n=>n.cid===c.id&&!n.read).length;
-  /* ring: share of the balance left since the last top-up */
   let run=0,peak=0;D().ledger.filter(e=>e.cid===c.id).sort((x,y)=>new Date(x.at)-new Date(y.at)).forEach(e=>{run+=e.coupons;if(e.kind==='topup'&&e.coupons>0)peak=run});
-  const frac=clamp(b/Math.max(peak,b,1),.03,1),C=2*Math.PI*41,rc=tone==='rose'?'var(--rose-i)':tone==='sand'?'var(--sand-i)':'var(--acc)';
-  const bar=logobar(`<button class="ib" style="position:relative" onclick="CU.bell()" aria-label="${t('Notifications')}">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button><button class="avatar tint-sky" style="width:40px;height:40px;font-size:14px" onclick="CU.go('me')" aria-label="${t('Profile')}">${initials(c.name)}</button>`);
-  const hero=`<div class="card hero"><div class="ring"><svg viewBox="0 0 96 96" aria-hidden="true"><circle class="trk" cx="48" cy="48" r="41"/><circle cx="48" cy="48" r="41" style="stroke:${rc};stroke-dasharray:${(frac*C).toFixed(1)} ${C.toFixed(1)}"/></svg><div class="rv"><b class="num">${b}</b><span>${t('coupons')}</span></div></div>
-   <div class="grow hcol"><div><span class="pill tint-${tone}"><span class="dot"></span>${t(lab)}</span></div>
-   <div class="meta">${ic('cal','s')}${weeks>0?weeks+' '+t(weeks===1?'week left':'weeks left'):t('Top up now')}</div>
-   <button class="btn ${tone==='mint'?'t':'p'} cmp" onclick="CU.topup()">${ic('plus','s')}${t('Top up')}</button></div></div>`;
+  const frac=clamp(b/Math.max(peak,b,1),.04,1),weeks=Math.floor(b/c.bottles);
+  const hero=`<div class="card hero">${CU.bottle(frac,tone)}
+   <div class="grow hcol"><div class="row sp" style="align-self:stretch"><div style="min-width:0"><div class="sub">${t('Hello')}</div><div class="hname ell">${CU.hello(c)}</div></div>${tone!=='mint'?`<span class="pill tint-${tone}"><span class="dot"></span>${t(lab)}</span>`:''}</div>
+   <div class="row sp" style="align-self:stretch;gap:8px"><div class="hnum"><b class="num">${b}</b><span><em>${t('coupons')}</em><strong class="num">${weeks} ${t('wk')}</strong></span></div><button class="btn ${tone==='mint'?'t':'p'} cmp" onclick="CU.topup()">${ic('plus','s')}${t('Top up')}</button></div></div></div>`;
   const stats=`<div class="mstats"><button class="ms" onclick="S.c.hist='cal';CU.go('hist')"><span class="ml" style="color:var(--sky-i)">${ic('chart','s')}<em>${t('This month')}</em></span><b class="num">${usedM}</b></button>
    <button class="ms" onclick="S.c.hist='mo';CU.go('hist')"><span class="ml" style="color:var(--lilac-i)">${ic('drop','s')}<em>${t('All time')}</em></span><b class="num">${usedT}</b></button>
    <button class="ms" onclick="CU.empties()"><span class="ml" style="color:var(--mint-i)">${ic('refresh','s')}<em>${t('Empties')}</em></span><b class="num">${c.empties}</b></button></div>`;
-  /* week strip */
   const strip=()=>{if(!nd.date)return '';const ndD=parseYmd(nd.date),start=(ndD-TODAY)/864e5<=6?TODAY:addDays(ndD,-6);let h='';for(let i=0;i<7;i++){const d=addDays(start,i),ds=ymd(d);const cls=ds===nd.date?'on':(ts&&ts.status==='delivered'&&ds===TODAY_S)?'done':onHold(c,ds)?'hold':ds===TODAY_S?'today':'';h+=`<div class="${cls}"><span>${d.toLocaleDateString(LANG(),{weekday:'narrow'})}</span><b class="num">${d.getDate()}</b></div>`}return `<div class="wk7">${h}</div>`};
-  const meta=`<div class="mrow"><span>${ic('clock','s')}<span dir="ltr">${c.ws} – ${c.we}</span></span><span>${ic('drop','s')}${c.bottles}</span><span>${ic('truck','s')}${esc(dr.name.split(' ')[0])}</span>${hold?`<span style="color:var(--lilac-i)">${ic('pause','s')}${fmtDay(hold.start)} – ${fmtDay(hold.end)}</span>`:''}</div>`;
-  let deliv,live=false;
-  if(ts&&ts.status==='pending'){live=true;const r=ts.route,e=MAPS.custEta(c.id)||{eta:'–',before:0};
-   deliv=`<div class="card dcard live"><div class="row sp"><div><div class="sub sm">${t('Arriving today')}</div><div class="dl"><span dir="ltr">${c.ws} – ${c.we}</span><span class="bx">${ic('drop','s')}${c.bottles}</span></div></div><div class="eta"><b class="num" data-eta>${e.eta}</b><span>${t('min')}</span></div></div>
-   <div class="segs">${r.stops.map(s=>`<i style="${s.status==='delivered'?'background:var(--mint-i)':s.status==='missed'?'background:var(--rose-i)':s.id===ts.id?'background:var(--acc)':''}"></i>`).join('')}</div>
-   ${MAPS.ok()?`<div class="mapwrap fill"><div class="lmap" data-kind="customer" data-cid="${c.id}"></div></div>`:''}
-   <div class="row"><span class="avatar sm tint-mint">${initials(dr.name)}</span><div class="grow" style="min-width:0"><b>${esc(dr.name.split(' ')[0])}</b> <span class="sub sm">${esc(dr.vehicle)}</span><div class="sub sm" data-before>${e.before===0?t('You are next'):e.before+' '+t(e.before>1?'stops before you':'stop before you')}</div></div><a class="ib flat" href="tel:${dr.phone.replace(/\s/g,'')}" aria-label="Call driver">${ic('phone')}</a></div></div>`}
+  const win=`<span dir="ltr">${c.ws} – ${c.we}</span>`,holdTag=hold?`<span style="color:var(--lilac-i)">${ic('pause','s')}${fmtDay(hold.start)} – ${fmtDay(hold.end)}</span>`:'';
+  let deliv;
+  if(ts&&ts.status==='pending'){const e=MAPS.custEta(c.id)||{eta:'–',before:0},started=ts.route.stops.some(s=>s.status!=='pending'),step=e.before===0?2:started?1:0;
+   const steps=[['box','Packed'],['truck','On the way'],['pin','Nearby'],['check','Delivered']];
+   deliv=`<div class="card dcard"><div class="row sp"><div><div class="sub sm">${t('Arriving today')}</div><div class="dl">${win}<span class="bx">${ic('drop','s')}${c.bottles}</span></div></div><div class="eta"><b class="num" data-eta-cid="${c.id}">${e.eta}</b><span>${t('min')}</span></div></div>
+   <div class="steps">${steps.map((s,i)=>`<div class="${i<step?'dn':i===step?'cu':''}"><i>${ic(s[0],'s')}</i><span>${t(s[1])}</span></div>`).join('')}</div>
+   <div class="row drow"><span class="avatar sm tint-mint">${initials(dr.name)}</span><div class="grow" style="min-width:0"><b>${esc(dr.name.split(' ')[0])}</b> <span class="sub sm">${esc(dr.vehicle)}</span></div><a class="ib flat" href="tel:${dr.phone.replace(/\s/g,'')}" aria-label="Call driver">${ic('phone')}</a></div></div>`}
   else if(ts&&ts.status==='delivered'){deliv=`<div class="card dcard"><div class="row sp"><div><div class="sub sm">${t('Delivered today')}</div><div class="dl">${hm(ts.completed_at)}<span class="bx">${ic('drop','s')}${ts.delivered}</span></div></div><span class="pill tint-mint">${ic('check','s')}${t('Delivered')}</span></div>
-   <div class="mrow"><span>${ic('ticket','s')}${ts.ref}</span><span>${ic('cal','s')}${t('Next')} ${nd.date?fmtD(nd.date):'—'}</span>${hold?`<span style="color:var(--lilac-i)">${ic('pause','s')}${fmtDay(hold.start)} – ${fmtDay(hold.end)}</span>`:''}</div>${strip()}</div>`}
+   <div class="mrow"><span>${ic('ticket','s')}${ts.ref}</span><span>${ic('cal','s')}${t('Next')} ${nd.date?fmtD(nd.date):'—'}</span>${holdTag}</div>${strip()}</div>`}
   else if(ts&&ts.status==='missed'){deliv=`<div class="card dcard"><div class="row sp"><div><div class="sub sm">${t('Missed today')}, ${hm(ts.completed_at)}</div><div class="dl">${esc(ts.miss_reason)}</div></div><span class="pill tint-rose">${t('Missed')}</span></div>
    <div class="mrow"><span>${ic('ticket','s')}${t('No coupons used')}</span><span>${ic('cal','s')}${t('Next')} ${nd.date?fmtD(nd.date):'—'}</span></div>${strip()}</div>`}
-  else{deliv=`<div class="card dcard"><div class="row sp"><div><div class="sub sm">${t('Next delivery')}</div><div class="dl">${nd.date?fmtD(nd.date,{weekday:'long'}):'—'}</div></div>${nd.moved?`<span class="pill tint-sky">${t('Moved')}</span>`:`<span class="pill tint-mint"><span class="dot"></span>${t('Scheduled')}</span>`}</div>${meta}${strip()}</div>`}
-  const qa=`<div class="qa"><button onclick="CU.resched()"><i>${ic('cal')}</i><span>${t('Reschedule')}</span></button><button onclick="CU.hold()"><i>${ic('pause')}</i><span>${t('Hold')}</span></button><button onclick="CU.address()"><i>${ic('pin')}</i><span>${t('Address')}</span></button><button onclick="CU.newTicket()"><i>${ic('chat')}</i><span>${t('Report')}</span></button></div>`;
-  const rec=live?'':`<div class="card tight rc">${ledgerOf(c.id).filter(e=>e.kind!=='topup'||e.amount).slice(0,2).map(e=>{const [tn,icn,lb]=CU.evKind[e.adjust?'adjust':e.kind],n=e.coupons;return `<div class="li tap" onclick="CU.go('hist')"><span class="ic tint-${tn}">${ic(icn,'s')}</span><div class="grow"><b class="sm">${t(lb)}</b><div class="sub xs">${fmtD(e.at)}, ${hm(e.at)}</div></div><b class="num" style="color:${n>0?'var(--mint-i)':n<0?'var(--acc-i)':'var(--mute)'}">${n>0?'+':''}${n||'—'}</b></div>`}).join('')}</div>`;
-  return bar+hero+stats+deliv+qa+rec},
+  else{deliv=`<div class="card dcard"><div class="row sp"><div><div class="sub sm">${t('Next delivery')}</div><div class="dl">${nd.date?fmtD(nd.date,{weekday:'long'}):'—'}</div></div>${nd.moved?`<span class="pill tint-sky">${t('Moved')}</span>`:`<span class="pill tint-mint"><span class="dot"></span>${t('Scheduled')}</span>`}</div>
+   <div class="mrow"><span>${ic('clock','s')}${win}</span><span>${ic('drop','s')}${c.bottles}</span><span>${ic('truck','s')}${esc(dr.name.split(' ')[0])}</span>${holdTag}</div>${strip()}</div>`}
+  const qa=`<div class="qa"><button onclick="CU.resched()"><i>${ic('cal')}</i><span>${t('Reschedule')}</span></button><button onclick="CU.hold()"><i>${ic('pause')}</i><span>${t('Hold')}</span></button><button onclick="CU.address()"><i>${ic('pin')}</i><span>${t('Address')}</span></button><button onclick="S.c.hist='mo';CU.go('hist')"><i>${ic('chart')}</i><span>${t('Monthly')}</span></button></div>`;
+  const last=ledgerOf(c.id).filter(e=>e.kind!=='topup'||e.amount)[0];
+  const rec=last?`<div class="card tight rc" onclick="CU.go('hist')" style="cursor:pointer">${CU.evMini(last)}</div>`:'';
+  return CU.bar(c)+hero+stats+deliv+qa+rec},
+
  bell(){const c=CU.me();const n=D().notes.filter(x=>x.cid===c.id);n.forEach(x=>x.read=true);save();
   const tone={ok:'mint',bad:'rose',top:'sky',low:'sand',chat:'lilac'},icn={ok:'check',bad:'alert',top:'plus',low:'alert',chat:'chat'};
   sheet(`<h2 class="title">${t('Notifications')}</h2><div class="card mt16 tight">${n.length?n.map(x=>`<div class="li"><span class="ic tint-${tone[x.kind]||'grey'}">${ic(icn[x.kind]||'info')}</span><div class="grow"><div>${esc(x.body)}</div><div class="sub xs">${rel(x.at)}</div></div></div>`).join(''):`<div class="empty">No notifications yet. Delivery updates and coupon alerts appear here.</div>`}</div><button class="btn g w" onclick="closeSheet(render)">${t('Done')}</button>`)},
@@ -1541,10 +1630,7 @@ const CU={
   <button class="btn p w lg mt16" onclick="(function(){const c=CU.me();c.building=$('#ab').value.trim()||c.building;c.street=$('#as').value.trim()||c.street;c.gate=$('#ag').value.trim();const q=plateRead('cqp');if(q.qbuilding&&q.qstreet&&q.qzone){Object.assign(c,q)}else if(q.qbuilding||q.qstreet||q.qzone){return toast('Fill all three plate numbers: building, street and zone')}audit(c.name+' updated their address');save();closeSheet(render);toast('Address updated')})()">${t('Save')}</button>`)},
  empties(){const c=CU.me();sheet(`<h2 class="title">${t('Empty bottles')}</h2><p class="sub mt4">You have <b>${c.empties}</b> empty bottle${c.empties===1?'':'s'}. Leave them out on delivery day and the driver takes them back. No deposit is charged while you are an active customer.</p><button class="btn g w mt16" onclick="closeSheet()">${t('Done')}</button>`)},
  /* --- Top up & payment --- */
- topup(){const c=CU.me();const best=D().packs.reduce((a,p)=>p.price/p.coupons<a.price/a.coupons?p:a);
-  sheet(`<h2 class="title">${t('Top up')}</h2><p class="sub mt4">One coupon is one bottle. Pay by card in the app, coupons are added instantly.</p>
-  ${D().packs.map(p=>`<button class="opt" onclick="CU.pay('${p.id}')"><span>${p.coupons} coupons<small>${money(p.price)}, ${(p.price/p.coupons).toFixed(2)} per bottle</small></span>${p.id===best.id?'<span class="pill tint-mint">Best value</span>':ic('right')}</button>`).join('')}
-  <p class="xs mute mt12 c">Prices include VAT where applicable. A tax invoice is emailed after payment.</p>`)},
+ topup(){const c=CU.me();sheet(`<h2 class="title">${t('Top up')}</h2><div class="mt16">${CU.packs(c)}</div><p class="xs mute mt12 c">${t('One coupon is one bottle')}</p>`)},
  pay(pid){const p=D().packs.find(p=>p.id===pid);sheet(`<h2 class="title">${t('Pay')} ${money(p.price)}</h2><p class="sub mt4">${p.coupons} coupons. Demo mode: no card is charged.</p>
   <div class="seg mt16" id="pm"><button class="on" onclick="CU.pm(this,'card')">Card</button><button onclick="CU.pm(this,'apple')">Apple Pay</button><button onclick="CU.pm(this,'cash')">Cash to driver</button></div>
   <div id="payform">${CU.payForm('card')}</div>
@@ -1558,40 +1644,48 @@ const CU={
    if(CU._pm==='cash'){notify(c.id,'top','Cash top-up of '+p.coupons+' coupons noted. Pay '+money(p.price)+' to your driver.');audit(c.name+' requested a cash top-up of '+p.coupons+' coupons');save();closeSheet(render);toast('Noted. Pay the driver on delivery.');return}
    ACT.topup(c.id,pid,m);closeSheet();sheet(`<div class="c" style="padding:10px 0"><div class="bigok">${ic('check')}</div><h2 class="title">Payment received</h2><p class="sub mt8">+${p.coupons} coupons added. You now have <b>${bal(c.id)}</b>.</p><p class="xs mute mt8">Receipt ${refCode(Math.random)} emailed to ${esc(c.email||'you')}.</p></div><button class="btn p w lg mt8" onclick="closeSheet(render)">${t('Done')}</button>`)},900)},
  /* --- History --- */
- hist(c){return `${CU.head(c,t('History'))}<div class="seg mt16">${[['cal','Calendar'],['wk','Weekly'],['mo','Monthly']].map(x=>`<button class="${S.c.hist===x[0]?'on':''}" onclick="S.c.hist='${x[0]}';render()">${t(x[1])}</button>`).join('')}</div>${CU['h_'+S.c.hist](c)}`},
+ hist(c){const tabs=[['cal','cal','Calendar','a'],['wk','list','Weekly','b'],['mo','chart','Monthly','c']];
+  return `${CU.bar(c)}<div class="seg3">${tabs.map(x=>`<button class="${x[3]} ${S.c.hist===x[0]?'on':''}" onclick="S.c.hist='${x[0]}';S.c.flt='All';render()">${ic(x[1],'s')}${t(x[2])}</button>`).join('')}</div>${CU['h_'+S.c.hist](c)}`},
+
  evKind:{delivered:['mint','check','Bottles delivered'],missed:['rose','alert','Delivery missed'],topup:['sky','plus','Coupons topped up'],adjust:['lilac','sliders','Coupons adjusted'],hold:['lilac','pause','Delivery hold']},
  evRow(e){const k=e.adjust?'adjust':e.kind,[tone,icn,lab]=CU.evKind[k];const n=e.coupons;
   return `<div class="li"><span class="ic tint-${tone}">${ic(icn)}</span><div class="grow"><b>${t(lab)}</b><div class="sub sm">${fmtD(e.at)}, ${hm(e.at)}${e.ref?', ref '+e.ref:e.detail?', '+esc(e.detail):''}</div></div><b class="num" style="font-size:18px;color:${n>0?'var(--mint-i)':n<0?'var(--acc-i)':'var(--mute)'}">${n>0?'+':''}${n||'—'}</b></div>`},
  filtered(c,list){const f=S.c.flt;return list.filter(e=>f==='All'||(f==='Delivered'&&e.kind==='delivered')||(f==='Missed'&&e.kind==='missed')||(f==='Top-up'&&e.kind==='topup'))},
- h_cal(c){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()+S.c.mOff,1),first=m.getDay(),len=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),ms=ymd(m).slice(0,7);
-  const all=ledgerOf(c.id).filter(e=>e.at.slice(0,7)===ms),list=CU.filtered(c,all);const byDay={};list.forEach(e=>{const d=+e.at.slice(8,10);(byDay[d]=byDay[d]||[]).push(e)});
-  const nd=nextDelivery(c);const holdDay=d=>onHold(c,ymd(new Date(m.getFullYear(),m.getMonth(),d)))&&(S.c.flt==='All'||S.c.flt==='Hold');
-  let g=['S','M','T','W','T','F','S'].map(d=>`<div class="h">${d}</div>`).join('');for(let i=0;i<first;i++)g+=`<button class="o" disabled></button>`;
-  for(let d=1;d<=len;d++){const ds=ymd(new Date(m.getFullYear(),m.getMonth(),d)),ks=(byDay[d]||[]).map(e=>CU.evKind[e.adjust?'adjust':e.kind][0]);if(holdDay(d))ks.push('lilac');
-   g+=`<button class="${ds===TODAY_S?'t':''} ${ds===nd.date?'n':''} ${S.c.sel===ds?'sel':''}" onclick="S.c.sel='${ds}';render()">${d}<u>${[...new Set(ks)].slice(0,3).map(k=>`<s style="background:var(--${k}-i)"></s>`).join('')}</u></button>`}
+ h_cal(c){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()+S.c.mOff,1),first=m.getDay(),len=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),ms=ymd(m).slice(0,7),f=S.c.flt;
+  const all=ledgerOf(c.id).filter(e=>ymd(new Date(e.at)).slice(0,7)===ms&&(e.kind!=='topup'||e.coupons>0)),list=CU.filtered(c,all);const byDay={};list.forEach(e=>{const d=new Date(e.at).getDate();(byDay[d]=byDay[d]||[]).push(e)});
+  const nd=nextDelivery(c);const bdg=e=>e.kind==='delivered'?`<s class="b-d">${e.bottles}</s>`:e.kind==='missed'?'<s class="b-m">!</s>':'<s class="b-t">+</s>';
+  let g=['S','M','T','W','T','F','S'].map(d=>`<div class="h">${d}</div>`).join('');for(let i=0;i<first;i++)g+='<span></span>';
+  for(let d=1;d<=len;d++){const ds=ymd(new Date(m.getFullYear(),m.getMonth(),d));let bs=(byDay[d]||[]).slice(0,2).map(bdg).join('');
+   if(!bs&&f==='All'){if(onHold(c,ds))bs='<s class="b-h">Ⅱ</s>';else if(ds===nd.date&&ds>=TODAY_S)bs=`<s class="b-n">${c.bottles}</s>`}
+   g+=`<button class="${ds===TODAY_S?'t':''} ${S.c.sel===ds?'sel':''}" onclick="S.c.sel='${ds}';render()"><span class="num">${d}</span><u>${bs}</u></button>`}
   const sel=S.c.sel&&S.c.sel.slice(0,7)===ms?S.c.sel:null,ev=sel?(byDay[+sel.slice(8,10)]||[]):[];
   const cnt=k=>all.filter(e=>e.kind===k).length;
-  return `<div class="chips mt12">${['All','Delivered','Missed','Top-up','Hold'].map(f=>`<button class="chip ${S.c.flt===f?'on':''}" onclick="S.c.flt='${f}';render()">${f!=='All'?`<span class="dot" style="background:var(--${{Delivered:'mint',Missed:'rose','Top-up':'sky',Hold:'lilac'}[f]}-i)"></span>`:''}${t(f)}</button>`).join('')}</div>
-  <div class="row sp mt8 mb8"><button class="ib flat" onclick="S.c.mOff--;S.c.sel=null;render()" ${S.c.mOff<=-5?'disabled':''}>${ic('left')}</button><b class="h2">${m.toLocaleDateString(LANG(),{month:'long',year:'numeric'})}</b><button class="ib flat" onclick="S.c.mOff++;S.c.sel=null;render()" ${S.c.mOff>=0?'disabled':''}>${ic('right')}</button></div>
-  <div class="stat3 mb12" style="grid-template-columns:repeat(4,1fr)"><div class="tint-mint"><b class="num">${cnt('delivered')}</b><span>${t('Deliveries')}</span></div><div class="tint-acc"><b class="num">${-sum(all.filter(e=>e.kind==='delivered'),e=>e.coupons)}</b><span>${t('Used')}</span></div><div class="tint-sky"><b class="num">${cnt('topup')}</b><span>${t('Top-ups')}</span></div><div class="tint-rose"><b class="num">${cnt('missed')}</b><span>${t('Missed')}</span></div></div>
-  <div class="card" style="padding:12px"><div class="cal">${g}</div></div>
-  <div class="card tight"><div class="li" style="padding-bottom:6px"><b class="h3">${sel?fmtD(sel,{weekday:'long'}):'Pick a day'}</b>${sel===TODAY_S?`<span class="pill tint-acc">${t('Today')}</span>`:sel===nd.date?`<span class="pill tint-sky">${t('Next delivery')}</span>`:''}</div>
-  ${ev.length?ev.map(CU.evRow).join(''):sel&&onHold(c,sel)?`<div class="li"><span class="ic tint-lilac">${ic('pause')}</span><div><b>${t('Delivery hold')}</b><div class="sub sm">No delivery on this day. Coupons kept.</div></div></div>`:`<div class="empty">${t('Nothing on this day')}.</div>`}</div>`},
+  const ft=(key,tone,icn,val,lab)=>`<button class="ft ${f===key?'on':''}" ${key?`onclick="S.c.flt=S.c.flt==='${key}'?'All':'${key}';render()"`:'disabled'}><span class="fv" style="color:var(--${tone}-i)">${ic(icn,'s')}<b class="num">${val}</b></span><em>${t(lab)}</em></button>`;
+  return `<div class="row sp calnav"><button class="ib flat" onclick="S.c.mOff--;S.c.sel=null;render()" ${S.c.mOff<=-5?'disabled':''} aria-label="Previous month">${ic('left')}</button><b class="h3">${m.toLocaleDateString(LANG(),{month:'long',year:'numeric'})}</b><button class="ib flat" onclick="S.c.mOff++;S.c.sel=null;render()" ${S.c.mOff>=0?'disabled':''} aria-label="Next month">${ic('right')}</button></div>
+  <div class="fts">${ft('Delivered','mint','check',cnt('delivered'),'Deliveries')}${ft('','acc','drop',-sum(all.filter(e=>e.kind==='delivered'),e=>e.coupons),'Bottles')}${ft('Top-up','sky','plus',cnt('topup'),'Top-ups')}${ft('Missed','rose','alert',cnt('missed'),'Missed')}</div>
+  <div class="card calc"><div class="cal2">${g}</div></div>
+  <div class="card tight rc"><div class="li" style="padding:10px 0 6px"><b class="grow">${sel?fmtD(sel,{weekday:'long'}):t('Pick a day')}</b>${sel===TODAY_S?`<span class="pill tint-acc">${t('Today')}</span>`:sel&&sel===nd.date?`<span class="pill tint-sky">${t('Next delivery')}</span>`:''}</div>
+  ${ev.length?ev.map(CU.evMini).join(''):sel&&onHold(c,sel)?`<div class="li"><span class="ic tint-lilac">${ic('pause','s')}</span><b class="sm">${t('Delivery hold')}</b></div>`:sel&&sel===nd.date?`<div class="li"><span class="ic tint-sky">${ic('truck','s')}</span><div class="grow"><b class="sm">${t('Next delivery')}</b><div class="sub xs"><span dir="ltr">${c.ws} – ${c.we}</span></div></div><b class="num">${c.bottles}</b></div>`:`<div class="li sub sm">${t('Nothing on this day')}</div>`}</div>`},
+
  _wk:4,
  h_wk(c){const list=CU.filtered(c,ledgerOf(c.id)).filter(e=>e.kind!=='topup'||e.amount);const wk=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-x.getDay());return ymd(x)};
   const groups=[];list.forEach(e=>{const k=wk(e.at);let g=groups.find(g=>g.k===k);if(!g){g={k,l:[]};groups.push(g)}g.l.push(e)});const show=groups.slice(0,CU._wk);
-  return `<div class="chips mt12">${['All','Delivered','Missed','Top-up'].map(f=>`<button class="chip ${S.c.flt===f?'on':''}" onclick="S.c.flt='${f}';render()">${t(f)}</button>`).join('')}</div>
-  ${show.map(g=>{const s=parseYmd(g.k),e=addDays(s,6),d=g.l.filter(x=>x.kind==='delivered').length;return `<div class="row sp mt12 mb8" style="padding:0 4px"><b>${fmtDay(s)} – ${fmtDay(e)}</b><span class="sub sm">${d} deliver${d===1?'y':'ies'}</span></div><div class="card tight">${g.l.map(CU.evRow).join('')}</div>`}).join('')||`<div class="empty">Nothing here yet.</div>`}
+  return `<div class="chips">${['All','Delivered','Missed','Top-up'].map(f=>`<button class="chip ${S.c.flt===f?'on':''}" onclick="S.c.flt='${f}';render()">${t(f)}</button>`).join('')}</div>
+  ${show.map(g=>{const s=parseYmd(g.k),e=addDays(s,6),d=g.l.filter(x=>x.kind==='delivered').length;return `<div class="row sp" style="padding:4px 4px 0"><b>${fmtDay(s)} – ${fmtDay(e)}</b><span class="sub sm">${d} deliver${d===1?'y':'ies'}</span></div><div class="card tight rc">${g.l.map(CU.evMini).join('')}</div>`}).join('')||`<div class="empty">Nothing here yet.</div>`}
   ${groups.length>CU._wk?`<button class="btn g w" onclick="CU._wk+=4;render()">${t('Load older weeks')}</button>`:''}`},
- h_mo(c){const months=[];for(let i=3;i>=0;i--){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()-i,1),ms=ymd(m).slice(0,7),l=ledgerOf(c.id).filter(e=>e.at.slice(0,7)===ms);months.push({m,ms,used:-sum(l.filter(e=>e.kind==='delivered'),e=>e.coupons),del:l.filter(e=>e.kind==='delivered').length,added:sum(l.filter(e=>e.kind==='topup'&&e.amount),e=>e.coupons),miss:l.filter(e=>e.kind==='missed').length})}
-  const mx=Math.max(1,...months.map(x=>x.used));
-  return `<div class="card mt12"><div class="sub">Coupons used per month</div><div class="spark mt12" style="height:150px">${months.map((x,i)=>`<div class="${i===3?'on':''}"><b class="ink2">${x.used}</b><i style="height:${Math.max(4,x.used/mx*100)}%"></i><span>${x.m.toLocaleDateString(LANG(),{month:'short'})}</span></div>`).join('')}</div></div>
-  ${[...months].reverse().map((x,i)=>`<div class="card"><div class="row sp"><b class="h3">${x.m.toLocaleDateString(LANG(),{month:'long',year:'numeric'})}</b>${i===0?'<span class="pill tint-acc">To date</span>':''}</div><div class="stat3 mt12" style="grid-template-columns:repeat(4,1fr)"><div class="tint-mint"><b class="num">${x.del}</b><span>${t('Deliveries')}</span></div><div class="tint-acc"><b class="num">${x.used}</b><span>${t('Used')}</span></div><div class="tint-sky"><b class="num">${x.added?'+'+x.added:0}</b><span>${t('Added')}</span></div><div class="tint-rose"><b class="num">${x.miss}</b><span>${t('Missed')}</span></div></div></div>`).join('')}`},
- /* --- Coupons --- */
- cpn(c){const b=bal(c.id),[tone,lab]=status(c),dl=daysLeft(c.id),tops=ledgerOf(c.id).filter(e=>e.kind==='topup').slice(0,5);const best=D().packs.reduce((a,p)=>p.price/p.coupons<a.price/a.coupons?p:a);
-  return `${CU.head(c,t('Coupons'))}<div class="card mt16"><div class="row sp"><span class="sub">${t('Coupons left')}</span><span class="pill tint-${tone}"><span class="dot"></span>${t(lab)}</span></div><div class="big num mt8">${b}</div><div class="sub mt8">${dl!=null?'About '+dl+' days at your usual use ('+avgMonthly(c.id)+' a month).':'Usage will show after a few deliveries.'}</div></div>
-  <div class="h3 mt20 mb8" style="padding:0 4px">${t('Coupon packs')}</div>${D().packs.map(p=>`<button class="opt" style="margin-top:8px" onclick="CU.pay('${p.id}')"><span>${p.coupons} coupons<small>${money(p.price)}, ${(p.price/p.coupons).toFixed(2)} per bottle</small></span>${p.id===best.id?'<span class="pill tint-mint">Best value</span>':ic('right')}</button>`).join('')}
-  <div class="h3 mt20 mb8" style="padding:0 4px">${t('Top-ups')}</div><div class="card tight">${tops.map(CU.evRow).join('')||'<div class="empty">No top-ups yet.</div>'}</div>`},
+ h_mo(c){const months=[];for(let i=3;i>=0;i--){const m=new Date(TODAY.getFullYear(),TODAY.getMonth()-i,1),ms=ymd(m).slice(0,7),l=ledgerOf(c.id).filter(e=>ymd(new Date(e.at)).slice(0,7)===ms);months.push({m,used:-sum(l.filter(e=>e.kind==='delivered'),e=>e.coupons),del:l.filter(e=>e.kind==='delivered').length,added:sum(l.filter(e=>e.kind==='topup'&&e.amount),e=>e.coupons),miss:l.filter(e=>e.kind==='missed').length})}
+  const mx=Math.max(1,...months.map(x=>x.used)),rows=[['Deliveries','mint','check','del'],['Used','acc','drop','used'],['Added','sky','plus','added'],['Missed','rose','alert','miss']];
+  return `<div class="card"><div class="sub sm">${t('Coupons used per month')}</div><div class="mog mt12"><div></div>${months.map((x,i)=>`<div class="mb ${i===3?'on':''}"><b class="num">${x.used}</b><i style="height:${Math.max(4,x.used/mx*100)}%"></i></div>`).join('')}
+  <div></div>${months.map((x,i)=>`<div class="mn ${i===3?'on':''}">${x.m.toLocaleDateString(LANG(),{month:'short'})}</div>`).join('')}
+  ${rows.map(r=>`<div class="rl" style="color:var(--${r[1]}-i)">${ic(r[2],'s')}<em>${t(r[0])}</em></div>${months.map(x=>{const v=x[r[3]];return `<div class="mc tint-${r[1]} num ${v?'':'z'}">${r[3]==='added'&&v?'+':''}${v}</div>`}).join('')}`).join('')}</div></div>
+  <div class="card tight rc">${ledgerOf(c.id).filter(e=>e.kind!=='topup'||e.amount).slice(0,1).map(CU.evMini).join('')}</div>`},
+
+ packs(c){const P=D().packs,best=P.reduce((a,p)=>p.price/p.coupons<a.price/a.coupons?p:a),tones=['blue','purple','green','teal'],cur=D().settings.currency;
+  return `<div class="pks" style="grid-template-columns:repeat(${Math.min(3,P.length)},1fr)">${P.map((p,i)=>`<button class="pk ${tones[i%4]}" onclick="CU.pay('${p.id}')">${P.length>1&&p.id===best.id?`<span class="bst">${t('Best value')}</span>`:''}<b class="num">${p.coupons}</b><span>${t('coupons')}</span><em>${cur} ${(p.price/p.coupons).toFixed(2)}/${t('bottle')}</em><strong>${t('Total')} ${money(p.price)}</strong><i>(${Math.floor(p.coupons/c.bottles)} ${t('weeks of water')})</i></button>`).join('')}</div>`},
+ cpn(c){const b=bal(c.id),[tone,lab]=status(c),weeks=Math.floor(b/c.bottles),tops=ledgerOf(c.id).filter(e=>e.kind==='topup'&&e.coupons>0).slice(0,3);
+  return `${CU.bar(c)}<div class="balc ${tone}"><div><div class="bl">${t('Coupons left')}</div><div class="bn num">${b}</div></div><div class="br"><span class="bp"><span class="dot"></span>${t(lab)}</span><div class="bw">${ic('cal','s')}${weeks} ${t(weeks===1?'week left':'weeks left')}</div><div class="bw">${ic('drop','s')}${c.bottles} / ${t('week')}</div></div></div>
+  <div class="h3" style="padding:4px 4px 0">${t('Refill')}</div>${CU.packs(c)}
+  <div class="h3" style="padding:4px 4px 0">${t('Top-ups')}</div><div class="card tight rc">${tops.map(CU.evMini).join('')||`<div class="li sub sm">${t('No top-ups yet')}</div>`}</div>`},
  /* --- Help --- */
  help(c){const my=D().tickets.filter(x=>x.cid===c.id);const st={open:['sand','Open'],in_progress:['sky','In progress'],resolved:['mint','Resolved']};const s=D().settings;
   return `${CU.head(c,t('Help'))}<div class="tiles mt16 mb12"><a class="tile" href="https://wa.me/${s.supportWa.replace(/\D/g,'')}" target="_blank" rel="noopener"><span class="ic tint-mint">${ic('wa')}</span><b>${t('WhatsApp')}</b><span>${esc(s.supportWa)}</span></a><a class="tile" href="tel:${s.supportPhone.replace(/\s/g,'')}"><span class="ic tint-sky">${ic('phone')}</span><b>${t('Call us')}</b><span>7 am to 9 pm</span></a></div>
@@ -1651,11 +1745,10 @@ const DR={
  route(){const me=DR.me(),R=DR.stops(),nx=DR.next(),done=R.filter(s=>s.status==='delivered').length,miss=R.filter(s=>s.status==='missed').length,left=R.filter(s=>s.status==='pending');
   const rn=DR.routes().map(r=>r.name).join(', ');
   return `<div class="body">${logobar(`<button class="ib" onclick="render();toast('Route refreshed')" aria-label="Refresh">${ic('refresh')}</button><span class="avatar tint-mint">${initials(me.name)}</span>`)}<div style="padding-top:14px"><div class="sub">${fmtD(TODAY,{weekday:'long'})}</div><div class="h2">${rn||'No route today'}</div></div>
-  ${R.length?`<div class="card mt16"><div class="row sp"><div><span class="mid num">${done}</span><span class="sub"> of ${R.length} delivered</span></div><div class="c"><div class="h3 num">${sum(left,s=>s.planned)}</div><div class="sub xs">bottles to go</div></div></div>
-   <div class="row mt12" style="gap:4px">${R.map(s=>`<i style="flex:1;height:7px;border-radius:7px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div>
-   <div class="row sp sub sm mt8"><span>${left.length} stop${left.length===1?'':'s'} left${miss?', '+miss+' missed':''}</span><span>${left.length?'Last window ends '+cust(left[left.length-1].cid).we:'All done'}</span></div></div>
+  ${R.length?`<div class="mstats mt12"><div class="ms"><span class="ml" style="color:var(--mint-i)">${ic('check','s')}<em>Delivered</em></span><b class="num">${done}<small>/${R.length}</small></b></div><div class="ms"><span class="ml" style="color:var(--sky-i)">${ic('drop','s')}<em>Bottles left</em></span><b class="num">${sum(left,s=>s.planned)}</b></div><div class="ms"><span class="ml" style="color:${miss?'var(--rose-i)':'var(--acc-i)'}">${ic(miss?'alert':'pin','s')}<em>${miss?'Missed':'Stops left'}</em></span><b class="num">${miss?miss+'<small> · '+left.length+' left</small>':left.length}</b></div></div>
+   <div class="segs mt12 mb12" style="gap:4px">${R.map(s=>`<i style="height:6px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div>
   ${MAPS.ok()?`<div class="mapbox mapwrap"><div class="lmap" data-kind="driver" data-driver="${me.id}"></div><div class="mapchip"></div></div>`:DR.map(R,nx)}
-  <div class="row sp mb8" style="padding:0 4px"><span class="sub">Stops, use the arrows to reorder</span><button class="btn sm g" onclick="DR.optimize()">Optimize</button></div>
+  <div class="row sp mb8" style="padding:0 4px"><span class="h3">Stops</span><button class="btn sm g" onclick="DR.optimize()">Optimize</button></div>
   ${R.map(s=>{const c=cust(s.cid),isN=nx&&s.id===nx.id,cls=s.status==='delivered'?'done':s.status==='missed'?'miss':isN?'next':'';
    return `<div class="stop ${cls}" ${s.status==='pending'?`onclick="DR.start('${s.id}')" style="cursor:pointer"`:`onclick="DR.detail('${s.id}')" style="cursor:pointer"`}><div class="n">${s.status==='delivered'?ic('check','s'):s.status==='missed'?'!':s.seq}</div>
    <div class="grow" style="min-width:0">${isN?'<div class="xs sb" style="color:var(--acc-i)">Next stop</div>':''}<b class="ell" style="display:block;font-size:16px">${esc(c.name)}</b><div class="sub sm ell">${s.status==='delivered'?hm(s.completed_at)+', '+s.delivered+' delivered, '+s.empties+' empties back':s.status==='missed'?'Missed, '+esc(s.miss_reason):zname(c)+', '+c.ws+' – '+c.we}</div></div>
@@ -1673,7 +1766,7 @@ const DR={
  /* --- Stop --- */
  start(id){const s=DR.stop(id);S.d.cur=id;S.d.full=s.planned;S.d.empty=s.planned;S.d.emptyTouched=false;S.d.photo=null;S.d.why='No answer at the door';S.d.busy=false;DR.go('stop')},
  adj(k,v){if(k==='full'){S.d.full=clamp(S.d.full+v,0,20);if(!S.d.emptyTouched)S.d.empty=S.d.full}else{S.d.empty=clamp(S.d.empty+v,0,20);S.d.emptyTouched=true}render()},
- photoBox(label){return `<label class="photo">${S.d.photo?`<img src="${S.d.photo}" alt="${label}">`:`<span>${ic('camera','l')}<div class="mt8">${label}</div><div class="sub sm" style="font-weight:500">Opens the camera on a phone</div></span>`}<input type="file" accept="image/*" capture="environment" hidden onchange="DR.pic(this)"></label>
+ photoBox(label){return `<label class="photo">${S.d.photo?`<img src="${S.d.photo}" alt="${label}">`:`<span>${ic('camera','l')}<div class="mt8">${label}</div></span>`}<input type="file" accept="image/*" capture="environment" hidden onchange="DR.pic(this)"></label>
   <div class="row mt8" style="justify-content:center;gap:14px">${S.d.photo?`<button class="btn sm g" onclick="S.d.photo=null;render()">Retake</button>`:`<button class="btn sm g" onclick="DR.samplePhoto()">${ic('sparkle','s')} Use a sample photo (demo)</button>`}</div>`},
  async pic(el){const f=el.files[0];if(!f)return;try{const b=await createImageBitmap(f),sc=Math.min(1,720/Math.max(b.width,b.height)),c=document.createElement('canvas');c.width=Math.round(b.width*sc);c.height=Math.round(b.height*sc);c.getContext('2d').drawImage(b,0,0,c.width,c.height);S.d.photo=c.toDataURL('image/jpeg',.7)}catch(e){const r=new FileReader();r.onload=()=>{S.d.photo=r.result;render()};r.readAsDataURL(f);return}render()},
  samplePhoto(){const c=document.createElement('canvas');c.width=640;c.height=420;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,420);g.addColorStop(0,'#cfd6dc');g.addColorStop(1,'#8d969e');x.fillStyle=g;x.fillRect(0,0,640,420);x.fillStyle='#b9a98f';x.fillRect(0,300,640,120);x.fillStyle='#6f7a83';x.fillRect(0,0,640,40);
@@ -1693,7 +1786,7 @@ const DR={
   <div class="card"><div class="row sp"><b style="font-size:16px">Photo proof</b><span class="pill tint-${S.d.photo?'mint':'rose'}">${S.d.photo?'Added':'Required'}</span></div>${DR.photoBox('Photo of the delivered bottles')}</div>
   ${bal(c.id)<S.d.full?`<div class="card tint-rose row" style="padding:12px 14px">${ic('alert')}<div class="sm"><b>Only ${bal(c.id)} coupons left.</b> You can still deliver; the customer will be asked to top up.</div></div>`:''}
   </div>
-  <div class="foot card-like"><button class="btn p w lg" ${S.d.photo&&!S.d.busy?'':'disabled'} onclick="DR.deliver()">${S.d.busy?'Saving…':S.d.photo?'Confirm delivery':'Take a photo to confirm'}</button><button class="btn o w mt8" onclick="DR.go('noresp')">No response</button><div class="xs mute c mt8">The customer gets a notification and their balance updates immediately.</div></div>`},
+  <div class="foot card-like"><button class="btn p w lg" ${S.d.photo&&!S.d.busy?'':'disabled'} onclick="DR.deliver()">${S.d.busy?'Saving…':S.d.photo?'Confirm delivery':'Take a photo to confirm'}</button><button class="btn o w mt8" onclick="DR.go('noresp')">No response</button></div>`},
  async deliver(){if(S.d.busy||!S.d.photo)return;S.d.busy=true;render();const gps=await DR.gps();const err=ACT.confirm(S.d.cur,S.d.full,S.d.empty,S.d.photo,gps);S.d.busy=false;if(err){toast(err);return render()}DR.go('done')},
  /* --- No response --- */
  noresp(){const s=DR.stop(S.d.cur),c=cust(s.cid),R=DR.stops(),reasons=['No answer at the door','Phone not reachable','Gate or door locked','Customer is away'];
@@ -1717,7 +1810,7 @@ const DR={
  sum(){const R=DR.stops(),del=R.filter(s=>s.status==='delivered'),miss=R.filter(s=>s.status==='missed');const me=DR.me();
   const wk=[];for(let i=6;i>=0;i--){const d=addDays(TODAY,-i),ds=ymd(d);const n=i===0?del.length:D().ledger.filter(e=>e.kind==='delivered'&&e.driver===me.id&&e.at.slice(0,10)===ds).length;wk.push({d,n})}const mx=Math.max(1,...wk.map(x=>x.n));
   return `<div class="body">${logobar(`<span class="avatar tint-mint">${initials(DR.me().name)}</span>`)}<div style="padding-top:14px"><div class="sub">${fmtD(TODAY,{weekday:'long'})}</div><h1 class="title">Today's summary</h1></div>
-  <div class="tiles mt16 mb12"><div class="kpi"><div class="v num">${del.length}<span class="sub" style="font-size:16px;font-weight:600">/${R.length}</span></div><div class="l">Stops delivered</div></div><div class="kpi"><div class="v num">${sum(del,s=>s.delivered)}</div><div class="l">Bottles delivered</div></div><div class="kpi"><div class="v num">${sum(del,s=>s.empties)}</div><div class="l">Empties collected</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed</div></div></div>
+  <div class="tiles mt16 mb12"><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('check','s')}</span>Stops delivered</div><div class="v num">${del.length}<span class="sub" style="font-size:16px;font-weight:600">/${R.length}</span></div></div><div class="kpi"><div class="l"><span class="ki tint-sky">${ic('drop','s')}</span>Bottles delivered</div><div class="v num">${sum(del,s=>s.delivered)}</div></div><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('refresh','s')}</span>Empties collected</div><div class="v num">${sum(del,s=>s.empties)}</div></div><div class="kpi"><div class="l"><span class="ki tint-rose">${ic('alert','s')}</span>Missed</div><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div></div></div>
   <div class="card"><div class="row sp"><b>Deliveries this week</b><span class="sub sm">${sum(wk,x=>x.n)} total</span></div><div class="spark mt12">${wk.map((x,i)=>`<div class="${i===6?'on':''}"><i style="height:${Math.max(4,x.n/mx*100)}%"></i><span>${x.d.toLocaleDateString('en-GB',{weekday:'short'}).slice(0,2)}</span></div>`).join('')}</div></div>
   <div class="card tight"><div class="li" style="padding-bottom:6px"><b class="h3">Completed stops</b></div>${R.filter(s=>s.status!=='pending').sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at)).map(s=>`<div class="li tap" onclick="DR.detail('${s.id}')"><span class="ic tint-${s.status==='delivered'?'mint':'rose'}">${ic(s.status==='delivered'?'check':'alert')}</span><div class="grow"><b>${esc(cust(s.cid).name)}</b><div class="sub sm">${hm(s.completed_at)}, ${s.status==='delivered'?s.delivered+' bottles, ref '+s.ref:esc(s.miss_reason)}</div></div>${ic('right')}</div>`).join('')||'<div class="empty">No stops completed yet.</div>'}</div></div>`},
  meView(){const me=DR.me(),R=DR.stops();const month=D().ledger.filter(e=>e.kind==='delivered'&&e.driver===me.id&&new Date(e.at)>=monthStart());
@@ -1754,8 +1847,8 @@ const AD={
   const m0=monthStart(),sold=D().ledger.filter(e=>e.kind==='topup'&&e.amount&&new Date(e.at)>=m0);
   const feed=[...D().notes.slice(0,6).map(n=>({at:n.at,cls:n.kind==='ok'?'ok':n.kind==='bad'?'bad':n.kind==='top'?'top':'',txt:cust(n.cid).name+': '+n.body})),...D().audit.slice(0,4).map(a=>({at:a.at,cls:'',txt:a.who+' '+a.what.charAt(0).toLowerCase()+a.what.slice(1)}))].sort((a,b)=>new Date(b.at)-new Date(a.at)).slice(0,8);
   return AD.head('Overview',fmtLong(TODAY),`<button class="btn g" onclick="AD.go('route')">${ic('route','s')} Today's routes</button><button class="btn p" onclick="AD.newCust()">${ic('plus','s')} New customer</button>`)+
-  `<div class="kpis"><div class="kpi"><div class="v num">${del.length}<span class="mute" style="font-size:18px;font-weight:600">/${st.length}</span></div><div class="l">Delivered today</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed stops</div></div><div class="kpi"><div class="v num" style="color:${low.length?'var(--sand-i)':'inherit'}">${low.length}</div><div class="l">Customers low on coupons</div></div><div class="kpi"><div class="v num">${open.length}</div><div class="l">Open tickets</div></div></div>
-  <div class="kpis"><div class="kpi"><div class="v num">${sum(sold,e=>e.coupons)}</div><div class="l">Coupons sold this month</div></div><div class="kpi"><div class="v num">${money(sum(sold,e=>e.amount))}</div><div class="l">Revenue this month</div></div><div class="kpi"><div class="v num">${-sum(D().ledger.filter(e=>e.kind==='delivered'&&new Date(e.at)>=m0),e=>e.coupons)}</div><div class="l">Bottles delivered this month</div></div><div class="kpi"><div class="v num">${D().customers.filter(c=>c.status==='active').length}</div><div class="l">Active customers</div></div></div>
+  `<div class="kpis"><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('check','s')}</span>Delivered today</div><div class="v num">${del.length}<span class="mute" style="font-size:18px;font-weight:600">/${st.length}</span></div></div><div class="kpi"><div class="l"><span class="ki tint-rose">${ic('alert','s')}</span>Missed stops</div><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div></div><div class="kpi"><div class="l"><span class="ki tint-sand">${ic('ticket','s')}</span>Customers low on coupons</div><div class="v num" style="color:${low.length?'var(--sand-i)':'inherit'}">${low.length}</div></div><div class="kpi"><div class="l"><span class="ki tint-sky">${ic('chat','s')}</span>Open tickets</div><div class="v num">${open.length}</div></div></div>
+  <div class="kpis"><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('card','s')}</span>Coupons sold this month</div><div class="v num">${sum(sold,e=>e.coupons)}</div></div><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('card','s')}</span>Revenue this month</div><div class="v num">${money(sum(sold,e=>e.amount))}</div></div><div class="kpi"><div class="l"><span class="ki tint-sky">${ic('drop','s')}</span>Bottles delivered this month</div><div class="v num">${-sum(D().ledger.filter(e=>e.kind==='delivered'&&new Date(e.at)>=m0),e=>e.coupons)}</div></div><div class="kpi"><div class="l"><span class="ki tint-lilac">${ic('users','s')}</span>Active customers</div><div class="v num">${D().customers.filter(c=>c.status==='active').length}</div></div></div>
   ${MAPS.ok()?`<div class="card" style="padding:0;overflow:hidden"><div class="row sp" style="padding:14px 16px 10px"><b class="h3">Live map</b><span class="sub sm">Drivers move in real time. Tap a stop for the customer.</span></div><div class="mapwrap lg"><div class="lmap" data-kind="admin"></div></div></div>`:''}
   <div class="cols"><div><div class="card"><div class="row sp mb12"><b class="h3">Routes today</b><button class="btn sm g" onclick="AD.go('route')">Manage</button></div>
    ${D().routes.filter(r=>r.date===TODAY_S).map(r=>{const d=r.stops.filter(s=>s.status==='delivered').length,nx=r.stops.find(s=>s.status==='pending');return `<div class="li"><span class="avatar sm tint-mint">${initials(drv(r.driver).name)}</span><div class="grow"><div class="row sp"><b>${esc(drv(r.driver).name)}</b><span class="sub sm num">${d}/${r.stops.length}</span></div><div class="sub sm">${esc(r.name)}${nx?', next: '+esc(cust(nx.cid).name):', complete'}</div><div class="row mt8" style="gap:3px">${r.stops.map(s=>`<i style="flex:1;height:6px;border-radius:6px;background:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':nx&&s.id===nx.id?'var(--acc)':'var(--line)'}"></i>`).join('')}</div></div><button class="ib flat" onclick="AD.preview('driver','${r.driver}')" aria-label="Open driver app">${ic('phone')}</button></div>`}).join('')||'<div class="empty">No routes generated for today.</div>'}</div>
@@ -1788,7 +1881,7 @@ const AD={
   <label class="field"><span>Coupons to add (use a minus to remove)</span><input class="in" id="ad" type="number" value="60" inputmode="numeric"></label><label class="field"><span>Reason</span><select class="in" id="an"><option>Cash payment at office</option><option>Bank transfer received</option><option>Goodwill for missed delivery</option><option>Correction</option><option>Promotion</option></select></label>
   <div class="two mt16"><button class="btn g" onclick="AD.cdet('${id}')">Cancel</button><button class="btn p" onclick="(function(){const d=parseInt($('#ad').value);if(!d)return toast('Enter a number other than 0');ACT.adjust('${id}',d,$('#an').value);toast('Coupons updated, now '+bal('${id}'));AD.cdet('${id}');render()})()">Save</button></div>`)},
  editCust(id){const c=cust(id);sheet(`<div class="row sp"><h2 class="title" style="font-size:22px">Edit customer</h2><span class="sub">ID ${c.no}</span></div>
-  <label class="field"><span>Full name</span><input class="in" id="en" value="${esc(c.name)}"></label><div class="two"><label class="field"><span>Mobile (locked)</span><input class="in" value="${esc(c.phone)}" disabled></label><label class="field"><span>Email</span><input class="in" id="ee" type="email" value="${esc(c.email||'')}"></label></div>
+  <div class="two" style="grid-template-columns:110px 1fr"><label class="field"><span>Title</span><select class="in" id="eti">${['','Mr.','Ms.'].map(x=>`<option value="${x}" ${(c.title||'')===x?'selected':''}>${x||'None'}</option>`).join('')}</select></label><label class="field"><span>Full name</span><input class="in" id="en" value="${esc(c.name)}"></label></div><div class="two"><label class="field"><span>Mobile (locked)</span><input class="in" value="${esc(c.phone)}" disabled></label><label class="field"><span>Email</span><input class="in" id="ee" type="email" value="${esc(c.email||'')}"></label></div>
   <div class="two"><label class="field"><span>Status</span><select class="in" id="es">${['active','paused','closed'].map(s=>`<option ${c.status===s?'selected':''}>${s}</option>`).join('')}</select></label><label class="field"><span>Zone</span><select class="in" id="ez">${D().zones.map(z=>`<option value="${z.id}" ${c.zone===z.id?'selected':''}>${esc(z.name)}</option>`).join('')}</select></label></div>
   <div class="field"><span>Blue plate</span>${plate(c,{edit:true,id:'eqp'})}</div>
   <label class="field"><span>Villa or building</span><input class="in" id="eb" value="${esc(c.building)}"></label><label class="field"><span>Street and area</span><input class="in" id="et" value="${esc(c.street)}"></label><label class="field"><span>Gate note for the driver</span><input class="in" id="eg" value="${esc(c.gate)}"></label>
@@ -1798,11 +1891,11 @@ const AD={
   <div class="two mt16"><button class="btn g" onclick="AD.cdet('${id}')">Cancel</button><button class="btn p" onclick="AD.saveCust('${id}')">Save changes</button></div>`)},
  parsePin(t){try{t=decodeURIComponent(t.trim())}catch(e){t=t.trim()}if(!t)return null;const m=t.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||t.match(/[?&](?:q|ll|query)=(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/^(-?\d+\.?\d*)[ ,]+(-?\d+\.?\d*)$/);return m?[+m[1],+m[2]]:false},
  saveCust(id){const c=cust(id);const v=i=>$('#'+i).value.trim();if(!v('en'))return toast('Name is required');const pin=AD.parsePin(v('el'));if(pin===false)return toast('Map pin not understood. Paste a Google Maps link or "25.26, 51.45".');
-  Object.assign(c,{name:v('en'),email:v('ee')||'',status:v('es'),zone:v('ez'),building:v('eb'),street:v('et'),gate:v('eg'),weekday:+v('ed'),bottles:clamp(+v('eq')||c.bottles,1,20),ws:v('ew')||c.ws,we:v('ex')||c.we});if(pin){c.lat=pin[0];c.lng=pin[1]}const q=plateRead('eqp');if(q.qbuilding&&q.qstreet&&q.qzone)Object.assign(c,q);
+  Object.assign(c,{title:v('eti'),name:v('en'),email:v('ee')||'',status:v('es'),zone:v('ez'),building:v('eb'),street:v('et'),gate:v('eg'),weekday:+v('ed'),bottles:clamp(+v('eq')||c.bottles,1,20),ws:v('ew')||c.ws,we:v('ex')||c.we});if(pin){c.lat=pin[0];c.lng=pin[1]}const q=plateRead('eqp');if(q.qbuilding&&q.qstreet&&q.qzone)Object.assign(c,q);
   audit('Edited customer '+c.name);save();toast('Saved');AD.cdet(id);render()},
  _last:{d:TODAY.getDay(),w:'07:00',x:'09:00',q:3},
  newCust(){const L=AD._last;sheet(`<h2 class="title" style="font-size:22px">New customer</h2><p class="sub mt4">They sign in with this mobile number. Opening coupons are added to the ledger.</p>
-  <label class="field"><span>Full name</span><input class="in" id="cn" placeholder="e.g. Salem Al-Kubaisi"></label><label class="field"><span>Mobile number</span><input class="in" id="cp" type="tel" placeholder="5555 1234" oninput="AD.chkPhone(this.value)"><div class="xs mt4" id="pwarn" style="color:var(--rose-i);min-height:16px"></div></label>
+  <div class="two" style="grid-template-columns:110px 1fr"><label class="field"><span>Title</span><select class="in" id="cti">${['','Mr.','Ms.'].map(x=>`<option value="${x}" ${('Mr.')===x?'selected':''}>${x||'None'}</option>`).join('')}</select></label><label class="field"><span>Full name</span><input class="in" id="cn" placeholder="e.g. Salem Al-Kubaisi"></label></div><label class="field"><span>Mobile number</span><input class="in" id="cp" type="tel" placeholder="5555 1234" oninput="AD.chkPhone(this.value)"><div class="xs mt4" id="pwarn" style="color:var(--rose-i);min-height:16px"></div></label>
   <label class="field" style="margin-top:0"><span>Email (optional)</span><input class="in" id="ce" type="email"></label>
   <div class="field"><span>Blue plate</span>${plate({},{edit:true,id:'nqp'})}</div>
   <div class="two"><label class="field"><span>Villa or building</span><input class="in" id="cb"></label><label class="field"><span>Street and area</span><input class="in" id="cs"></label></div>
@@ -1816,7 +1909,7 @@ const AD={
  chkPhone(v){const el=$('#pwarn');if(!el)return;if(v.replace(/\D/g,'').length<8){el.textContent='';return}const p=AD.norm(v);const ex=D().customers.find(c=>c.phone.replace(/\s/g,'')===p.replace(/\s/g,''));el.textContent=ex?'Already a customer: '+ex.name:''},
  saveNew(another){const v=i=>$('#'+i).value.trim();if(!v('cn')||v('cp').replace(/\D/g,'').length<8)return toast('Name and a valid mobile number are required');const p=AD.norm(v('cp'));if(D().customers.some(c=>c.phone.replace(/\s/g,'')===p.replace(/\s/g,'')))return toast('That number already belongs to a customer');
   const pin=AD.parsePin(v('cl2'));if(pin===false)return toast('Map pin not understood');const z=zone(v('cz'));AD._last={d:+v('cd'),w:v('cw'),x:v('cx'),q:+v('cq')||3};
-  const c={id:'c'+uid(),no:Math.max(...D().customers.map(c=>c.no))+1,name:v('cn'),email:v('ce'),phone:p,building:v('cb'),street:v('cs'),zone:z.id,lat:pin?pin[0]:+(z.lat+(Math.random()-.5)*.02).toFixed(5),lng:pin?pin[1]:+(z.lng+(Math.random()-.5)*.02).toFixed(5),gate:v('cg'),weekday:AD._last.d,ws:AD._last.w,we:AD._last.x,bottles:AD._last.q,login:false,status:'active',holds:[],resched:null,emailSaved:!!v('ce'),lang:'en',notif:{wa:true,email:true},empties:0,since:TODAY_S,target:0};Object.assign(c,plateRead('nqp'));if(!c.qzone)c.qzone=QZONES[z.id];
+  const c={id:'c'+uid(),no:Math.max(...D().customers.map(c=>c.no))+1,title:v('cti'),name:v('cn'),email:v('ce'),phone:p,building:v('cb'),street:v('cs'),zone:z.id,lat:pin?pin[0]:+(z.lat+(Math.random()-.5)*.02).toFixed(5),lng:pin?pin[1]:+(z.lng+(Math.random()-.5)*.02).toFixed(5),gate:v('cg'),weekday:AD._last.d,ws:AD._last.w,we:AD._last.x,bottles:AD._last.q,login:false,status:'active',holds:[],resched:null,emailSaved:!!v('ce'),lang:'en',notif:{wa:true,email:true},empties:0,since:TODAY_S,target:0};Object.assign(c,plateRead('nqp'));if(!c.qzone)c.qzone=QZONES[z.id];
   D().customers.push(c);const pk=v('cc');if(pk!=='0'){const P=D().packs.find(p=>p.id===pk);D().ledger.push({id:uid(),cid:c.id,kind:'topup',at:new Date().toISOString(),coupons:P.coupons,amount:P.price,detail:'Opening pack, paid at sign-up',pack:P.id})}
   audit('Created customer '+c.name);save();toast('Customer created');if(another)AD.newCust();else closeSheet();render()},
  /* --- Drivers --- */
@@ -1867,7 +1960,7 @@ const AD={
   const n=S.a.repRange;const days=[];for(let i=n-1;i>=0;i--){const d=addDays(TODAY,-i),ds=ymd(d);days.push({d,del:D().ledger.filter(e=>e.kind==='delivered'&&e.at.slice(0,10)===ds).length,miss:D().ledger.filter(e=>e.kind==='missed'&&e.at.slice(0,10)===ds).length})}const mx=Math.max(1,...days.map(x=>x.del+x.miss));
   const zrows=D().zones.map(z=>{const cs=D().customers.filter(c=>c.zone===z.id),ids=cs.map(c=>c.id);return {z,n:cs.length,del:del.filter(e=>ids.includes(e.cid)).length,bot:-sum(del.filter(e=>ids.includes(e.cid)),e=>e.coupons),miss:miss.filter(e=>ids.includes(e.cid)).length,low:cs.filter(c=>bal(c.id)<=D().settings.lowAt).length}});
   return AD.head('Reports',TODAY.toLocaleDateString('en-GB',{month:'long',year:'numeric'})+' to date',`<button class="btn g" onclick="AD.csv('customers')">${ic('download','s')} Customers</button><button class="btn g" onclick="AD.csv('deliveries')">${ic('download','s')} Deliveries</button><button class="btn g" onclick="AD.csv('ledger')">${ic('download','s')} Coupon ledger</button>`)+
-  `<div class="kpis"><div class="kpi"><div class="v num">${del.length}</div><div class="l">Deliveries</div></div><div class="kpi"><div class="v num">${-sum(del,e=>e.coupons)}</div><div class="l">Bottles delivered</div></div><div class="kpi"><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div><div class="l">Missed, ${del.length+miss.length?Math.round(miss.length/(del.length+miss.length)*100):0}% of stops</div></div><div class="kpi"><div class="v num">${money(sum(sold,e=>e.amount))}</div><div class="l">${sum(sold,e=>e.coupons)} coupons sold</div></div></div>
+  `<div class="kpis"><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('check','s')}</span>Deliveries</div><div class="v num">${del.length}</div></div><div class="kpi"><div class="l"><span class="ki tint-sky">${ic('drop','s')}</span>Bottles delivered</div><div class="v num">${-sum(del,e=>e.coupons)}</div></div><div class="kpi"><div class="l"><span class="ki tint-rose">${ic('alert','s')}</span>Missed, ${del.length+miss.length?Math.round(miss.length/(del.length+miss.length)*100):0}% of stops</div><div class="v num" style="color:${miss.length?'var(--rose-i)':'inherit'}">${miss.length}</div></div><div class="kpi"><div class="l"><span class="ki tint-mint">${ic('card','s')}</span>${sum(sold,e=>e.coupons)} coupons sold</div><div class="v num">${money(sum(sold,e=>e.amount))}</div></div></div>
   <div class="card"><div class="row sp"><b class="h3">Deliveries per day</b><div class="seg" style="padding:3px">${[7,14,30].map(k=>`<button class="${n===k?'on':''}" style="padding:6px 12px" onclick="S.a.repRange=${k};render()">${k} days</button>`).join('')}</div></div>
    <div class="spark mt16" style="height:160px">${days.map((x,i)=>`<div class="${i===days.length-1?'on':''}" title="${fmtD(x.d)}: ${x.del} delivered, ${x.miss} missed"><div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:120px;gap:2px">${x.miss?`<i class="m" style="height:${x.miss/mx*100}%;flex:none;border-radius:6px 6px 0 0"></i>`:''}<i style="height:${Math.max(2,x.del/mx*100)}%;flex:none;border-radius:${x.miss?'0 0 4px 4px':'6px 6px 4px 4px'}"></i></div><span>${n>14&&i%3?'':x.d.getDate()}</span></div>`).join('')}</div>
    <div class="row mt8 xs mute" style="gap:14px"><span class="row" style="gap:6px"><i class="dot" style="background:var(--acc)"></i>Delivered</span><span class="row" style="gap:6px"><i class="dot" style="background:var(--rose-i)"></i>Missed</span></div></div>
@@ -1899,7 +1992,8 @@ const AD={
 /* ---- boot ---- */
 (function(){if(!load()){S.data=genData();save()}applyTheme();render();
  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(!S.theme){applyTheme()}});
- document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('menuov'))MENU.close();else closeSheet()}});
+ MENU.enhance();new MutationObserver(()=>MENU.enhance()).observe(document.body,{childList:true,subtree:true});
  if('serviceWorker' in navigator&&location.protocol==='https:'&&!window.Capacitor){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 })();
 </script>

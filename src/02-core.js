@@ -13,7 +13,7 @@ const hm=ts=>{const d=new Date(ts);return pad(d.getHours())+':'+pad(d.getMinutes
 const fmtD=(d,o)=>new Date(d).toLocaleDateString(LANG(),Object.assign({weekday:'short',day:'numeric',month:'short'},o||{}));
 const fmtDay=d=>new Date(d).toLocaleDateString(LANG(),{day:'numeric',month:'short'});
 const fmtLong=d=>new Date(d).toLocaleDateString(LANG(),{weekday:'long',day:'numeric',month:'long'});
-const money=n=>(S.data?S.data.settings.currency:'QAR')+' '+Number(n).toLocaleString('en-GB');
+const money=n=>(S.data?S.data.settings.currency:'QR')+' '+Number(n).toLocaleString('en-GB');
 const uid=()=>Math.random().toString(36).slice(2,9);
 const initials=n=>n.split(' ').filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -87,7 +87,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v3';
+const LS='fh-water-demo-v4';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -141,11 +141,12 @@ function genData(){
   const building=z.id==='z4'?'Apartment '+(400+Math.floor(r()*1800))+', '+TOW[i%4]:z.id==='z7'?'Apartment '+(100+Math.floor(r()*2000))+', Porto Arabia':'Villa '+n;
   const street=z.id==='z4'?'West Bay':z.id==='z7'?'The Pearl':z.id==='z5'?'Al Dafna':z.id==='z6'?'Fox Hills, Lusail':(a[1]+(z.id==='z3'?Math.floor(10+r()*80):Math.floor(10+r()*89)))+a[2];
   customers.push(C('c'+(19+i),nm,'','+974 5560 '+(3100+i*7),building,street,z.id,day,w[0],w[1],2+Math.floor(r()*3),8+Math.floor(r()*80),i%6===0?'Ring the bell twice':''))});
+ const FEM='Noora Maryam Sara Aisha Hessa Latifa Moza Dana Amna Shaikha Reem Noof Wadha Alanoud Haya Lolwa Mariam Hind Jawaher'.split(' ');customers.forEach(c=>{c.title=FEM.includes(c.name.split(' ')[0])?'Ms.':'Mr.'});
  const QZ={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
  customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
  /* ledger: 16 weeks of history */
- const ledger=[];const packs=[{id:'p30',coupons:30,price:220},{id:'p60',coupons:60,price:420},{id:'p120',coupons:120,price:780}];
+ const ledger=[];const packs=[{id:'p25',coupons:25,price:185},{id:'p50',coupons:50,price:350},{id:'p100',coupons:100,price:650}];
  const push=e=>ledger.push(Object.assign({id:uid()},e));
  const todayDone={c2:'08:12',c6:'07:08',c7:'07:31',c9:'08:15',c11:'07:20',c12:'08:40'},todayMiss={c8:['07:52','Gate or door locked']};
  customers.forEach((c,ci)=>{
@@ -153,18 +154,18 @@ function genData(){
   const dates=[];for(let k=diff===0?16:15;k>=(diff===0?1:0);k--)dates.push(addDays(lastDate,-7*k));
   const missIdx=(ci%3===0)?3+(ci%5):-1;
   const used=dates.filter((d,i)=>i!==missIdx).length*c.bottles;
-  let k=Math.ceil((used+c.target-60)/60);k=clamp(k,1,4);let opening=c.target+used-60*k;if(opening<10){k--;opening+=60}
+  let k=Math.ceil((used+c.target-50)/50);k=clamp(k,1,5);let opening=c.target+used-50*k;if(opening<10){k--;opening+=50}
   const tupAt=[];for(let j=0;j<k;j++)tupAt.push(Math.floor((j+ .6)*dates.length/k)-1);
   push({cid:c.id,kind:'topup',at:addDays(dates[0],-3).toISOString(),coupons:opening,amount:null,detail:'Opening balance',pack:null});
   dates.forEach((d,i)=>{
-   if(tupAt.includes(i)){const t=new Date(d);t.setHours(18,30+Math.floor(r()*20));t.setDate(t.getDate()-2);push({cid:c.id,kind:'topup',at:t.toISOString(),coupons:60,amount:420,detail:'Card payment',pack:'p60'})}
+   if(tupAt.includes(i)){const t=new Date(d);t.setHours(18,30+Math.floor(r()*20));t.setDate(t.getDate()-2);push({cid:c.id,kind:'topup',at:t.toISOString(),coupons:50,amount:350,detail:'Card payment',pack:'p50'})}
    const t=new Date(d);const [h,m]=c.ws.split(':').map(Number);t.setHours(h,m+Math.floor(r()*90));
    if(i===missIdx)push({cid:c.id,kind:'missed',at:t.toISOString(),coupons:0,detail:['No answer at the door','Phone not reachable','Customer is away'][ci%3]});
    else push({cid:c.id,kind:'delivered',at:t.toISOString(),coupons:-c.bottles,bottles:c.bottles,empties:c.bottles,ref:refCode(r),driver:zones.find(z=>z.id===c.zone).drv});
   });
  });
  /* recent top-ups, so this month's sales are not empty */
- [['c12',2,'p60','Cash payment at office'],['c14',6,'p60','Card payment'],['c1',4,'p30','Card payment'],['c7',1,'p60','Card payment'],['c15',5,'p120','Card payment'],['c20',3,'p60','Apple Pay'],['c27',1,'p60','Card payment']].forEach(([cid,ago,pid,how])=>{
+ [['c12',2,'p50','Cash payment at office'],['c14',6,'p50','Card payment'],['c1',4,'p25','Card payment'],['c7',1,'p50','Card payment'],['c15',5,'p100','Card payment'],['c20',3,'p50','Apple Pay'],['c27',1,'p50','Card payment']].forEach(([cid,ago,pid,how])=>{
   const op=ledger.find(e=>e.cid===cid&&e.detail==='Opening balance'),pk=packs.find(p=>p.id===pid);if(!op)return;op.coupons-=Math.max(0,Math.min(pk.coupons,op.coupons-10));
   const t=addDays(TODAY,-ago);t.setHours(9+Math.floor(r()*11),Math.floor(r()*60));push({cid,kind:'topup',at:t.toISOString(),coupons:pk.coupons,amount:pk.price,detail:how,pack:pid})});
  /* today's routes */
@@ -188,7 +189,7 @@ function genData(){
   {id:'t3',cid:'c14',subject:'Need an invoice for last top-up',status:'open',created_at:iso(-1,16,12),messages:[{from:'customer',body:'Please send a tax invoice for the 60-coupon pack I bought on the 1st.',at:iso(-1,16,12)}]},
   {id:'t4',cid:'c5',subject:'Change delivery to the afternoon',status:'resolved',created_at:iso(-6,14,0),messages:[{from:'customer',body:'Can my delivery window be moved to 2 to 4 pm?',at:iso(-6,14,0)},{from:'support',body:'Done. Your window is now 10 to 12 on the same day, which is the latest slot in Lusail. Let us know if that works.',at:iso(-6,15,30)},{from:'customer',body:'That works, thanks.',at:iso(-6,16,0)}]}];
  const notes=[];
- const settings={company:'Rasid Water',accent:'orange',currency:'QAR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
+ const settings={company:'Rasid Water',accent:'orange',currency:'QR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
  const audit=[{at:iso(-1,12,20),who:'Aisha Al-Naimi',what:'Replied to ticket from Noora Al-Kuwari'},{at:iso(-1,9,2),who:'Fatima Al-Sulaiti',what:'Generated routes for '+fmtD(TODAY)},{at:iso(-2,17,45),who:'Fatima Al-Sulaiti',what:'Added 60 coupons to Saad Al-Khater (card payment at office)'}];
  return {zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
 }
@@ -271,6 +272,20 @@ function signIn(email,pw){const a=accounts().find(x=>x.email.toLowerCase()===ema
 function signOut(){S.me=null;S.role=null;S.a.preview=null;S.a.asId=null;S.c.tab='home';S.d.scr='route';S.a.tab='home';save();render()}
 function resetDemo(){try{localStorage.removeItem(LS)}catch(e){}S.data=genData();S.a.preview=null;S.a.asId=null;S.c=Object.assign(S.c,{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S});S.d=Object.assign(S.d,{scr:'route',tab:'route',cur:null,photo:null,busy:false});S.a.tab='home';applyTheme();save();render();toast('Demo data reset')}
 function toggleTheme(){const dark=document.documentElement.dataset.theme==='dark';S.theme=dark?'light':'dark';applyTheme();save();render()}
+
+/* ---- custom menus (replace native select pop-ups) ---- */
+const MENU={
+ enhance(){$$('select.in:not([data-m])').forEach(sel=>{sel.dataset.m='1';const b=document.createElement('button');b.type='button';b.className='in pickbtn';b.style.cssText=sel.style.cssText;if(sel.disabled)b.disabled=true;
+   const sync=()=>{const o=sel.options[sel.selectedIndex];b.innerHTML='<span class="grow ell">'+esc(o?o.text:'')+'</span>'+ic('down','s')};sync();sel.addEventListener('change',sync);sel.style.display='none';sel.after(b);
+   b.onclick=e=>{e.preventDefault();e.stopPropagation();MENU.open(b,sel)}})},
+ open(btn,sel){MENU.close();const r=btn.getBoundingClientRect(),ov=document.createElement('div');ov.className='menu-ov';ov.id='menuov';
+  ov.innerHTML='<div class="menu" role="listbox">'+[...sel.options].map((o,i)=>'<button role="option" aria-selected="'+(i===sel.selectedIndex)+'" class="'+(i===sel.selectedIndex?'on':'')+'" data-i="'+i+'"><span>'+esc(o.text)+'</span>'+(i===sel.selectedIndex?ic('check','s'):'')+'</button>').join('')+'</div>';
+  document.body.appendChild(ov);const m=ov.firstChild;m.style.width=Math.min(Math.max(r.width,230),innerWidth-24)+'px';const mh=m.offsetHeight,mw=m.offsetWidth;
+  let top=r.bottom+8;if(top+mh>innerHeight-12)top=r.top-mh-8;if(top<12)top=Math.max(12,(innerHeight-mh)/2);
+  m.style.top=top+'px';m.style.left=Math.min(Math.max(12,r.left),innerWidth-mw-12)+'px';m.style.transformOrigin=(top<r.top?'bottom':'top')+' left';
+  ov.onclick=e=>{const b=e.target.closest('[data-i]');MENU.close();if(b&&+b.dataset.i!==sel.selectedIndex){sel.selectedIndex=+b.dataset.i;sel.dispatchEvent(new Event('change',{bubbles:true}))}};
+  const on=m.querySelector('.on');if(on)on.scrollIntoView({block:'nearest'})},
+ close(){const o=document.getElementById('menuov');if(o)o.remove()}};
 
 /* ---- install as app ---- */
 const INST={evt:null,
