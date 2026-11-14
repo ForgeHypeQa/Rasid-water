@@ -7,8 +7,8 @@ const CU={
  view(){const c=CU.me();const body=CU[S.c.tab==='me'?'meView':S.c.tab](c);
   return `<div class="body" id="cbody">${body}</div>${tabbar([['home','home',t('Home')],['hist','clock',t('History')],['cpn','ticket',t('Coupons')],['help','chat',t('Help')],['me','user',t('Profile')]],S.c.tab,'CU.go')}`},
  head(c,title,extra){const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';const unread=D().notes.filter(n=>n.cid===c.id&&!n.read).length;
-  return `<div class="row sp" style="padding-top:8px"><div class="row"><span class="avatar tint-sky">${initials(c.name)}</span><div><div class="sub">${title?'':t(g)}</div><div class="h2" style="line-height:1.15">${title?esc(title):esc(c.name.split(' ')[0])}</div></div></div>
-  <div class="row"><button class="ib" style="position:relative" onclick="CU.bell()" aria-label="Notifications">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button>${extra||''}</div></div>`},
+  return `${logobar(`<button class="ib" style="position:relative" onclick="CU.bell()" aria-label="Notifications">${ic('bell')}${unread?`<span style="position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)"></span>`:''}</button>${extra||''}`)}
+  <div class="row" style="padding-top:14px">${title?'':`<span class="avatar tint-sky">${initials(c.name)}</span>`}<div><div class="sub">${title?'':t(g)}</div><div class="${title?'title':'h2'}" style="line-height:1.15">${title?esc(title):esc(c.name.split(' ')[0])}</div></div></div>`},
  /* --- Home --- */
  home(c){const b=bal(c.id),[tone,lab]=status(c),nd=nextDelivery(c),ts=todayStop(c.id),lt=lastTopup(c.id),pct=clamp(b/120*100,4,100),hold=nextHold(c),dr=driverFor(c);
   const usedM=usedBetween(c.id,monthStart(),addDays(TODAY,1)),usedT=-sum(D().ledger.filter(e=>e.cid===c.id&&e.kind==='delivered'),e=>e.coupons);

@@ -1,5 +1,5 @@
 // Rasid Water service worker: app shell offline, network-first for the page, cache map tiles lightly.
-const V='rasid-v1';
+const V='rasid-v2';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!=='rasid-tiles').map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});

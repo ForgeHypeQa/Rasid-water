@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<meta name="theme-color" content="#FF5A00">
+<meta name="theme-color" content="#0C0D10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -263,6 +263,14 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 }
 
 
+
+/* Rasid logo */
+.rlogo{position:relative;display:inline-block;vertical-align:middle;flex:none}
+.rlogo i{position:absolute;inset:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+.rlogo .lw{background:var(--ink)}.rlogo .lo{background:#FF5A00}
+.logobar{display:flex;align-items:center;gap:8px;padding:8px 0 10px;border-bottom:1px solid var(--line2);margin:0 -16px;padding-left:18px;padding-right:16px;min-height:58px}
+.mlogo{display:none}
+@media(max-width:899px){.mlogo{display:block;margin:-16px -16px 16px}.mlogo .logobar{margin:0;background:var(--card)}}
 /* Qatar blue address plate */
 .qplate{background:#0B4FA8;border-radius:16px;padding:5px;box-shadow:0 6px 18px rgba(11,79,168,.25);color:#fff;font-family:Figtree,sans-serif}
 .qplate .pb{border:2px solid rgba(255,255,255,.92);border-radius:12px;overflow:hidden}
