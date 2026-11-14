@@ -27,6 +27,10 @@ const logo=(kind,h,cls)=>{const m=LOGO_M[kind||'word'];return `<span class="rlog
 const themeBtn=()=>`<button class="ib" onclick="toggleTheme()" aria-label="Switch light or dark theme">${ic(document.documentElement.dataset.theme==='dark'?'sun':'moon')}</button>`;
 const logobar=right=>`<div class="logobar">${logo('word',22)}<span class="grow"></span>${right||''}</div>`;
 
+const powered=()=>'<div class="pwr">Powered by <b>Forge</b><b>Hype</b></div>';
+const kfmt=n=>n>=100000?Math.round(n/1000)+'k':n>=10000?(n/1000).toFixed(1)+'k':Number(n).toLocaleString('en-GB');
+const fold=(i,onclick,av,name,sub,right)=>`<div class="fold k${((i%7)+7)%7}" role="button" tabindex="0" onclick="${onclick}"><i class="fbg"></i><div class="fc"><span class="fav num">${av}</span><div class="grow fm"><b class="ell">${name}</b><small class="ell">${sub}</small></div>${right||''}</div></div>`;
+
 /* ---- Qatar blue address plate ---- */
 const QZONES={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
 function plate(c,o){o=o||{};const ed=!!o.edit,id=o.id||'qp',sz=o.size||'';const f=(k,lab,ar,v,w)=>`<div class="pc ${k}"><div class="pl"><span>${lab}</span><span dir="rtl">${ar}</span></div>${ed?`<input class="pn" id="${id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="${w}" value="${v??''}" placeholder="—" aria-label="${lab} number" oninput="this.value=this.value.replace(/\\D/g,'')">`:`<div class="pn">${v??'—'}</div>`}</div>`;
@@ -319,7 +323,7 @@ function loginView(){const acc=accounts();const grp=k=>acc.filter(a=>a.kind===k)
  <div class="sm sb ink2 mt12">Office</div>${grp('admin').map(row).join('')}${grp('support').map(row).join('')}
  <div class="sm sb ink2 mt16">Drivers</div>${grp('driver').map(row).join('')}
  <div class="sm sb ink2 mt16">Customers</div>${grp('customer').map(row).join('')}
- <div class="row sp mt24 sub"><span>ForgeHype Water, demo build</span><span class="row"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button><button class="btn sm g" onclick="resetDemo()">Reset data</button></span></div>
+ <div class="row sp mt24 sub"><span>Powered by <b style="color:#FF5A00">Forge</b><b style="color:var(--ink)">Hype</b></span><span class="row"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button><button class="btn sm g" onclick="resetDemo()">Reset data</button></span></div>
  </div></div>`}
 function fillLogin(e){$('#lemail').value=e;$('#lpw').value=DEMO_PW;$('#lpw').focus();$('#lerr').textContent=''}
 function doLogin(){const err=signIn($('#lemail').value,$('#lpw').value);if(err){$('#lerr').textContent=err;const c=$('#loginCard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}}
