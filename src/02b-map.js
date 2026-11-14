@@ -87,9 +87,11 @@ const MAPS={inst:[],
   if(inst.kind==='admin'||inst.kind==='driver')L.marker([DEPOT.lat,DEPOT.lng],{icon:MAPS.icon('mk depot',ic('box','s'),26),zIndexOffset:50}).addTo(inst.layers).bindTooltip(DEPOT.name,{direction:'top',offset:[0,-14],className:'maptip'});
   inst.bounds=bounds;if(first||!inst.userMoved)MAPS.fit(inst);MAPS.chips(inst)},
  fit(inst){if(!inst.bounds||!inst.bounds.length)return;inst.userMoved=false;inst.map.fitBounds(L.latLngBounds(inst.bounds),{padding:[34,34],maxZoom:15,animate:false})},
- chips(inst){const routes=MAPS.routesFor(inst);const chip=inst.el.parentElement&&inst.el.parentElement.querySelector('.mapchip');if(!chip)return;
-  if(inst.kind==='customer'){const r=routes[0];if(!r)return;const sim=SIM.route(r);const ts=todayStop(inst.cid);const before=sim.stops.filter(s=>s.status==='pending'&&s.seq<ts.seq).length;const c=cust(inst.cid);const km=KM([sim.pos.lat,sim.pos.lng],[c.lat,c.lng]);const eta=Math.max(1,Math.round(km/30*60))+before*6;
-   chip.innerHTML=`<b>${before===0?'About '+eta+' min away':before+' stop'+(before>1?'s':'')+' before you, about '+eta+' min'}</b><span>${km.toFixed(1)} km${sim.pos.real?', live GPS':''}</span>`;return}
+ custEta(cid){const ts=todayStop(cid);if(!ts||ts.status!=='pending')return null;const sim=SIM.route(ts.route),before=sim.stops.filter(s=>s.status==='pending'&&s.seq<ts.seq).length,c=cust(cid),km=KM([sim.pos.lat,sim.pos.lng],[c.lat,c.lng]);return {before,km,eta:Math.max(1,Math.round(km/30*60))+before*6,real:sim.pos.real}},
+ chips(inst){const routes=MAPS.routesFor(inst);const chip=inst.el.parentElement&&inst.el.parentElement.querySelector('.mapchip');
+  if(inst.kind==='customer'){const e=MAPS.custEta(inst.cid);if(!e)return;const card=inst.el.closest('.card'),t1=card&&card.querySelector('[data-eta]');if(t1)t1.textContent=e.eta;
+   if(chip)chip.innerHTML=`<b>${e.before===0?'About '+e.eta+' min away':e.before+' stop'+(e.before>1?'s':'')+' before you, about '+e.eta+' min'}</b><span>${e.km.toFixed(1)} km${e.real?', live GPS':''}</span>`;return}
+  if(!chip)return;
   if(inst.kind==='driver'){const r=routes[0];if(!r)return;const sim=SIM.route(r);if(!sim.next){chip.innerHTML='<b>Route complete</b><span>Head back to the depot</span>';return}
    const sub=sim.pos.far?'Your location is '+Math.round(sim.pos.remainingKm)+' km from this route':sim.pos.real?'About '+sim.pos.etaMin+' min, live GPS'+(sim.pos.acc?' ±'+Math.round(sim.pos.acc)+' m':''):SIM.watch?'Finding your location…':SIM.denied?'Location blocked, tap '+ic('locate','s')+' to retry':'Simulated, tap '+ic('locate','s')+' for your location';
    chip.innerHTML=`<b>Next: ${esc(cust(sim.next.cid).name.split(' ')[0])}, ${sim.pos.remainingKm.toFixed(1)} km</b><span>${sub}</span>`}},

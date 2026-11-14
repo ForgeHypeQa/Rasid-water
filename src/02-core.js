@@ -328,7 +328,7 @@ function railView(){const m=S.me;return `<aside class="rail"><div class="mb16">$
  <div class="card flat"><div class="h3">Tips for the demo</div><ul class="sub" style="margin:8px 0 0;padding-left:18px;line-height:1.6">${m.kind==='driver'?'<li>Start the next stop, add a photo and confirm. The customer app and admin update instantly.</li><li>Try “No response” to see the missed-delivery flow.</li><li>Undo is available for 30 minutes.</li>':'<li>Khalid’s delivery is on the way today; Noora’s was delivered this morning.</li><li>Top up to see the payment flow (no card is charged).</li><li>Report a problem, then answer it from the admin panel.</li>'}</ul></div></aside>`}
 
 /* ---- root render ---- */
-function render(){const root=$('#root');applyTheme();
+function render(){const root=$('#root');applyTheme();document.body.dataset.app=!S.me?'login':S.role==='admin'?(S.a.preview||'admin'):S.role;
  if(!S.me){root.innerHTML=loginView();document.documentElement.dir='ltr';return}
  document.documentElement.dir='ltr';
  if(S.role==='admin'){root.innerHTML=AD.view();MAPS.mountAll();return}

@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<meta name="theme-color" content="#0C0D10">
+<meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -27,9 +27,9 @@
  color-scheme:light;
 }
 [data-theme=dark]{
- --bg:#0C0D10;--card:#17191E;--card2:#1E2127;--ink:#F3F4F6;--ink2:#C7CAD1;--mute:#8E939D;--line:#262930;--line2:#1F2227;
+ --bg:#000000;--card:#1C1C1E;--card2:#2A2A2D;--ink:#F5F5F7;--ink2:#D1D1D6;--mute:#8E8E93;--line:#38383A;--line2:#2A2A2D;
  --mint:#0F2E22;--mint-i:#4ED39B;--sky:#13244A;--sky-i:#86ABFF;--sand:#382808;--sand-i:#FFC46A;--rose:#3B1818;--rose-i:#FF8A8A;--lilac:#241B45;--lilac-i:#BBA8FF;
- --sh:0 0 0 1px rgba(255,255,255,.05);
+ --sh:0 0 0 1px rgba(255,255,255,.04);
  --acc-t:color-mix(in srgb,var(--acc) 22%,var(--card));--acc-i:color-mix(in srgb,var(--acc) 75%,#fff);--acc-h:color-mix(in srgb,var(--acc) 85%,#fff);
  color-scheme:dark;
 }
@@ -264,6 +264,48 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 
 
 
+
+/* customer home: everything at a glance, no scroll */
+.body.home{display:flex;flex-direction:column;gap:10px;padding:0 16px 12px}
+.body.home>*{flex-shrink:0;margin-bottom:0}
+.hero{display:flex;gap:18px;align-items:center;padding:14px 16px}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
+.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .trk{stroke:var(--line2)}
+.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.ring .rv b{font-size:32px;font-weight:800;letter-spacing:-.03em}
+.ring .rv span{font-size:11px;color:var(--mute);margin-top:4px;font-weight:600}
+.hcol{display:flex;flex-direction:column;gap:9px;min-width:0;align-items:flex-start}
+.meta{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink);font-weight:600}
+.meta svg{color:var(--mute)}
+.btn.cmp{padding:9px 16px;font-size:14px;border-radius:12px;gap:6px}
+.mstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ms{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:10px 12px 9px;text-align:start;display:block}
+.ms .ml{display:flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600}
+.ms .ml em{font-style:normal;color:var(--mute);white-space:nowrap}
+.ms b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:3px;line-height:1.1}
+.dcard{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.dcard.live{flex:1 0 auto}
+.dl{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.25;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dl .bx{display:inline-flex;align-items:center;gap:3px;font-size:14px;font-weight:700;color:var(--ink2)}.dl .bx svg{color:var(--sky-i)}
+.eta{line-height:1;white-space:nowrap}.eta b{font-size:32px;font-weight:800;letter-spacing:-.03em;color:var(--acc-i)}.eta span{font-size:12px;color:var(--mute);margin-inline-start:3px;font-weight:600}
+.segs{display:flex;gap:3px}.segs i{flex:1;height:4px;border-radius:4px;background:var(--line)}
+.mapwrap.fill{flex:1 0 104px;display:flex;border-radius:16px;overflow:hidden}
+.mapwrap.fill .lmap{height:auto;flex:1}
+.mrow{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;font-weight:600;color:var(--ink2)}
+.mrow span{display:inline-flex;align-items:center;gap:5px}.mrow svg{color:var(--mute)}
+.wk7{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.wk7 div{display:flex;flex-direction:column;gap:3px;align-items:center}
+.wk7 span{font-size:10.5px;color:var(--mute);font-weight:600}
+.wk7 b{font-size:14px;font-weight:700;width:32px;height:32px;border-radius:50%;display:grid;place-items:center}
+.wk7 .on b{background:var(--acc);color:#fff}.wk7 .hold b{background:var(--lilac);color:var(--lilac-i)}.wk7 .today b{box-shadow:inset 0 0 0 1.5px var(--ink)}.wk7 .done b{background:var(--mint);color:var(--mint-i)}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:2px 0}
+.qa button{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--ink2)}
+.qa i{width:46px;height:46px;border-radius:50%;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center;font-style:normal;color:var(--ink)}
+.rc .li{padding:9px 0}.rc .li .ic{width:32px;height:32px;border-radius:10px}
+@media(max-height:700px){.body.home{gap:8px}.hero{padding:10px 14px}.ring{width:86px;height:86px}.ring .rv b{font-size:26px}.hcol{gap:6px}.ms{padding:8px 12px 7px}.ms b{font-size:20px}.dcard{padding:12px 14px;gap:8px}.mapwrap.fill{flex-basis:84px}.qa i{width:40px;height:40px}.eta b{font-size:28px}}
+[data-app=customer] .btn.lg{padding:13px 16px;font-size:15px;border-radius:14px}
 /* Rasid logo */
 .rlogo{position:relative;display:inline-block;vertical-align:middle;flex:none}
 .rlogo i{position:absolute;inset:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
