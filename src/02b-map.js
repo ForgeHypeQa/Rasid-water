@@ -1,4 +1,30 @@
 /* ============ Live map (Leaflet) + driver position simulation ============ */
+const ORS_KEY='eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjZmZWU2ZTk0ZmYxNjRkNjVhNGUwYTRkNzg1ZjQ1ZDZkIiwiaCI6Im11cm11cjY0In0=';
+const ORS={
+ secs:t=>{const p=String(t).split(':').map(Number);return p[0]*3600+(p[1]||0)*60},
+ hm:x=>String(Math.floor(x/3600)%24).padStart(2,'0')+':'+String(Math.floor(x%3600/60)).padStart(2,'0'),
+ dur:m=>m>=60?Math.floor(m/60)+' h '+(m%60)+' min':m+' min',
+ async call(b){const r=await fetch('https://api.openrouteservice.org/optimization',{method:'POST',headers:{'Authorization':ORS_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});let j=null;try{j=await r.json()}catch(e){}if(!r.ok)throw (j||{error:'HTTP '+r.status});return j},
+ async optimise(code){if(S.a.optBusy)return;
+  const items=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops.map(s=>({s,r}))).filter(x=>{const z=routeOf(cust(x.s.cid));return z&&z.code===code});
+  if(!items.length){toast('No stops on this route');return}
+  const run=items[0].r,done=run.stops.filter(s=>s.status!=='pending').sort((a,b)=>a.seq-b.seq),todo=run.stops.filter(s=>s.status==='pending');
+  if(todo.length<2){toast('Fewer than 2 stops left, nothing to reorder');return}
+  const last=done.length?cust(done[done.length-1].cid):null,start=last?[last.lng,last.lat]:[DEPOT.lng,DEPOT.lat],dep=[DEPOT.lng,DEPOT.lat];
+  const now=new Date(),t0=S.a.rdate===TODAY_S?Math.max(21600,now.getHours()*3600+now.getMinutes()*60):21600;
+  const jobs=todo.map((s,i)=>{const c=cust(s.cid);return {id:i+1,description:c.name,location:[c.lng,c.lat],service:300,delivery:[s.planned||1],time_windows:[[ORS.secs(c.ws),ORS.secs(c.we)]]}});
+  const req=tw=>({vehicles:[{id:1,profile:'driving-car',start,end:dep,capacity:[todo.reduce((a,s)=>a+(s.planned||1),0)],time_window:[t0,86340]}],jobs:tw?jobs:jobs.map(({time_windows,...j})=>j),options:{g:true}});
+  S.a.optBusy=code;render();
+  try{let tw=true,res=await ORS.call(req(true));if(res.unassigned&&res.unassigned.length){tw=false;res=await ORS.call(req(false))}
+   const steps=res.routes[0].steps.filter(x=>x.type==='job');
+   steps.forEach(x=>{todo[x.id-1].eta=x.arrival});
+   ACT.order(run.id,done.map(s=>s.id).concat(steps.map(x=>todo[x.id-1].id)));
+   run.opt={at:Date.now(),km:(res.summary.distance||res.routes[0].distance||0)/1000,min:Math.round(res.summary.duration/60),tw};
+   audit('Optimised stop order for '+code);save();toast(tw?'Order optimised':'Order optimised. Time slots could not all be met, so they were ignored')}
+  catch(e){const m=String(e&&e.error||e&&e.message||e);const f=m.match(/coordinate \d+: ([\d.]+) ([\d.]+)/);
+   if(f){const c=todo.map(s=>cust(s.cid)).find(c=>Math.abs(c.lng-+f[1])<1e-4&&Math.abs(c.lat-+f[2])<1e-4);toast((c?'The pin for '+c.name:'A pin')+' is more than 350 m from a road. Move it closer to the gate.')}
+   else toast('Could not optimise: '+m.slice(0,90));console.error(e)}
+  finally{S.a.optBusy=null;render()}}};
 const DEPOT={lat:25.2062,lng:51.4705,name:'Rasid depot, Industrial Area'};
 const KM=(a,b)=>{const R=6371,dLa=(b[0]-a[0])*Math.PI/180,dLo=(b[1]-a[1])*Math.PI/180,x=Math.sin(dLa/2)**2+Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const pathLen=p=>{let l=0;for(let i=1;i<p.length;i++)l+=KM(p[i-1],p[i]);return l};
@@ -67,7 +93,7 @@ const MAPS={inst:[],
   rc.onclick=e=>{e.stopPropagation();if(kind==='driver'&&!SIM.watch){SIM.off=false;SIM.denied=false;SIM.startGps(false);return}if(kind==='driver'&&SIM.gps){inst.userMoved=true;inst.map.setView(SIM.gps,16,{animate:true});return}MAPS.fit(inst)};el.appendChild(rc);map.on('dragstart',()=>{inst.userMoved=true})},
  redraw(){MAPS.inst.forEach(i=>MAPS.draw(i,false))},
  routesFor(inst){const today=D().routes.filter(r=>r.date===TODAY_S);if(inst.kind==='driver')return today.filter(r=>r.driver===inst.did);if(inst.kind==='customer'){const ts=todayStop(inst.cid);return ts?[ts.route]:[]}return today},
- draw(inst,first){inst.layers.clearLayers();inst.drivers={};inst.acc=null;const rcb=inst.el.querySelector('.maprc');if(rcb)rcb.classList.toggle('on',!!SIM.gps);const bounds=[];const acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
+ draw(inst,first){if(inst.kind==='rz')return MAPS.drawRz(inst,first);inst.layers.clearLayers();inst.drivers={};inst.acc=null;const rcb=inst.el.querySelector('.maprc');if(rcb)rcb.classList.toggle('on',!!SIM.gps);const bounds=[];const acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
   const routes=MAPS.routesFor(inst);
   routes.forEach((r,ri)=>{const sim=SIM.route(r);const col=inst.kind==='admin'?(ri===0?acc:'#1C55D6'):acc;
    if(sim.donePath.length>1)L.polyline(sim.donePath,{color:MAPS.dark()?'#777':'#9aa0a8',weight:4,opacity:.7,dashArray:'2 8',lineCap:'round'}).addTo(inst.layers);
@@ -86,6 +112,15 @@ const MAPS={inst:[],
   if(inst.kind==='driver'&&!routes.length&&SIM.gps){L.marker(SIM.gps,{icon:MAPS.driverIcon('You',SIM.heading),zIndexOffset:1000}).addTo(inst.layers);bounds.push(SIM.gps)}
   if(inst.kind==='admin'||inst.kind==='driver')L.marker([DEPOT.lat,DEPOT.lng],{icon:MAPS.icon('mk depot',ic('box','s'),26),zIndexOffset:50}).addTo(inst.layers).bindTooltip(DEPOT.name,{direction:'top',offset:[0,-14],className:'maptip'});
   inst.bounds=bounds;if(first||!inst.userMoved)MAPS.fit(inst);MAPS.chips(inst)},
+ drawRz(inst,first){inst.layers.clearLayers();const code=inst.el.dataset.code,acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
+  const st=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops).filter(s=>{const rd=routeOf(cust(s.cid));return rd&&rd.code===code}).sort((a,b)=>a.seq-b.seq);
+  const next=st.find(s=>s.status==='pending'),dep=[DEPOT.lat,DEPOT.lng],path=[dep].concat(st.map(s=>{const c=cust(s.cid);return [c.lat,c.lng]})),bounds=path.slice(1);
+  if(path.length>1){L.polyline(path,{color:'#fff',weight:8,opacity:.9,lineCap:'round',lineJoin:'round'}).addTo(inst.layers);L.polyline(path,{color:acc,weight:3.5,opacity:.95,dashArray:'1 7',lineCap:'round'}).addTo(inst.layers)}
+  st.forEach(s=>{const c=cust(s.cid),isNext=next&&next.id===s.id;const m=L.marker([c.lat,c.lng],{icon:MAPS.stopIcon(s,isNext),zIndexOffset:isNext?400:s.status==='pending'?200:100}).addTo(inst.layers);
+   m.bindTooltip(`<b>${s.seq}. ${esc(c.name)}</b><br>Zone ${c.qzone||'?'}, Street ${c.qstreet||'?'}, Building ${c.qbuilding||'?'}<br>${s.status==='pending'?'×'+s.planned+' bottles':s.status==='delivered'?'Delivered '+hm(s.completed_at):'Missed'}`,{direction:'top',offset:[0,-16],className:'maptip'});
+   m.on('click',()=>AD.cdet(s.cid))});
+  L.marker(dep,{icon:MAPS.icon('mk depot',ic('box','s'),26),zIndexOffset:50}).addTo(inst.layers).bindTooltip(DEPOT.name+' (start)',{direction:'top',offset:[0,-14],className:'maptip'});
+  inst.bounds=bounds.concat([dep]);if(first||!inst.userMoved)MAPS.fit(inst)},
  fit(inst){if(!inst.bounds||!inst.bounds.length)return;inst.userMoved=false;inst.map.fitBounds(L.latLngBounds(inst.bounds),{padding:[34,34],maxZoom:15,animate:false})},
  custEta(cid){const ts=todayStop(cid);if(!ts||ts.status!=='pending')return null;const sim=SIM.route(ts.route),before=sim.stops.filter(s=>s.status==='pending'&&s.seq<ts.seq).length,c=cust(cid),km=KM([sim.pos.lat,sim.pos.lng],[c.lat,c.lng]);return {before,km,eta:Math.max(1,Math.round(km/30*60))+before*6,real:sim.pos.real}},
  chips(inst){const routes=MAPS.routesFor(inst);const chip=inst.el.parentElement&&inst.el.parentElement.querySelector('.mapchip');

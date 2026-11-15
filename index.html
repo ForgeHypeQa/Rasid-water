@@ -1310,7 +1310,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v5';
+const LS='fh-water-demo-v6';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -1373,6 +1373,7 @@ function genData(){
  customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
  customers.find(c=>c.id==='c53').qzone=91;
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
+ const fix={c11:[25.3155,51.5330]};customers.forEach(c=>{if(fix[c.id]){c.lat=fix[c.id][0];c.lng=fix[c.id][1]}});
  /* ledger: 16 weeks of history */
  const ledger=[];const packs=[{id:'p25',coupons:25,price:185},{id:'p50',coupons:50,price:350},{id:'p100',coupons:100,price:650}];
  const push=e=>ledger.push(Object.assign({id:uid()},e));
@@ -1588,6 +1589,32 @@ function render(){const root=$('#root');applyTheme();document.body.dataset.app=!
  root.innerHTML=`<div class="stage">${railView()}${phone(inner,S.role==='customer'&&S.c.ar?'rtl':'ltr')}</div>`;MAPS.mountAll();
  clearInterval(_clock);_clock=setInterval(()=>{const c=$('#clk');if(c)c.textContent=hm(new Date())},15000)}
 /* ============ Live map (Leaflet) + driver position simulation ============ */
+const ORS_KEY='eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjZmZWU2ZTk0ZmYxNjRkNjVhNGUwYTRkNzg1ZjQ1ZDZkIiwiaCI6Im11cm11cjY0In0=';
+const ORS={
+ secs:t=>{const p=String(t).split(':').map(Number);return p[0]*3600+(p[1]||0)*60},
+ hm:x=>String(Math.floor(x/3600)%24).padStart(2,'0')+':'+String(Math.floor(x%3600/60)).padStart(2,'0'),
+ dur:m=>m>=60?Math.floor(m/60)+' h '+(m%60)+' min':m+' min',
+ async call(b){const r=await fetch('https://api.openrouteservice.org/optimization',{method:'POST',headers:{'Authorization':ORS_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});let j=null;try{j=await r.json()}catch(e){}if(!r.ok)throw (j||{error:'HTTP '+r.status});return j},
+ async optimise(code){if(S.a.optBusy)return;
+  const items=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops.map(s=>({s,r}))).filter(x=>{const z=routeOf(cust(x.s.cid));return z&&z.code===code});
+  if(!items.length){toast('No stops on this route');return}
+  const run=items[0].r,done=run.stops.filter(s=>s.status!=='pending').sort((a,b)=>a.seq-b.seq),todo=run.stops.filter(s=>s.status==='pending');
+  if(todo.length<2){toast('Fewer than 2 stops left, nothing to reorder');return}
+  const last=done.length?cust(done[done.length-1].cid):null,start=last?[last.lng,last.lat]:[DEPOT.lng,DEPOT.lat],dep=[DEPOT.lng,DEPOT.lat];
+  const now=new Date(),t0=S.a.rdate===TODAY_S?Math.max(21600,now.getHours()*3600+now.getMinutes()*60):21600;
+  const jobs=todo.map((s,i)=>{const c=cust(s.cid);return {id:i+1,description:c.name,location:[c.lng,c.lat],service:300,delivery:[s.planned||1],time_windows:[[ORS.secs(c.ws),ORS.secs(c.we)]]}});
+  const req=tw=>({vehicles:[{id:1,profile:'driving-car',start,end:dep,capacity:[todo.reduce((a,s)=>a+(s.planned||1),0)],time_window:[t0,86340]}],jobs:tw?jobs:jobs.map(({time_windows,...j})=>j),options:{g:true}});
+  S.a.optBusy=code;render();
+  try{let tw=true,res=await ORS.call(req(true));if(res.unassigned&&res.unassigned.length){tw=false;res=await ORS.call(req(false))}
+   const steps=res.routes[0].steps.filter(x=>x.type==='job');
+   steps.forEach(x=>{todo[x.id-1].eta=x.arrival});
+   ACT.order(run.id,done.map(s=>s.id).concat(steps.map(x=>todo[x.id-1].id)));
+   run.opt={at:Date.now(),km:(res.summary.distance||res.routes[0].distance||0)/1000,min:Math.round(res.summary.duration/60),tw};
+   audit('Optimised stop order for '+code);save();toast(tw?'Order optimised':'Order optimised. Time slots could not all be met, so they were ignored')}
+  catch(e){const m=String(e&&e.error||e&&e.message||e);const f=m.match(/coordinate \d+: ([\d.]+) ([\d.]+)/);
+   if(f){const c=todo.map(s=>cust(s.cid)).find(c=>Math.abs(c.lng-+f[1])<1e-4&&Math.abs(c.lat-+f[2])<1e-4);toast((c?'The pin for '+c.name:'A pin')+' is more than 350 m from a road. Move it closer to the gate.')}
+   else toast('Could not optimise: '+m.slice(0,90));console.error(e)}
+  finally{S.a.optBusy=null;render()}}};
 const DEPOT={lat:25.2062,lng:51.4705,name:'Rasid depot, Industrial Area'};
 const KM=(a,b)=>{const R=6371,dLa=(b[0]-a[0])*Math.PI/180,dLo=(b[1]-a[1])*Math.PI/180,x=Math.sin(dLa/2)**2+Math.cos(a[0]*Math.PI/180)*Math.cos(b[0]*Math.PI/180)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
 const pathLen=p=>{let l=0;for(let i=1;i<p.length;i++)l+=KM(p[i-1],p[i]);return l};
@@ -1656,7 +1683,7 @@ const MAPS={inst:[],
   rc.onclick=e=>{e.stopPropagation();if(kind==='driver'&&!SIM.watch){SIM.off=false;SIM.denied=false;SIM.startGps(false);return}if(kind==='driver'&&SIM.gps){inst.userMoved=true;inst.map.setView(SIM.gps,16,{animate:true});return}MAPS.fit(inst)};el.appendChild(rc);map.on('dragstart',()=>{inst.userMoved=true})},
  redraw(){MAPS.inst.forEach(i=>MAPS.draw(i,false))},
  routesFor(inst){const today=D().routes.filter(r=>r.date===TODAY_S);if(inst.kind==='driver')return today.filter(r=>r.driver===inst.did);if(inst.kind==='customer'){const ts=todayStop(inst.cid);return ts?[ts.route]:[]}return today},
- draw(inst,first){inst.layers.clearLayers();inst.drivers={};inst.acc=null;const rcb=inst.el.querySelector('.maprc');if(rcb)rcb.classList.toggle('on',!!SIM.gps);const bounds=[];const acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
+ draw(inst,first){if(inst.kind==='rz')return MAPS.drawRz(inst,first);inst.layers.clearLayers();inst.drivers={};inst.acc=null;const rcb=inst.el.querySelector('.maprc');if(rcb)rcb.classList.toggle('on',!!SIM.gps);const bounds=[];const acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
   const routes=MAPS.routesFor(inst);
   routes.forEach((r,ri)=>{const sim=SIM.route(r);const col=inst.kind==='admin'?(ri===0?acc:'#1C55D6'):acc;
    if(sim.donePath.length>1)L.polyline(sim.donePath,{color:MAPS.dark()?'#777':'#9aa0a8',weight:4,opacity:.7,dashArray:'2 8',lineCap:'round'}).addTo(inst.layers);
@@ -1675,6 +1702,15 @@ const MAPS={inst:[],
   if(inst.kind==='driver'&&!routes.length&&SIM.gps){L.marker(SIM.gps,{icon:MAPS.driverIcon('You',SIM.heading),zIndexOffset:1000}).addTo(inst.layers);bounds.push(SIM.gps)}
   if(inst.kind==='admin'||inst.kind==='driver')L.marker([DEPOT.lat,DEPOT.lng],{icon:MAPS.icon('mk depot',ic('box','s'),26),zIndexOffset:50}).addTo(inst.layers).bindTooltip(DEPOT.name,{direction:'top',offset:[0,-14],className:'maptip'});
   inst.bounds=bounds;if(first||!inst.userMoved)MAPS.fit(inst);MAPS.chips(inst)},
+ drawRz(inst,first){inst.layers.clearLayers();const code=inst.el.dataset.code,acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
+  const st=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops).filter(s=>{const rd=routeOf(cust(s.cid));return rd&&rd.code===code}).sort((a,b)=>a.seq-b.seq);
+  const next=st.find(s=>s.status==='pending'),dep=[DEPOT.lat,DEPOT.lng],path=[dep].concat(st.map(s=>{const c=cust(s.cid);return [c.lat,c.lng]})),bounds=path.slice(1);
+  if(path.length>1){L.polyline(path,{color:'#fff',weight:8,opacity:.9,lineCap:'round',lineJoin:'round'}).addTo(inst.layers);L.polyline(path,{color:acc,weight:3.5,opacity:.95,dashArray:'1 7',lineCap:'round'}).addTo(inst.layers)}
+  st.forEach(s=>{const c=cust(s.cid),isNext=next&&next.id===s.id;const m=L.marker([c.lat,c.lng],{icon:MAPS.stopIcon(s,isNext),zIndexOffset:isNext?400:s.status==='pending'?200:100}).addTo(inst.layers);
+   m.bindTooltip(`<b>${s.seq}. ${esc(c.name)}</b><br>Zone ${c.qzone||'?'}, Street ${c.qstreet||'?'}, Building ${c.qbuilding||'?'}<br>${s.status==='pending'?'×'+s.planned+' bottles':s.status==='delivered'?'Delivered '+hm(s.completed_at):'Missed'}`,{direction:'top',offset:[0,-16],className:'maptip'});
+   m.on('click',()=>AD.cdet(s.cid))});
+  L.marker(dep,{icon:MAPS.icon('mk depot',ic('box','s'),26),zIndexOffset:50}).addTo(inst.layers).bindTooltip(DEPOT.name+' (start)',{direction:'top',offset:[0,-14],className:'maptip'});
+  inst.bounds=bounds.concat([dep]);if(first||!inst.userMoved)MAPS.fit(inst)},
  fit(inst){if(!inst.bounds||!inst.bounds.length)return;inst.userMoved=false;inst.map.fitBounds(L.latLngBounds(inst.bounds),{padding:[34,34],maxZoom:15,animate:false})},
  custEta(cid){const ts=todayStop(cid);if(!ts||ts.status!=='pending')return null;const sim=SIM.route(ts.route),before=sim.stops.filter(s=>s.status==='pending'&&s.seq<ts.seq).length,c=cust(cid),km=KM([sim.pos.lat,sim.pos.lng],[c.lat,c.lng]);return {before,km,eta:Math.max(1,Math.round(km/30*60))+before*6,real:sim.pos.real}},
  chips(inst){const routes=MAPS.routesFor(inst);const chip=inst.el.parentElement&&inst.el.parentElement.querySelector('.mapchip');
@@ -2065,7 +2101,9 @@ const AD={
   const body=rd=>{const L=(by[rd.code]||[]).sort((a,b)=>a.s.seq-b.s.seq);
    return `<div class="row sp" style="padding:6px 0 10px;border-bottom:1px solid var(--line2);gap:8px"><div class="row" style="min-width:0;gap:8px"><span class="avatar sm tint-mint">${rd.driver?initials(drv(rd.driver).name):'?'}</span><select class="in" style="width:auto;padding:7px 34px 7px 12px" onchange="AD.setRouteDriver('${rd.code}',this.value)"><option value="" ${rd.driver?'':'selected'}>No driver</option>${D().drivers.map(x=>`<option value="${x.id}" ${x.id===rd.driver?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>${rd.driver?`<button class="ib flat" onclick="AD.preview('driver','${rd.driver}')" aria-label="Open driver app">${ic('phone')}</button>`:''}</div>
    <div class="row wrap" style="gap:4px;padding:10px 0 4px">${rd.zones.map(z=>`<span class="zb num" title="${(H[z]||{houses:0}).houses} houses">${z}</span>`).join('')}</div>
-   ${L.map(({s})=>{const c=cust(s.cid);return `<div class="li tap" onclick="${s.status==='pending'?`AD.cdet('${c.id}')`:`AD.stopDet('${s.id}')`}"><span class="num" style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none;background:${s.status==='delivered'?'var(--mint)':s.status==='missed'?'var(--rose)':'var(--card2)'};color:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':'var(--ink)'}">${s.seq}</span><div class="grow" style="min-width:0"><b class="ell" style="display:block">${esc(c.name)}</b><div class="sub sm ell">Z${c.qzone} St ${c.qstreet} Bldg ${c.qbuilding}, ${c.ws}${s.status==='missed'?', '+esc(s.miss_reason):''}</div></div><span class="rq num">${ic('drop','s')}${s.status==='delivered'?s.delivered:s.planned}</span><span class="pill tint-${s.status==='delivered'?'mint':s.status==='missed'?'rose':'sky'}">${s.status==='pending'?'to do':s.status}</span></div>`}).join('')||'<div class="empty">No stops on this date.</div>'}`};
+   ${L.length&&MAPS.ok()?`<div class="mapwrap" style="margin:8px 0 6px"><div class="lmap" data-kind="rz" data-code="${rd.code}"></div></div>`:''}
+   ${L.length?(()=>{const run=L[0].r,o=run.opt,busy=S.a.optBusy===rd.code;return `<div class="row sp wrap" style="gap:8px;padding:4px 0 8px"><div class="sub sm" style="min-width:0">${o?`Optimised ${hm(new Date(o.at))}: ${o.km.toFixed(1)} km, ${ORS.dur(o.min)} driving${o.tw?'':', time slots ignored'}`:'Order not optimised yet'}</div><button class="btn sm ${o?'g':'p'}" ${busy?'disabled':''} onclick="ORS.optimise('${rd.code}')">${ic('route','s')} ${busy?'Optimising…':o?'Optimise again':'Optimise order'}</button></div>`})():''}
+   ${L.map(({s})=>{const c=cust(s.cid);return `<div class="li tap" onclick="${s.status==='pending'?`AD.cdet('${c.id}')`:`AD.stopDet('${s.id}')`}"><span class="num" style="width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none;background:${s.status==='delivered'?'var(--mint)':s.status==='missed'?'var(--rose)':'var(--card2)'};color:${s.status==='delivered'?'var(--mint-i)':s.status==='missed'?'var(--rose-i)':'var(--ink)'}">${s.seq}</span><div class="grow" style="min-width:0"><b class="ell" style="display:block">${esc(c.name)}</b><div class="sub sm ell">${s.status==='pending'&&s.eta!=null?'<b style="color:var(--acc)">ETA '+ORS.hm(s.eta)+'</b>, ':''}Z${c.qzone} St ${c.qstreet} Bldg ${c.qbuilding}, ${c.ws}${s.status==='missed'?', '+esc(s.miss_reason):''}</div></div><span class="rq num">${ic('drop','s')}${s.status==='delivered'?s.delivered:s.planned}</span><span class="pill tint-${s.status==='delivered'?'mint':s.status==='missed'?'rose':'sky'}">${s.status==='pending'?'to do':s.status}</span></div>`}).join('')||'<div class="empty">No stops on this date.</div>'}`};
   const outBody=`<p class="sub sm" style="padding:8px 0 4px">Zone is outside R01 to R06 or in the exclusion list. These customers are never put on a route.</p>${out.map(c=>{const v=coverage(c.qzone);return `<div class="li tap" onclick="AD.cdet('${c.id}')"><span class="zb num">${c.qzone||'?'}</span><div class="grow" style="min-width:0"><b class="ell" style="display:block">${esc(c.name)}</b><div class="sub sm ell">${esc(v.why)}${c.weekday===wd?', due this day':''}</div></div>${ic('right','s')}</div>`}).join('')||'<div class="empty">Every active customer is inside a route.</div>'}`;
   return AD.head('Routes',fmtLong(d),`<button class="btn g" onclick="AD.go('drv')">${ic('truck','s')} Drivers</button><button class="btn g" onclick="AD.combine()">${ic('grid','s')} Edit routes</button>`)+
   `<div class="card"><div class="row wrap" style="gap:8px;align-items:center"><input class="in" type="date" value="${S.a.rdate}" onchange="S.a.rdate=this.value;render()" style="width:auto;padding:9px 12px" aria-label="Date"><button class="btn sm g" onclick="S.a.rdate='${TODAY_S}';render()">Today</button><button class="btn sm g" onclick="S.a.rdate='${ymd(addDays(d,1))}';render()">Next day</button><span class="grow"></span><button class="btn p" onclick="(function(){const n=ACT.generate(S.a.rdate);toast(n?n+' stops added':'Routes are already up to date');render()})()">${ic('route','s')} Generate</button></div>

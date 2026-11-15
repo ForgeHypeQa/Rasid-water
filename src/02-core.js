@@ -94,7 +94,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v5';
+const LS='fh-water-demo-v6';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -157,6 +157,7 @@ function genData(){
  customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
  customers.find(c=>c.id==='c53').qzone=91;
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
+ const fix={c11:[25.3155,51.5330]};customers.forEach(c=>{if(fix[c.id]){c.lat=fix[c.id][0];c.lng=fix[c.id][1]}});
  /* ledger: 16 weeks of history */
  const ledger=[];const packs=[{id:'p25',coupons:25,price:185},{id:'p50',coupons:50,price:350},{id:'p100',coupons:100,price:650}];
  const push=e=>ledger.push(Object.assign({id:uid()},e));
