@@ -29,6 +29,21 @@ Open `index.html` in a browser, or host it on any static host (Netlify, Vercel, 
 
 Sample data (42 customers across 7 Doha zones, 16 weeks of history, routes for every weekday) is generated for the day the demo is opened and kept in the browser's local storage. Use **Reset data** on the sign-in screen or in Settings to start fresh.
 
+## Delivery routes and zones
+
+Customers are routed by the official Ministry of Municipality zone number on their blue plate:
+
+| Route | Zones |
+| --- | --- |
+| R01 Central Doha | 13–17, 21–27, 38, 39 |
+| R02 West Bay & Pearl | 60, 61, 63–68 |
+| R03 Lusail | 69, 70 |
+| R04 Gharrafa & North Doha | 30–37, 51 |
+| R05 Waab & Inner Rayyan | 52–55 |
+| R06 South Doha & Wakrah | 40–48, 56, 90, 91 |
+
+Excluded (flagged **Out of delivery zone**, never routed): Salwa Road & Industrial Area 57, 81, 92, 93, 96, 97; North of Lusail 71, 74, 75; West of Rayyan 58, 59, 80; South of Wakrah 94, 95, 98. Any other zone number is also flagged. Admin can move zones between routes or into the exclusion list, and assign each route to a driver (Routes → Edit routes). Unique houses per zone are counted as zone → street → building.
+
 ## Live map
 
 The map uses Leaflet with Esri light/dark gray basemap tiles (OpenStreetMap fallback) and road geometry from the public OSRM server. The driver app asks for the phone's location when the route opens and shows the real position with an accuracy circle; the locate button on the map retries or recenters. If location is blocked, the marker is simulated (it travels toward the next stop). Live location can be switched off in the Me tab. Customers see the same driver marker on their "Arriving today" card, and the admin overview shows every driver and stop on one map.

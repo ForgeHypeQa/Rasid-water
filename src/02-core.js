@@ -30,13 +30,13 @@ const logobar=right=>`<div class="logobar">${logo('word',22)}<span class="grow">
 const powered=()=>'<div class="pwr">Powered by <b>Forge</b><b>Hype</b></div>';
 const kfmt=n=>n>=100000?Math.round(n/1000)+'k':n>=10000?(n/1000).toFixed(1)+'k':Number(n).toLocaleString('en-GB');
 const UI={open:{},tog(id,group){const o=!UI.open[id];if(group)Object.keys(UI.open).forEach(k=>{if(k.startsWith(group))UI.open[k]=false});UI.open[id]=o;render();if(o){const el=document.getElementById('acc-'+id);if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest',behavior:'smooth'})}}};
-const acc=(id,k,title,sub,right,body,o)=>{o=o||{};const op=!!UI.open[id];return `<div class="acc k${((k%7)+7)%7} ${op?'open':''}" id="acc-${id}"><button class="acch" onclick="UI.tog('${id}','${o.group||''}')" aria-expanded="${op}"><div class="grow" style="min-width:0"><b>${title}</b>${sub?`<small class="ell">${sub}</small>`:''}</div>${right!==''&&right!=null?`<span class="accr num">${right}</span>`:''}<span class="chev">${ic('right','s')}</span></button>${op?`<div class="accb ${o.flush?'flush':''}">${body}</div>`:''}</div>`};
+const acc=(id,k,title,sub,right,body,o)=>{o=o||{};const op=!!UI.open[id];return `<div class="acc k${((k%7)+7)%7} ${o.cls||''} ${op?'open':''}" id="acc-${id}"><button class="acch" onclick="UI.tog('${id}','${o.group||''}')" aria-expanded="${op}"><div class="grow" style="min-width:0"><b>${title}</b>${sub?`<small class="ell">${sub}</small>`:''}</div>${right!==''&&right!=null?`<span class="accr num">${right}</span>`:''}<span class="chev">${ic('right','s')}</span></button>${op?`<div class="accb ${o.flush?'flush':''}">${body}</div>`:''}</div>`};
 const fold=(i,onclick,av,name,sub,right)=>`<div class="fold k${((i%7)+7)%7}" role="button" tabindex="0" onclick="${onclick}"><i class="fbg"></i><div class="fc"><span class="fav num">${av}</span><div class="grow fm"><b class="ell">${name}</b><small class="ell">${sub}</small></div>${right||''}</div></div>`;
 
 /* ---- Qatar blue address plate ---- */
-const QZONES={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
-function plate(c,o){o=o||{};const ed=!!o.edit,id=o.id||'qp',sz=o.size||'';const f=(k,lab,ar,v,w)=>`<div class="pc ${k}"><div class="pl"><span>${lab}</span><span dir="rtl">${ar}</span></div>${ed?`<input class="pn" id="${id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="${w}" value="${v??''}" placeholder="—" aria-label="${lab} number" oninput="this.value=this.value.replace(/\\D/g,'')">`:`<div class="pn">${v??'—'}</div>`}</div>`;
- return `<div class="qplate ${sz}" role="group" aria-label="Qatar address plate"><div class="pb">${f('b','Building','رقم المبنى',c.qbuilding,4)}<div class="prow">${f('s','Street','الشارع',c.qstreet,4)}${f('z','Zone','المنطقة',c.qzone,3)}</div></div></div>`}
+const QZONES={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66,z8:38,z9:90,z10:46,z11:58};
+function plate(c,o){o=o||{};const ed=!!o.edit,id=o.id||'qp',sz=o.size||'';const f=(k,lab,ar,v,w)=>`<div class="pc ${k}"><div class="pl"><span>${lab}</span><span dir="rtl">${ar}</span></div>${ed?`<input class="pn" id="${id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="${w}" value="${v??''}" placeholder="—" aria-label="${lab} number" oninput="this.value=this.value.replace(/\\D/g,'');${k==='z'?`(function(e){const h=document.getElementById('${id}-hint');if(h)h.innerHTML=covHint(e.value)})(this)`:''}">`:`<div class="pn">${v??'—'}</div>`}</div>`;
+ return `<div class="qplate ${sz}" role="group" aria-label="Qatar address plate"><div class="pb">${f('b','Building','رقم المبنى',c.qbuilding,4)}<div class="prow">${f('s','Street','الشارع',c.qstreet,4)}${f('z','Zone','المنطقة',c.qzone,3)}</div></div></div>${ed?`<div class="covh" id="${id}-hint">${covHint(c.qzone)}</div>`:''}`}
 const plateRead=id=>{const g=k=>{const e=document.getElementById(id+'-'+k);return e&&e.value?+e.value:null};return {qbuilding:g('b'),qstreet:g('s'),qzone:g('z')}};
 const plateText=c=>(c.qbuilding?'Bldg '+c.qbuilding:'')+(c.qstreet?', St '+c.qstreet:'')+(c.qzone?', Zone '+c.qzone:'');
 
@@ -94,7 +94,7 @@ star:'M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z
 const ic=(n,cls='')=>`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 
 /* ---- state & persistence ---- */
-const LS='fh-water-demo-v4';
+const LS='fh-water-demo-v5';
 let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
@@ -113,7 +113,8 @@ function genData(){
  const r=rng(20261107);
  const zones=[
   {id:'z1',name:'Al Waab',drv:'d1',lat:25.258,lng:51.452},{id:'z2',name:'Al Rayyan',drv:'d1',lat:25.292,lng:51.424},{id:'z3',name:'Al Gharrafa',drv:'d1',lat:25.332,lng:51.433},
-  {id:'z4',name:'West Bay',drv:'d2',lat:25.322,lng:51.531},{id:'z5',name:'Al Dafna',drv:'d2',lat:25.311,lng:51.528},{id:'z6',name:'Lusail',drv:'d2',lat:25.418,lng:51.492},{id:'z7',name:'The Pearl',drv:'d2',lat:25.371,lng:51.552}];
+  {id:'z4',name:'West Bay',drv:'d2',lat:25.322,lng:51.531},{id:'z5',name:'Al Dafna',drv:'d2',lat:25.311,lng:51.528},{id:'z6',name:'Lusail',drv:'d2',lat:25.418,lng:51.492},{id:'z7',name:'The Pearl',drv:'d2',lat:25.371,lng:51.552},
+  {id:'z8',name:'Al Sadd',drv:'d2',lat:25.2835,lng:51.5085},{id:'z9',name:'Al Wakrah',drv:'d2',lat:25.168,lng:51.598},{id:'z10',name:'Al Thumama',drv:'d2',lat:25.232,lng:51.553},{id:'z11',name:'Muaither',drv:'d1',lat:25.279,lng:51.392}];
  const drivers=[
   {id:'d1',name:'Mohammed Al-Marri',email:'driver1@forgehype.qa',phone:'+974 5511 2201',vehicle:'Van 1',plate:'384 921',active:true,zones:['z1','z2','z3']},
   {id:'d2',name:'Yousef Al-Hajri',email:'driver2@forgehype.qa',phone:'+974 5511 2202',vehicle:'Van 2',plate:'517 044',active:true,zones:['z4','z5','z6','z7']}];
@@ -148,9 +149,13 @@ function genData(){
   const building=z.id==='z4'?'Apartment '+(400+Math.floor(r()*1800))+', '+TOW[i%4]:z.id==='z7'?'Apartment '+(100+Math.floor(r()*2000))+', Porto Arabia':'Villa '+n;
   const street=z.id==='z4'?'West Bay':z.id==='z7'?'The Pearl':z.id==='z5'?'Al Dafna':z.id==='z6'?'Fox Hills, Lusail':(a[1]+(z.id==='z3'?Math.floor(10+r()*80):Math.floor(10+r()*89)))+a[2];
   customers.push(C('c'+(19+i),nm,'','+974 5560 '+(3100+i*7),building,street,z.id,day,w[0],w[1],2+Math.floor(r()*3),8+Math.floor(r()*80),i%6===0?'Ring the bell twice':''))});
- const FEM='Noora Maryam Sara Aisha Hessa Latifa Moza Dana Amna Shaikha Reem Noof Wadha Alanoud Haya Lolwa Mariam Hind Jawaher'.split(' ');customers.forEach(c=>{c.title=FEM.includes(c.name.split(' ')[0])?'Ms.':'Mr.'});
- const QZ={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66};
+ const FEM='Fatma Asma Hamda Noora Maryam Sara Aisha Hessa Latifa Moza Dana Amna Shaikha Reem Noof Wadha Alanoud Haya Lolwa Mariam Hind Jawaher'.split(' ');customers.forEach(c=>{c.title=FEM.includes(c.name.split(' ')[0])?'Ms.':'Mr.'});
+ customers.push(C('c50','Mohammed Al-Kuwari','','+974 5550 1101','Villa 14','Street 860, Al Sadd','z8',0,'10:00','12:00',3,40),C('c51','Fatma Al-Marri','','+974 5550 1102','Apartment 302, Al Sadd Tower','Street 870, Al Sadd','z8',2,'08:00','10:00',2,27),
+  C('c52','Khalid Al-Mannai','','+974 5550 1103','Villa 6','Street 1020, Al Wakrah','z9',0,'08:00','10:00',4,30),C('c53','Asma Al-Kubaisi','','+974 5550 1104','Villa 19','Street 1104, Al Wukair North','z9',3,'09:00','11:00',3,45),
+  C('c54','Rashed Al-Naemi','','+974 5550 1105','Villa 33','Street 1105, Al Thumama','z10',0,'09:00','11:00',3,22),C('c55','Hamda Al-Kuwari','','+974 5550 1106','Villa 2','Street 560, Muaither','z11',1,'09:00','11:00',3,18,'Customer moved outside delivery area'));
+ const QZ={z1:55,z2:53,z3:51,z4:61,z5:63,z6:69,z7:66,z8:38,z9:90,z10:46,z11:58};
  customers.forEach(c=>{const m=(c.street.match(/Street (\d+)/)||[]);c.qzone=QZ[c.zone];c.qstreet=m[1]?+m[1]:800+Math.floor(r()*190);c.qbuilding=(c.building.match(/Villa (\d+)/)||[])[1]?+(c.building.match(/Villa (\d+)/)[1]):10+Math.floor(r()*110)});
+ customers.find(c=>c.id==='c53').qzone=91;
  customers.forEach((c,i)=>{c.no=10400+i*7+Math.floor(r()*5);const z=zones.find(z=>z.id===c.zone);c.lat=+(z.lat+(r()-.5)*.026).toFixed(5);c.lng=+(z.lng+(r()-.5)*.03).toFixed(5);c.empties=1+Math.floor(r()*4);c.since=ymd(addDays(TODAY,-(120+Math.floor(r()*500))))});
  /* ledger: 16 weeks of history */
  const ledger=[];const packs=[{id:'p25',coupons:25,price:185},{id:'p50',coupons:50,price:350},{id:'p100',coupons:100,price:650}];
@@ -175,12 +180,15 @@ function genData(){
  [['c12',2,'p50','Cash payment at office'],['c14',6,'p50','Card payment'],['c1',4,'p25','Card payment'],['c7',1,'p50','Card payment'],['c15',5,'p100','Card payment'],['c20',3,'p50','Apple Pay'],['c27',1,'p50','Card payment']].forEach(([cid,ago,pid,how])=>{
   const op=ledger.find(e=>e.cid===cid&&e.detail==='Opening balance'),pk=packs.find(p=>p.id===pid);if(!op)return;op.coupons-=Math.max(0,Math.min(pk.coupons,op.coupons-10));
   const t=addDays(TODAY,-ago);t.setHours(9+Math.floor(r()*11),Math.floor(r()*60));push({cid,kind:'topup',at:t.toISOString(),coupons:pk.coupons,amount:pk.price,detail:how,pack:pid})});
+ const rdefs=[{code:'R01',name:'Central Doha',zones:[13,14,15,16,17,21,22,23,24,25,26,27,38,39],driver:'d2'},{code:'R02',name:'West Bay & Pearl',zones:[60,61,63,64,65,66,67,68],driver:'d2'},{code:'R03',name:'Lusail',zones:[69,70],driver:'d1'},{code:'R04',name:'Gharrafa & North Doha',zones:[30,31,32,33,34,35,36,37,51],driver:'d1'},{code:'R05',name:'Waab & Inner Rayyan',zones:[52,53,54,55],driver:'d1'},{code:'R06',name:'South Doha & Wakrah',zones:[40,41,42,43,44,45,46,47,48,56,90,91],driver:'d2'}];
+ const excl=[{label:'Salwa Road & Industrial Area',zones:[57,81,92,93,96,97]},{label:'North of Lusail',zones:[71,74,75]},{label:'West of Rayyan',zones:[58,59,80]},{label:'South of Wakrah',zones:[94,95,98]}];
+ const rOf=c=>rdefs.find(r=>r.zones.includes(c.qzone));
  /* today's routes */
- const nameOf={d1:'Al Waab & Al Rayyan',d2:'West Bay & Lusail'};
- const routes=['d1','d2'].map(did=>{const dz=drivers.find(d=>d.id===did).zones;const cs=customers.filter(c=>c.weekday===wd&&dz.includes(c.zone));
+ const ORD=['c6','c7','c8','c9','c1','c10','c13','c11','c2','c12','c14','c15','c50','c54','c52'];
+ const routes=['d1','d2'].map(did=>{const cs=customers.filter(c=>c.weekday===wd&&rOf(c)&&rOf(c).driver===did);
   cs.sort((a,b)=>a.ws.localeCompare(b.ws)||a.name.localeCompare(b.name));
-  if(did==='d1'){const o=['c6','c7','c8','c9','c1','c10'];cs.sort((a,b)=>o.indexOf(a.id)-o.indexOf(b.id))}else{const o=['c11','c2','c12','c13','c14','c15'];cs.sort((a,b)=>o.indexOf(a.id)-o.indexOf(b.id))}
-  return {id:'r_'+did+'_'+TODAY_S,date:TODAY_S,name:nameOf[did],driver:did,stops:cs.map((c,i)=>{const s={id:'s'+uid(),cid:c.id,seq:i+1,status:'pending',planned:c.bottles,delivered:0,empties:0,completed_at:null,miss_reason:null,photo:null,ref:null,gps:null};
+  cs.sort((a,b)=>(ORD.indexOf(a.id)+1||99)-(ORD.indexOf(b.id)+1||99));
+  return {id:'r_'+did+'_'+TODAY_S,date:TODAY_S,name:rdefs.filter(r=>r.driver===did).map(r=>r.code).join(' · '),driver:did,stops:cs.map((c,i)=>{const s={id:'s'+uid(),cid:c.id,seq:i+1,status:'pending',planned:c.bottles,delivered:0,empties:0,completed_at:null,miss_reason:null,photo:null,ref:null,gps:null};
    if(todayDone[c.id]){const [h,m]=todayDone[c.id].split(':').map(Number);const t=new Date(TODAY);t.setHours(h,m);s.status='delivered';s.completed_at=t.toISOString();s.delivered=c.bottles;s.empties=c.bottles-(c.id==='c7'?1:0);s.ref=refCode(r);s.gps=[c.lat,c.lng];
     push({cid:c.id,kind:'delivered',at:s.completed_at,coupons:-c.bottles,bottles:c.bottles,empties:s.empties,ref:s.ref,driver:did,stop:s.id})}
    if(todayMiss[c.id]){const [h,m]=todayMiss[c.id][0].split(':').map(Number);const t=new Date(TODAY);t.setHours(h,m);s.status='missed';s.completed_at=t.toISOString();s.miss_reason=todayMiss[c.id][1];
@@ -198,7 +206,7 @@ function genData(){
  const notes=[];
  const settings={company:'Rasid Water',accent:'orange',currency:'QR',supportPhone:'+974 4444 0000',supportWa:'+974 5500 0000',lowAt:10,warnAt:20,holdMax:14};
  const audit=[{at:iso(-1,12,20),who:'Aisha Al-Naimi',what:'Replied to ticket from Noora Al-Kuwari'},{at:iso(-1,9,2),who:'Fatima Al-Sulaiti',what:'Generated routes for '+fmtD(TODAY)},{at:iso(-2,17,45),who:'Fatima Al-Sulaiti',what:'Added 60 coupons to Saad Al-Khater (card payment at office)'}];
- return {zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
+ return {rdefs,excl,zones,drivers,staff,customers,ledger,packs,routes,tickets,notes,settings,audit};
 }
 
 /* ---- derived data ---- */
@@ -225,7 +233,13 @@ function nextDelivery(c){
   if(c.resched&&c.resched.to===s&&!onHold(c,s))return {date:s,moved:true};
   d=addDays(d,1)}
  return {date:null}}
-const driverFor=c=>drv(zone(c.zone).drv);
+const coverage=qz=>{qz=+qz;if(!qz)return {ok:false,why:'No zone number'};const r=D().rdefs.find(x=>x.zones.includes(qz));if(r)return {ok:true,r};const e=D().excl.find(x=>x.zones.includes(qz));return {ok:false,why:e?e.label:'Zone '+qz+' is not in any route'}};
+const routeOf=c=>{const v=coverage(c.qzone);return v.ok?v.r:null};
+const drvRoutes=id=>D().rdefs.filter(r=>r.driver===id);
+const runName=id=>drvRoutes(id).map(r=>r.code).join(' · ')||'Route';
+const housesByZone=()=>{const g={};D().customers.filter(c=>c.status==='active').forEach(c=>{const z=+c.qzone||0;const Z=g[z]=g[z]||{z,set:new Set(),streets:new Set(),cust:0,bottles:0,areas:new Set()};Z.set.add((c.qstreet||0)+'/'+(c.qbuilding||c.id));Z.streets.add(c.qstreet||0);Z.cust++;Z.bottles+=c.bottles;Z.areas.add(zname(c))});Object.values(g).forEach(Z=>{Z.houses=Z.set.size;Z.areas=[...Z.areas]});return g};
+const covHint=(v)=>{if(!v)return '';const x=coverage(v);return x.ok?`<span style="color:var(--mint-i)">${ic('check','s')} ${x.r.code} ${esc(x.r.name)}</span>`:`<span style="color:var(--rose-i)">${ic('alert','s')} Out of delivery zone, ${esc(x.why)}</span>`};
+const driverFor=c=>{const r=routeOf(c);return drv(r&&r.driver)||drv(zone(c.zone).drv)||D().drivers[0]};
 const openTickets=()=>D().tickets.filter(t=>t.status!=='resolved');
 const monthStart=()=>new Date(TODAY.getFullYear(),TODAY.getMonth(),1);
 function audit(what){D().audit.unshift({at:new Date().toISOString(),who:S.me?S.me.name:'System',what});D().audit=D().audit.slice(0,60)}
@@ -255,9 +269,9 @@ const ACT={
   notify(cid,'top','+'+p.coupons+' coupons added. Payment of '+money(p.price)+' received.');audit('Top-up of '+p.coupons+' coupons by '+cust(cid).name+' ('+(method||'card')+')');save()},
  adjust(cid,delta,note){D().ledger.push({id:uid(),cid,kind:'topup',at:new Date().toISOString(),coupons:delta,amount:null,detail:note||'Admin adjustment',pack:null,adjust:true});audit((delta>0?'Added ':'Removed ')+Math.abs(delta)+' coupons for '+cust(cid).name+(note?' ('+note+')':''));save()},
  generate(dateS){const d=parseYmd(dateS),wd=d.getDay();let added=0;
-  D().drivers.filter(x=>x.active).forEach(dr=>{const cs=D().customers.filter(c=>c.status==='active'&&dr.zones.includes(c.zone)&&!onHold(c,dateS)&&((c.weekday===wd&&!(c.resched&&c.resched.from===dateS))||(c.resched&&c.resched.to===dateS)));
+  D().drivers.filter(x=>x.active).forEach(dr=>{const cs=D().customers.filter(c=>c.status==='active'&&routeOf(c)&&routeOf(c).driver===dr.id&&!onHold(c,dateS)&&((c.weekday===wd&&!(c.resched&&c.resched.from===dateS))||(c.resched&&c.resched.to===dateS)));
    if(!cs.length)return;let r=D().routes.find(r=>r.date===dateS&&r.driver===dr.id);
-   if(!r){r={id:'r_'+dr.id+'_'+dateS,date:dateS,name:dr.id==='d1'?'Al Waab & Al Rayyan':'West Bay & Lusail',driver:dr.id,stops:[]};D().routes.push(r)}
+   if(!r){r={id:'r_'+dr.id+'_'+dateS,date:dateS,name:runName(dr.id),driver:dr.id,stops:[]};D().routes.push(r)}
    cs.sort((a,b)=>a.ws.localeCompare(b.ws)).forEach(c=>{if(r.stops.some(s=>s.cid===c.id))return;r.stops.push({id:'s'+uid(),cid:c.id,seq:r.stops.length+1,status:'pending',planned:c.bottles,delivered:0,empties:0,completed_at:null,miss_reason:null,photo:null,ref:null,gps:null});added++})});
   audit('Generated routes for '+fmtD(d)+' ('+added+' stops added)');save();return added},
  ticket(cid,subject,body){const t={id:'t'+uid(),cid,subject,status:'open',created_at:new Date().toISOString(),messages:[{from:'customer',body,at:new Date().toISOString()}]};D().tickets.unshift(t);save();return t},
