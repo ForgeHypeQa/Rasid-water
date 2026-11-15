@@ -5,6 +5,12 @@ const ORS={
  hm:x=>String(Math.floor(x/3600)%24).padStart(2,'0')+':'+String(Math.floor(x%3600/60)).padStart(2,'0'),
  dur:m=>m>=60?Math.floor(m/60)+' h '+(m%60)+' min':m+' min',
  async call(b){const r=await fetch('https://api.openrouteservice.org/optimization',{method:'POST',headers:{'Authorization':ORS_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});let j=null;try{j=await r.json()}catch(e){}if(!r.ok)throw (j||{error:'HTTP '+r.status});return j},
+ roads:(()=>{try{return JSON.parse(localStorage.getItem('rasid-roads')||'{}')}catch(e){return {}}})(),pend:{},
+ road(pts){const key=pts.map(p=>p[0].toFixed(5)+','+p[1].toFixed(5)).join(';');if(ORS.roads[key])return ORS.roads[key];if(ORS.pend[key]||pts.length<2)return null;ORS.pend[key]=1;
+  fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson',{method:'POST',headers:{'Authorization':ORS_KEY,'Content-Type':'application/json'},body:JSON.stringify({coordinates:pts.map(p=>[p[1],p[0]]),radiuses:pts.map(()=>-1)})})
+   .then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{const f=j.features[0];ORS.roads[key]={line:f.geometry.coordinates.map(c=>[c[1],c[0]]),km:f.properties.summary.distance/1000,min:Math.round(f.properties.summary.duration/60)};
+    const ks=Object.keys(ORS.roads);while(ks.length>40)delete ORS.roads[ks.shift()];try{localStorage.setItem('rasid-roads',JSON.stringify(ORS.roads))}catch(e){}MAPS.redraw()})
+   .catch(e=>console.error('road line',e)).finally(()=>{delete ORS.pend[key]});return null},
  async optimise(code){if(S.a.optBusy)return;
   const items=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops.map(s=>({s,r}))).filter(x=>{const z=routeOf(cust(x.s.cid));return z&&z.code===code});
   if(!items.length){toast('No stops on this route');return}
@@ -115,7 +121,8 @@ const MAPS={inst:[],
  drawRz(inst,first){inst.layers.clearLayers();const code=inst.el.dataset.code,acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
   const st=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops).filter(s=>{const rd=routeOf(cust(s.cid));return rd&&rd.code===code}).sort((a,b)=>a.seq-b.seq);
   const next=st.find(s=>s.status==='pending'),dep=[DEPOT.lat,DEPOT.lng],path=[dep].concat(st.map(s=>{const c=cust(s.cid);return [c.lat,c.lng]})),bounds=path.slice(1);
-  if(path.length>1){L.polyline(path,{color:'#fff',weight:8,opacity:.9,lineCap:'round',lineJoin:'round'}).addTo(inst.layers);L.polyline(path,{color:acc,weight:3.5,opacity:.95,dashArray:'1 7',lineCap:'round'}).addTo(inst.layers)}
+  const rd=path.length>1?ORS.road(path):null;
+  if(rd){L.polyline(rd.line,{color:'#fff',weight:8,opacity:.9,lineCap:'round',lineJoin:'round'}).addTo(inst.layers);L.polyline(rd.line,{color:acc,weight:4,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(inst.layers)}
   st.forEach(s=>{const c=cust(s.cid),isNext=next&&next.id===s.id;const m=L.marker([c.lat,c.lng],{icon:MAPS.stopIcon(s,isNext),zIndexOffset:isNext?400:s.status==='pending'?200:100}).addTo(inst.layers);
    m.bindTooltip(`<b>${s.seq}. ${esc(c.name)}</b><br>Zone ${c.qzone||'?'}, Street ${c.qstreet||'?'}, Building ${c.qbuilding||'?'}<br>${s.status==='pending'?'×'+s.planned+' bottles':s.status==='delivered'?'Delivered '+hm(s.completed_at):'Missed'}`,{direction:'top',offset:[0,-16],className:'maptip'});
    m.on('click',()=>AD.cdet(s.cid))});
