@@ -29,6 +29,8 @@ const logobar=right=>`<div class="logobar">${logo('word',22)}<span class="grow">
 
 const powered=()=>'<div class="pwr">Powered by <b>Forge</b><b>Hype</b></div>';
 const kfmt=n=>n>=100000?Math.round(n/1000)+'k':n>=10000?(n/1000).toFixed(1)+'k':Number(n).toLocaleString('en-GB');
+const UI={open:{},tog(id,group){const o=!UI.open[id];if(group)Object.keys(UI.open).forEach(k=>{if(k.startsWith(group))UI.open[k]=false});UI.open[id]=o;render();if(o){const el=document.getElementById('acc-'+id);if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest',behavior:'smooth'})}}};
+const acc=(id,k,title,sub,right,body,o)=>{o=o||{};const op=!!UI.open[id];return `<div class="acc k${((k%7)+7)%7} ${op?'open':''}" id="acc-${id}"><button class="acch" onclick="UI.tog('${id}','${o.group||''}')" aria-expanded="${op}"><div class="grow" style="min-width:0"><b>${title}</b>${sub?`<small class="ell">${sub}</small>`:''}</div>${right!==''&&right!=null?`<span class="accr num">${right}</span>`:''}<span class="chev">${ic('right','s')}</span></button>${op?`<div class="accb ${o.flush?'flush':''}">${body}</div>`:''}</div>`};
 const fold=(i,onclick,av,name,sub,right)=>`<div class="fold k${((i%7)+7)%7}" role="button" tabindex="0" onclick="${onclick}"><i class="fbg"></i><div class="fc"><span class="fav num">${av}</span><div class="grow fm"><b class="ell">${name}</b><small class="ell">${sub}</small></div>${right||''}</div></div>`;
 
 /* ---- Qatar blue address plate ---- */

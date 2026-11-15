@@ -452,6 +452,24 @@ select.in{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w
 .phone .kpis{grid-template-columns:repeat(4,1fr);gap:8px}
 .phone .kpi{padding:10px 8px;border-radius:16px}.phone .ki{width:26px;height:26px;border-radius:8px;margin-bottom:7px}.phone .kpi .v{font-size:18px}.phone .kpi .l{font-size:10px;line-height:1.2}
 @media(max-width:899px){.kpis{grid-template-columns:repeat(4,1fr);gap:8px}.kpi{padding:10px 8px;border-radius:16px}.ki{width:26px;height:26px;border-radius:8px;margin-bottom:7px}.kpi .v{font-size:18px}.kpi .l{font-size:10px;line-height:1.2}}
+
+/* colourful collapsible bars */
+.accs{display:grid;gap:12px;margin-bottom:12px;align-items:start}
+@media(min-width:900px){.main .accs{grid-template-columns:1fr 1fr}.main .accs .acc.open{grid-column:1/-1}}
+.acc{background:var(--k);border-radius:30px;color:#111318;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.acch{display:flex;align-items:center;gap:12px;width:100%;padding:16px 14px 16px 22px;text-align:start}
+.acch b{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.acch small{display:block;font-size:13px;color:rgba(17,19,24,.66);font-weight:500;margin-top:3px}
+.accr{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;white-space:nowrap}.accr small{display:inline;font-size:.6em;font-weight:700;opacity:.6;margin:0}
+.body>.acc{margin:0 0 12px}
+.chev{width:42px;height:42px;border-radius:50%;background:#111318;color:#fff;display:grid;place-items:center;flex:none;transition:transform .2s}
+.acc.open .chev{transform:rotate(90deg)}
+.accb{background:var(--card);color:var(--ink);margin:0 8px 8px;border-radius:24px;padding:6px 14px 10px}
+.accb.flush{padding:0;overflow:hidden}.accb .mapwrap .lmap{height:300px}.accb.flush .mapwrap.lg .lmap{height:380px}
+.zb{display:inline-grid;place-items:center;min-width:28px;height:22px;padding:0 6px;border-radius:6px;background:#0B4FA8;color:#fff;font-size:12px;font-weight:800;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.85),0 0 0 1.5px #0B4FA8}
+.zplate{width:46px;height:40px;border-radius:9px;background:#0B4FA8;color:#fff;display:grid;place-items:center;font-size:18px;font-weight:800;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.9),0 0 0 2px #0B4FA8}
+.cbx{width:24px;height:24px;border-radius:7px;box-shadow:inset 0 0 0 2px var(--line);display:grid;place-items:center;flex:none}.cbx.on{background:var(--ink);color:var(--bg);box-shadow:none}
+.hz{text-align:end;line-height:1}.hz b{font-size:22px;font-weight:800;display:block}.hz small{font-size:10.5px;color:var(--mute);font-weight:600}
 /* Rasid logo */
 .rlogo{position:relative;display:inline-block;vertical-align:middle;flex:none}
 .rlogo i{position:absolute;inset:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
