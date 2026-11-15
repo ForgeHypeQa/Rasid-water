@@ -2,7 +2,7 @@
 const DR={
  me(){return drv(S.role==='driver'?S.me.id:S.a.asId)},
  routes(){return D().routes.filter(r=>r.date===TODAY_S&&r.driver===DR.me().id)},
- stops(){return DR.routes().flatMap(r=>r.stops.map(s=>Object.assign(s,{route:r}))).sort((a,b)=>a.seq-b.seq)},
+ stops(){return DR.routes().flatMap(r=>r.stops.map(s=>Object.defineProperty(s,'route',{value:r,enumerable:false,configurable:true,writable:true}))).sort((a,b)=>a.seq-b.seq)},
  next(){return DR.stops().find(s=>s.status==='pending')},
  stop(id){return DR.stops().find(s=>s.id===id)},
  go(s){S.d.scr=s;if(['route','sum','me'].includes(s))S.d.tab=s;render()},

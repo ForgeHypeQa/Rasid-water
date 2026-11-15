@@ -1315,9 +1315,9 @@ let S={role:null,me:null,data:null,theme:null,
  c:{tab:'home',hist:'cal',flt:'All',mOff:0,sel:TODAY_S,ar:false},
  d:{scr:'route',tab:'route',cur:null,full:0,empty:0,photo:null,why:'No answer at the door',busy:false},
  a:{tab:'home',preview:null,asId:null,f:{q:'',z:'All',c:'All',t:'All'},rdate:TODAY_S,repRange:14}};
-function save(){try{localStorage.setItem(LS,JSON.stringify({day:TODAY_S,data:S.data,role:S.role,me:S.me,theme:S.theme,a:{preview:S.a.preview,asId:S.a.asId},ar:S.c.ar}))}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify({day:TODAY_S,data:S.data,role:S.role,me:S.me,theme:S.theme,a:{preview:S.a.preview,asId:S.a.asId},ar:S.c.ar},(k,v)=>k==='route'&&v&&typeof v==='object'?undefined:v))}catch(e){console.error('save failed',e)}}
 function load(){try{const j=JSON.parse(localStorage.getItem(LS)||'null');if(!j)return false;if(j.day!==TODAY_S){S.theme=j.theme;return false}
- S.data=j.data;S.role=j.role;S.me=j.me;S.theme=j.theme;S.c.ar=!!j.ar;if(j.a){S.a.preview=j.a.preview;S.a.asId=j.a.asId}return true}catch(e){return false}}
+ S.data=j.data;S.role=j.role;S.me=j.me;S.theme=j.theme;S.c.ar=!!j.ar;S.a.preview=null;if(j.a){S.a.asId=j.a.asId}return true}catch(e){return false}}
 function applyTheme(){const r=document.documentElement;const dark=S.theme==='dark'||(!S.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=dark?'dark':'light';
  if(S.data)r.style.setProperty('--acc',ACCENTS[S.data.settings.accent]||ACCENTS.orange)}
 const ACCENTS={orange:'#FF5A00',blue:'#1463F3',teal:'#0E9F8A',green:'#19A05B',navy:'#243B8A',plum:'#8A2E8A'};
@@ -1550,12 +1550,12 @@ function loginView(){const acc=accounts();const grp=k=>acc.filter(a=>a.kind===k)
    <button class="btn p w lg mt4" type="submit">Sign in</button>
   </form>${INST.btn()}
  </div>
- <div class="row sp mt20 mb8"><span class="h3">Demo accounts</span><span class="pill tint-sand">Password 0000</span></div>
- <p class="sub mb12">Tap an account to fill it in. Everything here is sample data for ${esc(fmtLong(TODAY))}; nothing leaves this browser.</p>
+ <div class="row sp mt20 mb8"><span class="h3">Demo accounts</span></div>
+ <p class="sub mb12">Tap an account to fill it in.</p>
  <div class="sm sb ink2 mt12">Office</div>${grp('admin').map(row).join('')}${grp('support').map(row).join('')}
  <div class="sm sb ink2 mt16">Drivers</div>${grp('driver').map(row).join('')}
  <div class="sm sb ink2 mt16">Customers</div>${grp('customer').map(row).join('')}
- <div class="row sp mt24 sub"><span>Powered by <b style="color:#FF5A00">Forge</b><b style="color:var(--ink)">Hype</b></span><span class="row"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button><button class="btn sm g" onclick="resetDemo()">Reset data</button></span></div>
+ <div class="row sp mt24 sub"><span>Powered by <b style="color:#FF5A00">Forge</b><b style="color:var(--ink)">Hype</b></span><span class="row"><button class="btn sm g" onclick="toggleTheme()">${ic('moon','s')} Theme</button></span></div>
  </div></div>`}
 function fillLogin(e){$('#lemail').value=e;$('#lpw').value=DEMO_PW;$('#lpw').focus();$('#lerr').textContent=''}
 function doLogin(){const err=signIn($('#lemail').value,$('#lpw').value);if(err){$('#lerr').textContent=err;const c=$('#loginCard');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')}}
@@ -1842,7 +1842,7 @@ const CU={
 const DR={
  me(){return drv(S.role==='driver'?S.me.id:S.a.asId)},
  routes(){return D().routes.filter(r=>r.date===TODAY_S&&r.driver===DR.me().id)},
- stops(){return DR.routes().flatMap(r=>r.stops.map(s=>Object.assign(s,{route:r}))).sort((a,b)=>a.seq-b.seq)},
+ stops(){return DR.routes().flatMap(r=>r.stops.map(s=>Object.defineProperty(s,'route',{value:r,enumerable:false,configurable:true,writable:true}))).sort((a,b)=>a.seq-b.seq)},
  next(){return DR.stops().find(s=>s.status==='pending')},
  stop(id){return DR.stops().find(s=>s.id===id)},
  go(s){S.d.scr=s;if(['route','sum','me'].includes(s))S.d.tab=s;render()},
