@@ -14,10 +14,11 @@ const ORS={
  async optimise(code){if(S.a.optBusy)return;
   const items=D().routes.filter(r=>r.date===S.a.rdate).flatMap(r=>r.stops.map(s=>({s,r}))).filter(x=>{const z=routeOf(cust(x.s.cid));return z&&z.code===code});
   if(!items.length){toast('No stops on this route');return}
-  const run=items[0].r,done=run.stops.filter(s=>s.status!=='pending').sort((a,b)=>a.seq-b.seq),todo=run.stops.filter(s=>s.status==='pending');
+  return ORS.optRun(items[0].r,S.a.rdate,code)},
+ async optRun(run,dateS,code,noGps){if(S.a.optBusy)return;const done=run.stops.filter(s=>s.status!=='pending').sort((a,b)=>a.seq-b.seq),todo=run.stops.filter(s=>s.status==='pending');
   if(todo.length<2){toast('Fewer than 2 stops left, nothing to reorder');return}
-  const last=done.length?cust(done[done.length-1].cid):null,start=last?[last.lng,last.lat]:[DEPOT.lng,DEPOT.lat],dep=[DEPOT.lng,DEPOT.lat];
-  const now=new Date(),t0=S.a.rdate===TODAY_S?Math.max(21600,now.getHours()*3600+now.getMinutes()*60):21600;
+  const last=done.length?cust(done[done.length-1].cid):null,gps=!noGps&&SIM.gps&&run.driver===SIM.gpsDriver&&dateS===TODAY_S?[SIM.gps[1],SIM.gps[0]]:null,start=gps||(last?[last.lng,last.lat]:[DEPOT.lng,DEPOT.lat]),dep=[DEPOT.lng,DEPOT.lat];
+  const now=new Date(),t0=dateS===TODAY_S?Math.max(21600,now.getHours()*3600+now.getMinutes()*60):21600;
   const jobs=todo.map((s,i)=>{const c=cust(s.cid);return {id:i+1,description:c.name,location:[c.lng,c.lat],service:300,delivery:[s.planned||1],time_windows:[[ORS.secs(c.ws),ORS.secs(c.we)]]}});
   const req=tw=>({vehicles:[{id:1,profile:'driving-car',start,end:dep,capacity:[todo.reduce((a,s)=>a+(s.planned||1),0)],time_window:[t0,86340]}],jobs:tw?jobs:jobs.map(({time_windows,...j})=>j),options:{g:true}});
   S.a.optBusy=code;render();
@@ -26,8 +27,9 @@ const ORS={
    steps.forEach(x=>{todo[x.id-1].eta=x.arrival});
    ACT.order(run.id,done.map(s=>s.id).concat(steps.map(x=>todo[x.id-1].id)));
    run.opt={at:Date.now(),km:(res.summary.distance||res.routes[0].distance||0)/1000,min:Math.round(res.summary.duration/60),tw};
-   audit('Optimised stop order for '+code);save();toast(tw?'Order optimised':'Order optimised. Time slots could not all be met, so they were ignored')}
-  catch(e){const m=String(e&&e.error||e&&e.message||e);const f=m.match(/coordinate \d+: ([\d.]+) ([\d.]+)/);
+   audit('Optimised stop order for '+(code==='drv'?run.name:code));save();toast(tw?'Order optimised':'Order optimised. Time slots could not all be met, so they were ignored')}
+  catch(e){const m=String(e&&e.error||e&&e.message||e);const f=m.match(/coordinate \d+: (\d+\.\d+) (\d+\.\d+)/);
+   if(f&&gps&&Math.abs(gps[0]-+f[1])<1e-4&&Math.abs(gps[1]-+f[2])<1e-4){S.a.optBusy=null;return ORS.optRun(run,dateS,code,true)}
    if(f){const c=todo.map(s=>cust(s.cid)).find(c=>Math.abs(c.lng-+f[1])<1e-4&&Math.abs(c.lat-+f[2])<1e-4);toast((c?'The pin for '+c.name:'A pin')+' is more than 350 m from a road. Move it closer to the gate.')}
    else toast('Could not optimise: '+m.slice(0,90));console.error(e)}
   finally{S.a.optBusy=null;render()}}};
@@ -42,21 +44,26 @@ const ROADS={cache:{},pending:{},
  key:pts=>pts.map(p=>p[0].toFixed(4)+','+p[1].toFixed(4)).join('|'),
  get(pts){if(pts.length<2)return pts;const k=ROADS.key(pts);if(ROADS.cache[k])return ROADS.cache[k];
   if(!ROADS.pending[k]&&ROADS.enabled!==false){ROADS.pending[k]=true;const coords=pts.map(p=>p[1]+','+p[0]).join(';');
-   const ctl=new AbortController();setTimeout(()=>ctl.abort(),6000);
-   fetch('https://router.project-osrm.org/route/v1/driving/'+coords+'?overview=full&geometries=geojson&steps=false',{signal:ctl.signal}).then(r=>r.json()).then(j=>{if(j&&j.routes&&j.routes[0]){ROADS.cache[k]=j.routes[0].geometry.coordinates.map(c=>[c[1],c[0]]);MAPS.redraw()}}).catch(()=>{ROADS.fail=(ROADS.fail||0)+1;if(ROADS.fail>=3)ROADS.enabled=false}).finally(()=>{delete ROADS.pending[k]})}
+   const ctl=new AbortController();setTimeout(()=>ctl.abort(),9000);
+   fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson',{method:'POST',signal:ctl.signal,headers:{'Authorization':ORS_KEY,'Content-Type':'application/json'},body:JSON.stringify({coordinates:pts.map(p=>[p[1],p[0]]),radiuses:pts.map(()=>-1)})}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{if(j&&j.features&&j.features[0]){ROADS.cache[k]=j.features[0].geometry.coordinates.map(c=>[c[1],c[0]]);ROADS.fail=0;MAPS.redraw()}}).catch(()=>{ROADS.fail=(ROADS.fail||0)+1;if(ROADS.fail>=5)ROADS.enabled=false}).finally(()=>{delete ROADS.pending[k]})}
   let out=[];for(let i=1;i<pts.length;i++){const c=curve(pts[i-1],pts[i]);out=out.concat(i===1?c:c.slice(1))}return out}};
 
 /* ---- simulated / real driver position ---- */
-const SIM={legs:{},gps:null,
+const SIM={legs:{},gps:null,anchor:{},
  route(r){const st=[...r.stops].sort((a,b)=>a.seq-b.seq),pend=st.filter(s=>s.status==='pending'),done=st.filter(s=>s.status!=='pending').sort((a,b)=>new Date(a.completed_at)-new Date(b.completed_at));
   const last=done[done.length-1],fromC=last?cust(last.cid):null,from=fromC?[fromC.lat,fromC.lng]:[DEPOT.lat,DEPOT.lng];
   const nx=pend[0];const ahead=pend.map(s=>{const c=cust(s.cid);return [c.lat,c.lng]});
   const real=!!(SIM.gps&&r.driver===SIM.gpsDriver),g3=real?[+SIM.gps[0].toFixed(3),+SIM.gps[1].toFixed(3)]:null,far=real&&ahead.length?KM(SIM.gps,ahead[0])>60:false;
-  const path=ahead.length?ROADS.get([real&&!far?g3:from,...ahead]):[from];
+  let path;
+  if(real&&!far&&ahead.length){const pk=pend.map(s=>s.id).join(','),A=SIM.anchor[r.id];let line=A&&A.pk===pk?ROADS.get([A.pt,...ahead]):null;
+   let near=-1,best=1e9;if(line&&ROADS.cache[ROADS.key([A.pt,...ahead])]){line.forEach((q,i)=>{const d=KM(SIM.gps,q);if(d<best){best=d;near=i}})}
+   if(!A||A.pk!==pk||(near>=0&&best>.25)){SIM.anchor[r.id]={pt:[SIM.gps[0],SIM.gps[1]],pk};line=ROADS.get([SIM.anchor[r.id].pt,...ahead]);near=-1}
+   path=near>=0?[[SIM.gps[0],SIM.gps[1]],...line.slice(near+1)]:line}
+  else path=ahead.length?ROADS.get([from,...ahead]):[from];
   const donePath=done.length?ROADS.get([[DEPOT.lat,DEPOT.lng],...done.map(s=>{const c=cust(s.cid);return [c.lat,c.lng]})]):[];
   let pos={lat:from[0],lng:from[1],heading:0,remainingKm:0,etaMin:0,next:nx,arrived:!nx};
   if(nx){const nxC=cust(nx.cid),leg=ROADS.get([from,[nxC.lat,nxC.lng]]),len=pathLen(leg),key=r.id+':'+nx.id;
-   if(real){pos.lat=SIM.gps[0];pos.lng=SIM.gps[1];pos.heading=SIM.heading||0;pos.remainingKm=far?KM(SIM.gps,[nxC.lat,nxC.lng]):pathLen(ROADS.get([g3,[nxC.lat,nxC.lng]]));pos.etaMin=Math.max(1,Math.round(pos.remainingKm/30*60));pos.real=true;pos.far=far;pos.acc=SIM.acc}
+   if(real){pos.lat=SIM.gps[0];pos.lng=SIM.gps[1];pos.heading=SIM.heading||0;pos.remainingKm=far?KM(SIM.gps,[nxC.lat,nxC.lng]):(()=>{const i=path.findIndex(q=>KM(q,[nxC.lat,nxC.lng])<.03);return i>0?pathLen(path.slice(0,i+1)):KM(SIM.gps,[nxC.lat,nxC.lng])*1.3})();pos.etaMin=Math.max(1,Math.round(pos.remainingKm/30*60));pos.real=true;pos.far=far;pos.acc=SIM.acc}
    else{const L0=SIM.legs[key]||(SIM.legs[key]={t0:Date.now()});const dur=clamp(len/30*3600*1000,45000,110000);const raw=Math.min(.95,(Date.now()-L0.t0)/dur),p=raw<.95?1-Math.pow(1-raw,1.6):.95;const a=along(leg,p);pos.lat=a.pt[0];pos.lng=a.pt[1];pos.heading=a.heading;pos.remainingKm=(1-p)*len;pos.etaMin=Math.max(1,Math.round(pos.remainingKm/30*60))}}
   if(!nx&&real){pos.lat=SIM.gps[0];pos.lng=SIM.gps[1];pos.real=true;pos.acc=SIM.acc;pos.heading=SIM.heading||0}
   return {pos,path,donePath,stops:st,next:nx,from}},
@@ -102,11 +109,11 @@ const MAPS={inst:[],
  draw(inst,first){if(inst.kind==='rz')return MAPS.drawRz(inst,first);inst.layers.clearLayers();inst.drivers={};inst.acc=null;const rcb=inst.el.querySelector('.maprc');if(rcb)rcb.classList.toggle('on',!!SIM.gps);const bounds=[];const acc=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#FF5A00';
   const routes=MAPS.routesFor(inst);
   routes.forEach((r,ri)=>{const sim=SIM.route(r);const col=inst.kind==='admin'?(ri===0?acc:'#1C55D6'):acc;
-   if(sim.donePath.length>1)L.polyline(sim.donePath,{color:MAPS.dark()?'#777':'#9aa0a8',weight:4,opacity:.7,dashArray:'2 8',lineCap:'round'}).addTo(inst.layers);
+   if(inst.kind!=='driver'&&sim.donePath.length>1)L.polyline(sim.donePath,{color:MAPS.dark()?'#777':'#9aa0a8',weight:4,opacity:.7,dashArray:'2 8',lineCap:'round'}).addTo(inst.layers);
    if(sim.path.length>1){L.polyline(sim.path,{color:'#fff',weight:9,opacity:.9,lineCap:'round',lineJoin:'round'}).addTo(inst.layers);L.polyline(sim.path,{color:inst.kind==='admin'?col:(MAPS.dark()?'#f3f4f6':'#111318'),weight:4,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(inst.layers)}
    const customerStop=inst.kind==='customer'?sim.stops.find(s=>s.cid===inst.cid):null;
    sim.stops.forEach(s=>{const c=cust(s.cid);const ll=[c.lat,c.lng];if(inst.kind==='customer'){if(s.cid!==inst.cid)return;L.marker(ll,{icon:MAPS.homeIcon(),zIndexOffset:500}).addTo(inst.layers);bounds.push(ll);return}
-    const isNext=sim.next&&sim.next.id===s.id;const m=L.marker(ll,{icon:MAPS.stopIcon(s,isNext),zIndexOffset:isNext?400:s.status==='pending'?200:100}).addTo(inst.layers);
+    if(inst.kind==='driver'&&s.status!=='pending')return;const isNext=sim.next&&sim.next.id===s.id;const m=L.marker(ll,{icon:MAPS.stopIcon(s,isNext),zIndexOffset:isNext?400:s.status==='pending'?200:100}).addTo(inst.layers);
     m.bindTooltip(`<b>${s.seq}. ${esc(c.name)}</b><br>${esc(c.building)}<br>${s.status==='pending'?c.ws+' – '+c.we+', ×'+s.planned:s.status==='delivered'?'Delivered '+hm(s.completed_at):'Missed, '+esc(s.miss_reason)}`,{direction:'top',offset:[0,-16],className:'maptip'});
     if(inst.kind==='driver'&&s.status==='pending')m.on('click',()=>DR.start(s.id));if(inst.kind==='driver'&&s.status!=='pending')m.on('click',()=>DR.detail(s.id));if(inst.kind==='admin')m.on('click',()=>AD.cdet(s.cid));
     bounds.push(ll)});
@@ -137,4 +144,4 @@ const MAPS={inst:[],
   if(inst.kind==='driver'){const r=routes[0];if(!r)return;const sim=SIM.route(r);if(!sim.next){chip.innerHTML='<b>Route complete</b><span>Head back to the depot</span>';return}
    const sub=sim.pos.far?'Your location is '+Math.round(sim.pos.remainingKm)+' km from this route':sim.pos.real?'About '+sim.pos.etaMin+' min, live GPS'+(sim.pos.acc?' ±'+Math.round(sim.pos.acc)+' m':''):SIM.watch?'Finding your location…':SIM.denied?'Location blocked, tap '+ic('locate','s')+' to retry':'Simulated, tap '+ic('locate','s')+' for your location';
    chip.innerHTML=`<b>Next: ${esc(cust(sim.next.cid).name.split(' ')[0])}, ${sim.pos.remainingKm.toFixed(1)} km</b><span>${sub}</span>`}},
- tick(){$$('[data-eta-cid]').forEach(el=>{const e=MAPS.custEta(el.dataset.etaCid);if(e)el.textContent=e.eta});MAPS.inst.forEach(inst=>{if(!document.body.contains(inst.el))return;const routes=MAPS.routesFor(inst);routes.forEach(r=>{const m=inst.drivers[r.id];if(!m)return;const sim=SIM.route(r);m.setLatLng([sim.pos.lat,sim.pos.lng]);const svg=m.getElement()&&m.getElement().querySelector('svg');if(svg)svg.style.transform='rotate('+((sim.pos.heading||0)-45)+'deg)';if(inst.acc&&sim.pos.real){inst.acc.setLatLng([sim.pos.lat,sim.pos.lng]);if(sim.pos.acc)inst.acc.setRadius(Math.min(sim.pos.acc,500))}});MAPS.chips(inst)})}};
+ tick(){$$('[data-eta-cid]').forEach(el=>{const e=MAPS.custEta(el.dataset.etaCid);if(e)el.textContent=e.eta});MAPS.inst.forEach(inst=>{if(!document.body.contains(inst.el))return;const routes=MAPS.routesFor(inst);routes.forEach(r=>{const m=inst.drivers[r.id];if(!m)return;const sim=SIM.route(r);m.setLatLng([sim.pos.lat,sim.pos.lng]);const svg=m.getElement()&&m.getElement().querySelector('svg');if(svg)svg.style.transform='rotate('+((sim.pos.heading||0)-45)+'deg)';if(inst.acc&&sim.pos.real){inst.acc.setLatLng([sim.pos.lat,sim.pos.lng]);if(sim.pos.acc)inst.acc.setRadius(Math.min(sim.pos.acc,500))}});MAPS.chips(inst);if(inst.kind==='driver'&&SIM.gps){const pos=L.latLng(SIM.gps[0],SIM.gps[1]);if(!inst.userMoved&&!inst.map.getBounds().pad(-.2).contains(pos))inst.map.panTo(pos,{animate:true});if(!inst.lastDraw||Date.now()-inst.lastDraw>5000){inst.lastDraw=Date.now();MAPS.draw(inst,false)}}})}};
